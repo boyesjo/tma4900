@@ -1,0 +1,50 @@
+\chapter{Multi-armed bandits}
+\label{chap:bandits}
+
+\section{Problem formulation}
+In the multi-armed bandit problem, there are $k$ distributions (\enquote{arms}), $\{P_1, P_2,\dots,P_k\}$ with unknown means $\{\mu_1, \mu_2,\dots,\mu_k\}$.
+For a given number of turns $T$, the goal is to maximise the expected reward by iteratively selecting a distribution to sample from.
+In particular, the goal is to minimise the regret defined as
+\begin{equation}
+    R(T) = \sum_{t=1}^T \mu^* - \mu_t,
+\end{equation}
+where $\mu^*$ is the mean of the distribution with the highest mean, and $\mu_t$ is the mean of the distribution selected at time $t$.
+The number of turns $T$ is often referred to as the horizon and can be assumed to be greater than $k$.
+This poses a constant struggle between exploration and exploitation, where exploration is the process of trying out new distributions, and exploitation is the process of using the distribution with the highest mean.
+
+
+Almost always, assumptions are made about the distributions.
+Otherwise, composing algorithm with any sort of optimality guarantee would be futile.
+A common assumption, for example, is that the distributions are Bernoulli.
+Often they are assumed to be Gaussian with unknown mean and maybe some restrictions on the variance.
+If no assumptions are made to the type of distributions, there are likely to be assumptions made to the variance or support of the distributions.
+
+There are many generalisations to the multi-armed bandit problem.
+For instance, the distributions may not be stationary, but instead change throughout the game.
+Alternatively, with contextual bandits, information about a context is given before each turn, which must then be taken into account when selecting an arm.
+
+\subsection{Alternative problems}
+An alternative problem is to find the best arm with as few turns as possible.
+In this version, a $\delta$ is given, and the goal is to find the best arm with probability at least $1-\delta$.
+
+
+\section{Strategies}
+\subsection{Greedy}
+A simple algorithm and a good baseline is the greedy algorithm.
+Here, all arms are tried $N$ initial times, and the empirical means are used to select the best arm.
+Afterwards, the arm with the highest empirical mean is selected for all remaining turns.
+
+\subsection{Epsilon-greedy}
+The problem with the greedy algorithm is that it may be unlucky and not discover the best arm in the initial exploration phase.
+To mitigate this, the epsilon-greedy algorithm may be used.
+In this algorithm, the estimated arm is pulled with probability $1-\epsilon$ and a random arm is pulled with probability $\epsilon$.
+This ensures convergence to correct exploitation as the horizon increases, and it will generally reduce the regret.
+Choosing $\epsilon$ is a trade-off between exploration and exploitation and can significantly affect the regret.
+
+\subsubsection{Epsilon-decay}
+If one allows the $\epsilon$ to decay over time, the regret can be reduced even further.
+This makes sense, as exploration is less worthwhile as estimates become more accurate.
+A common choice is to decay $\epsilon$ as $\epsilon_t = \epsilon_0 / t$.
+
+\subsection{UCB}
+\subsection{Bayesian: Thompson sampling}

@@ -1,0 +1,94 @@
+% inspired by https://github.com/FagKom/Oppgavemal_2
+\ProvidesPackage{preamble}
+\usepackage{lipsum} % filltext
+
+\usepackage[
+    bindingoffset=20mm,
+    twoside,
+]{geometry}
+
+
+% \usepackage{ragged2e}
+\usepackage[norsk, UKenglish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{bookmark}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Font encoding:
+\usepackage[T1]{fontenc}
+%\usepackage{lmodern} % font
+%\usepackage{bookman} % font
+%\usepackage{euler}
+\usepackage{csquotes} % quotes
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{physics}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% % TIKZ
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepgfplotslibrary{groupplots,dateplot}
+\usetikzlibrary{patterns,shapes.arrows}
+\pgfplotsset{compat=newest}
+% \usetikzlibrary{calc}
+% \usetikzlibrary{tikzmark}
+% \usetikzlibrary{decorations.markings}
+% \usetikzlibrary{backgrounds}
+% \usetikzlibrary{fadings}
+% \pgfplotsset{
+%     every axis plot/.append style={line width=1pt},
+%     every axis plot post/.append style={
+%             every mark/.append style={line width=2pt}
+%         }
+% }
+\pgfplotsset{
+    %every axis/.append style={font=\footnotesize},
+    %every axis label/.append style={font=\footnotesize},
+    every x tick label/.append style = {font=\footnotesize},
+    every y tick label/.append style = {font=\footnotesize},
+    every axis legend/.append style={font=\footnotesize},
+}
+
+
+\usetikzlibrary{quantikz}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{mathtools}
+\usepackage[version=4]{mhchem}
+\usepackage{caption}
+\captionsetup[figure]{labelfont=bf}
+\captionsetup[table]{labelfont=bf, position=top}
+% \captionsetup{width=\textwidth}
+\usepackage{subcaption}
+\usepackage{environ}
+\usepackage{bm}
+
+
+
+% todos
+\usepackage{todonotes}
+
+% tables
+\usepackage{multirow}
+\usepackage{nicematrix}
+\usepackage{tablefootnote}
+
+
+% ...
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+
+% definge \bigO
+\newcommand{\bigO}[1]{\ensuremath{\mathcal{O}\left(#1\right)}}
+
+\usepackage{enumitem}
+\setlist[description]{style=nextline}
+
+\usepackage{adjustbox}
