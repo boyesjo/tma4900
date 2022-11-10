@@ -19,5 +19,6 @@
         "**/*.blg": true,
         "**/*.fls": true,
         "**/*.fdb_latexmk": true,
+        "**/__pycache__": true,
     }
 }
