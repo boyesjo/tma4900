@@ -6,7 +6,7 @@ from arms.bernoulli import BernoulliArm
 from bandits import Bandits
 
 # Create bandits
-p_list = np.linspace(0.1, 0.9, 9)
+p_list = [0.1, 0.5, 0.45, 0.2]
 
 bandits = Bandits([BernoulliArm(p) for p in p_list])
 
@@ -19,14 +19,16 @@ agent_list = [
     agents.UCB(bandits, test_rounds=10),
     agents.ThompsonBernoulli(bandits),
 ]
-
-# %%
-T = 5000
+T = 1000
 
 for agent in agent_list:
-    for _ in range(T):
+    for t in range(T):
         agent.pull()
 
+        if agent.__class__.__name__ == "ThompsonBernoulli" and t % 100 == 0:
+            agent.plot_posteriors(title=f"Turn {t}", arms=4)
+
+for agent in agent_list:
     plt.plot(agent.regret, label=agent.__class__.__name__)
 
 plt.legend()
