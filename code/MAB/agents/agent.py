@@ -25,8 +25,9 @@ class Agent(ABC):
         # run test rounds, try each arm
         if self.turns < self.test_rounds * self.bandits.n_arms:
             arm_idx = self.turns % self.bandits.n_arms
+        else:
+            arm_idx = self._select_arm()
 
-        arm_idx = self._select_arm()
         reward = self.bandits.pull(arm_idx)
         self.rewards.append(reward)
         self.arms_pulled.append(arm_idx)
@@ -37,6 +38,15 @@ class Agent(ABC):
         self.turns += 1
 
         return reward
+
+    def play(self, T: int, **kwargs) -> None:
+
+        # inform about unsued kwargs
+        if kwargs:
+            print(f"Unused kwargs: {kwargs}")
+
+        for _ in range(T):
+            self.pull()
 
     @property
     def arm_means(self) -> list[float]:
