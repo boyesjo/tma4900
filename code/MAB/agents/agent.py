@@ -40,11 +40,6 @@ class Agent(ABC):
         return reward
 
     def play(self, T: int, **kwargs) -> None:
-
-        # inform about unsued kwargs
-        if kwargs:
-            print(f"Unused kwargs: {kwargs}")
-
         for _ in range(T):
             self.pull()
 

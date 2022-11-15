@@ -24,11 +24,11 @@ T = 1000
 for agent in agent_list:
     agent.play(
         T,
-        # plot_at=[0, 10, 100, 999],
+        plot_at=[0, 10, 100, 999],
     )
 
 plot_regret(agent_list)
 plot_regret(agent_list, yscale="log")
-
+print("\n" * 10)
 
 # %%

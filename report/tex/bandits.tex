@@ -12,27 +12,72 @@ where $\mu^*$ is the mean of the distribution with the highest mean, and $\mu_t$
 The number of turns $T$ is often referred to as the horizon and can be assumed to be greater than $k$.
 This poses a constant struggle between exploration and exploitation, where exploration is the process of trying out new distributions, and exploitation is the process of using the distribution with the highest mean.
 
-
 Almost always, assumptions are made about the distributions.
 Otherwise, composing algorithm with any sort of optimality guarantee would be futile.
 A common assumption, for example, is that the distributions are Bernoulli.
 Often they are assumed to be Gaussian with unknown mean and maybe some restrictions on the variance.
 If no assumptions are made to the type of distributions, there are likely to be assumptions made to the variance or support of the distributions.
 
-There are many generalisations to the multi-armed bandit problem.
-For instance, the distributions may not be stationary, but instead change throughout the game.
-Alternatively, with contextual bandits, information about a context is given before each turn, which must then be taken into account when selecting an arm.
-
 \subsection{Alternative problems}
 An alternative problem is to find the best arm with as few turns as possible.
 In this version, a $\delta$ is given, and the goal is to find the best arm with probability at least $1-\delta$.
 
+\subsection{Generalisations}
+There are many generalisations to the multi-armed bandit problem.
+For instance, the distributions may not be stationary, but instead change throughout the game.
+Alternatively, with contextual bandits, information about a context is given before each turn, which must then be taken into account when selecting an arm.
+Adversarial bandits complicates matters further, where the rewards are not stochastic from some distribution, but are instead selected by an adversary.
+
 
 \section{Strategies}
+\subsection{Explore-only}
+Pure exploration is obviously a suboptimal strategy, but it is a good baseline to compare against.
+It can be implemented by selecting an arm uniformly or in order, but it will perform poorly either way.
+The arm-selection procedure is described by \cref{alg:greedy}.
+\begin{algorithm}
+    \caption{Random arm selection}
+    \label{alg:random}
+    \begin{algorithmic}
+        \Procedure{SelectArm}{$t$}
+        \State Sample $i$ from $\{1,\dots, k\}$ uniformly
+        \State \Return $i$
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+
+It is easy that the expected regret is
+\begin{equation}
+    R(T) = T\left(\mu^* - \frac{1}{k}\sum_{i=1}^k \mu_i\right),
+\end{equation}
+which is $\Theta(T)$.
+This motivates the search for an algorithm with sublinear regret.
+
+
 \subsection{Greedy}
 A simple algorithm and a good baseline is the greedy algorithm.
 Here, all arms are tried $N$ initial times, and the empirical means are used to select the best arm.
 Afterwards, the arm with the highest empirical mean is selected for all remaining turns.
+The arm-selection procedure is listed in \cref{alg:greedy}, where $\hat{\mu}_i$ is the empirical mean of arm $i$.
+\begin{algorithm}
+    \caption{Greedy arm selection}
+    \label{alg:greedy}
+    \begin{algorithmic}
+        \Procedure{SelectArm}{$t$}
+        \If{$t \leq Nk$}
+        \State \Return $(t \mod k) + 1$
+        \Else
+        \State \Return $\argmax_{i=1,\dots,k} \hat{\mu}_i$
+        \EndIf
+        \EndProcedure
+    \end{algorithmic}
+\end{algorithm}
+
+With greedy selection, the expected regret is
+\begin{equation}
+    R(T) = \sum_{t=1}^T \mu^* - \hat{\mu}_t,
+\end{equation}
+
+
 
 \subsection{Epsilon-greedy}
 The problem with the greedy algorithm is that it may be unlucky and not discover the best arm in the initial exploration phase.
@@ -43,8 +88,21 @@ Choosing $\epsilon$ is a trade-off between exploration and exploitation and can 
 
 \subsubsection{Epsilon-decay}
 If one allows the $\epsilon$ to decay over time, the regret can be reduced even further.
-This makes sense, as exploration is less worthwhile as estimates become more accurate.
+This makes sense, as exploration is less worthwhile as estimates become ever more accurate.
 A common choice is to decay $\epsilon$ as $\epsilon_t = \epsilon_0 / t$.
 
 \subsection{UCB}
+The upper confidence bound (UCB) algorithm is a more sophisticated algorithm based on estimating an upper bound for the mean of each arm.
+In the original formulation, where support on only $[0,1]$ is assumed, the upper confidence bound is given by
+\begin{equation}
+    \text{UCB}_t(a) = \hat{\mu}_t(a) + \sqrt{\frac{2\ln t}{N_t(a)}},
+\end{equation}
+where $\hat{\mu}_t(a)$ is the empirical mean of arm $a$ at time $t$, $N_t(a)$ is the number of times arm $a$ has been pulled at time $t$.
+It generally achieves logarithmic regret.
+
+Many variants of the UCB algorithm exist.
+Different assumptions about the distributions changes the confidence bounds.
+
 \subsection{Bayesian: Thompson sampling}
+Thompson sampling is a Bayesian approach to the multi-armed bandit problem, originally described in 1933 as a way to handle the exploration-exploitation dilemma in the context of medical trials.
+The idea is to sample from the posterior distribution of the means of the arms and pull the arm with the highest sample.

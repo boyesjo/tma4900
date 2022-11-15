@@ -42,8 +42,15 @@ class Thompson(Agent):
             num_arms = min(self.bandits.n_arms, 5)
             arms = list(range(self.bandits.n_arms))[:num_arms]
 
-        fig, axs = plt.subplots(1, len(arms), figsize=(20, 5))
+        fig, axs = plt.subplots(1, len(arms), figsize=(10, 5))
         for i, ax in enumerate(axs):
+
+            ax.axvline(
+                self.bandits.arms[arms[i]].mean,
+                color="black",
+                linestyle="--",
+                label="true mean",
+            )
 
             x = np.linspace(0, 1, num_samples)
             ax.plot(x, self.posterior_func.pdf(x, **self.posterior_params[i]))
@@ -65,29 +72,13 @@ class Thompson(Agent):
         self._update_posterior_params(self.arms_pulled[-1], reward)
         return reward
 
-    def play(self, T: int, **kwargs) -> None:
+    def play(self, T: int, plot_at: list[int] = [], **kwargs) -> None:
 
-        plot_at = kwargs.pop("plot_at", None)
-
-        if plot_at is not None:
-            if isinstance(plot_at, int):
-                plot_at = [plot_at]
-            elif not isinstance(plot_at, Sequence):
-                raise TypeError(
-                    "plot_at must be an int or a sequence of ints, "
-                    f"not {type(plot_at)}"
-                )
-            elif not all(isinstance(i, int) for i in plot_at):
-                raise TypeError(
-                    "plot_at must be an int or a sequence of ints, "
-                    f"not {type(plot_at)}"
-                )
-
-            # ensure plot_at values in [0, T]
-            if any(i < 0 or i > T for i in plot_at):
-                raise ValueError(
-                    f"plot_at values must be in [0, T], not {plot_at}"
-                )
+        # ensure plot_at values in [0, T]
+        if any(i < 0 or i > T for i in plot_at):
+            raise ValueError(
+                f"plot_at values must be in [0, T], not {plot_at}"
+            )
 
         else:
             plot_at = []
