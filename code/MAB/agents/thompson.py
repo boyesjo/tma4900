@@ -80,9 +80,6 @@ class Thompson(Agent):
                 f"plot_at values must be in [0, T], not {plot_at}"
             )
 
-        else:
-            plot_at = []
-
         for i in range(T):
             if i in plot_at:
                 self.plot_posteriors(title=f"Turn {i}", **kwargs)
