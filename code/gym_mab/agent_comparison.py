@@ -2,12 +2,12 @@
 import agents
 import numpy as np
 from bandits import BanditsEnv
-from stable_baselines3 import DQN
 
 n_arms = 3
-max_turns = 1000
+T = 100
+N = 20
 
-env = BanditsEnv(n_arms, max_turns)
+env = BanditsEnv(n_arms, T)
 
 # %%
 agent_dict = {
@@ -19,28 +19,60 @@ agent_dict = {
     "thompson": agents.ThompsonBernoulli(env),
 }
 
-regrets = {name: np.zeros(env.max_turns) for name in agent_dict.keys()}
+regrets = {name: np.zeros((N, T)) for name in agent_dict.keys()}
 
 # %%
-for name, agent in agent_dict.items():
+for n in range(N):
+    env.reset()
+    for name, agent in agent_dict.items():
 
-    obs = env.reset(keep_p_list=True)
+        obs = env.reset(keep_p_list=True)
 
-    done = False
-    while not done:
-        action, _ = agent.predict(obs)
-        obs, reward, done, _ = env.step(action)
-    regrets[name] = env.regret
+        done = False
+        while not done:
+            action, _ = agent.predict(obs)
+            obs, reward, done, _ = env.step(action)
+        regrets[name][n] = env.regret
 
 # %%
 import matplotlib.pyplot as plt
 
-print(env.p_list)
-
 for name, regret in regrets.items():
-    plt.plot(regret, label=name)
+    plt.plot(np.mean(regret, axis=0), label=name)
+    # add standard deviation
+    plt.fill_between(
+        np.arange(T),
+        np.mean(regret, axis=0) - np.std(regret, axis=0) / (N + 1),
+        np.mean(regret, axis=0) + np.std(regret, axis=0) / (N + 1),
+        alpha=0.2,
+    )
+
 plt.legend()
-plt.yscale("log")
+plt.savefig("regrets_classic.png")
 plt.show()
+# import matplotlib.pyplot as plt
+
+# print(env.p_list)
+
+# for name, regret in regrets.items():
+#     plt.plot(regret, label=name)
+# plt.legend()
+# plt.yscale("log")
+# plt.show()
+
+# %%
+import pandas as pd
+
+# create df with regrets for each agent as columns
+pd.concat(
+    [
+        pd.DataFrame(regrets[name])
+        .melt(ignore_index=False, var_name="t", value_name=name)
+        .set_index("t", append=True)
+        for name in regrets.keys()
+    ],
+    axis=1,
+).to_csv("regrets_classic.csv", index_label=["n", "t"])
+
 
 # %%

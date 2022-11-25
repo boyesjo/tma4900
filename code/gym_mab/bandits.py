@@ -13,8 +13,6 @@ class BanditsEnv(gym.Env):
         self.amrs = arms
         self.max_turns = max_turns
 
-        self.p_list = np.random.uniform(0, 1, self.amrs)
-
         self.action_space = spaces.Discrete(arms)
         self.observation_space = spaces.Box(
             low=0,
@@ -30,7 +28,7 @@ class BanditsEnv(gym.Env):
         self.arms_pulled: list[int] = []
         self.arm_counts = np.zeros(self.amrs)
         self.arm_rewards = np.zeros(self.amrs)
-        if not kwargs.get("keep_p_list", False):
+        if not kwargs.get("keep_p_list", False) or not hasattr(self, "p_list"):
             self.p_list = np.random.uniform(0, 1, self.amrs)
         self.turn = 0
         self.reward_list: list[float] = []
