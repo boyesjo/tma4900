@@ -18,11 +18,11 @@ A common assumption, for example, is that the distributions are Bernoulli.
 Often they are assumed to be Gaussian with unknown mean and maybe some restrictions on the variance.
 If no assumptions are made to the type of distributions, there are likely to be assumptions made to the variance or support of the distributions.
 
-\subsection{Alternative problems}
+\subsection{Best-arm identification}
 An alternative problem is to find the best arm with as few turns as possible.
 In this version, a $\delta$ is given, and the goal is to find the best arm with probability at least $1-\delta$.
 
-\subsection{Generalisations}
+\subsection{Bandit generalisations}
 There are many generalisations to the multi-armed bandit problem.
 For instance, the distributions may not be stationary, but instead change throughout the game.
 Alternatively, with contextual bandits, information about a context is given before each turn, which must then be taken into account when selecting an arm.
@@ -30,6 +30,30 @@ Adversarial bandits complicates matters further, where the rewards are not stoch
 
 
 \section{Strategies}
+
+\begin{table}
+    \centering
+    \caption{
+        Comparison of strategies.
+    }
+    \label{tab:strategies}
+    \begin{tblr}{
+            width=\linewidth,
+            colspec={Q[l] Q[r] Q[r]}
+        }
+        \toprule
+        Strategy       & Regret      & Tuning    \\
+        \midrule
+        Random         & Linear      & NA        \\
+        Greedy         & Linear      & NA        \\
+        Epsilon-greedy & Linear      & Difficult \\
+        Epsilon-decay  & Logarithmic & Difficult \\
+        UCB            & Logarithmic & Optional  \\
+        Thompson       & Logarithmic & Priors    \\
+        \bottomrule
+    \end{tblr}
+\end{table}
+
 \subsection{Explore-only}
 Pure exploration is obviously a suboptimal strategy, but it is a good baseline to compare against.
 It can be implemented by selecting an arm uniformly or in order, but it will perform poorly either way.
@@ -84,6 +108,7 @@ The problem with the greedy algorithm is that it may be unlucky and not discover
 To mitigate this, the epsilon-greedy algorithm may be used.
 In this algorithm, the estimated arm is pulled with probability $1-\epsilon$ and a random arm is pulled with probability $\epsilon$.
 This ensures convergence to correct exploitation as the horizon increases, and it will generally reduce the regret.
+Still, with a constant $\epsilon$, a constant proportion of the turns will be spent exploring, keeping the regret linear in the horizon.
 Choosing $\epsilon$ is a trade-off between exploration and exploitation and can significantly affect the regret.
 
 \subsubsection{Epsilon-decay}
@@ -93,6 +118,8 @@ A common choice is to decay $\epsilon$ as $\epsilon_t = \epsilon_0 / t$.
 
 \subsection{UCB}
 The upper confidence bound (UCB) algorithm is a more sophisticated algorithm based on estimating an upper bound for the mean of each arm.
+One always chooses the arm whose upper confidence bound is highest, a principle known as \enquote{optimism in the face of uncertainty}.
+
 In the original formulation, where support on only $[0,1]$ is assumed, the upper confidence bound is given by
 \begin{equation}
     \text{UCB}_t(a) = \hat{\mu}_t(a) + \sqrt{\frac{2\ln t}{N_t(a)}},
