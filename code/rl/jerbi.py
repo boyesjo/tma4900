@@ -226,6 +226,9 @@ for batch in range(n_episodes // batch_size):
     if avg_rewards >= 500.0:
         break
 
+# %%
+# save model
+torch.save(model.state_dict(), "model.pt")
 
 # %%
 plt.plot(episode_rewards)
