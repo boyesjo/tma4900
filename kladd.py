@@ -1,12 +1,23 @@
-from abc import ABC, abstractmethod
+# %%
+import pennylane as qml
+from pennylane import numpy as np
+
+# %%
+dev = qml.device("default.qubit", wires=2)
+
+observables = [
+    lambda: qml.expval(qml.PauliZ(0)),
+    lambda: qml.expval(qml.PauliZ(1)),
+]
 
 
-class Base(ABC):
-    @abstractmethod
-    def foo(self, x: int) -> int:
-        pass
+@qml.qnode(dev, interface="torch")
+def circuit(x, y):
+    qml.RX(x, wires=0)
+    qml.RX(y, wires=1)
+
+    return [o() for o in observables]
 
 
-class Derived(Base):
-    def foo(self, x: int, y: float = 0) -> int:
-        return x + 1
+circuit(0, 1).real
+# %%
