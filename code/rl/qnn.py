@@ -52,9 +52,9 @@ def get_qnn(
             qml.Hadamard(wires=i)
 
         for i in range(n_layers):
-            u_var(n_qubits, phi[i])
+            u_var(n_qubits, phi[i], entangle_strat)
             u_enc(n_qubits, inputs, lam[i])
-        u_var(n_qubits, phi[n_layers])
+        u_var(n_qubits, phi[n_layers], entangle_strat)
 
         return [o() for o in observables]
 
