@@ -1,35 +1,31 @@
 # %%
-import pennylane as qml
-import torch
-from pennylane import numpy as np
+import numpy as np
+import sympy
 
-dev = qml.device("default.qubit", wires=2)
+# %%
+pauli_z = sympy.Matrix([[1, 0], [0, -1]])
+pauli_x = sympy.Matrix([[0, 1], [1, 0]])
+pauli_y = sympy.Matrix([[0, -1j], [1j, 0]])
+i = sympy.Matrix([[1, 0], [0, 1]])
+theta = sympy.Symbol("theta")
 
-p_01 = np.zeros((4, 4))
-p_01[0, 0] = 1
-p_01[1, 1] = 1
+# %%
+c_z = sympy.Matrix(np.diag([1, 1, 1, -1]))
+c_z
+c_x = sympy.Matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 1], [0, 0, 1, 0]])
+c_x
 
-p_2 = np.zeros((4, 4))
-p_2[2, 2] = 1
+# %%
+zz = sympy.kronecker_product(pauli_z, pauli_z)
+r_zz = sympy.exp(-0.5j * theta * zz)
+r_zz
 
-p_3 = np.zeros((4, 4))
-p_3[3, 3] = 1
+# %%
+rz = sympy.exp(-0.5j * theta * pauli_z)
+rz_neg = sympy.exp(0.5j * theta * pauli_z)
+rz
 
-observables = [
-    lambda: qml.probs(wires=[0, 1]),
-]
+# %%
+c_x @ sympy.kronecker_product(i, rz) @ c_x
 
-
-def post_process(obs: torch.Tensor) -> torch.Tensor:
-    return obs[..., 0] * obs[..., 1], obs[..., 2], obs[..., 3]
-
-
-@qml.qnode(dev, interface="torch")
-def circuit():
-
-    return [o() for o in observables]
-
-
-circuit()  # .real
-post_process(circuit())
 # %%

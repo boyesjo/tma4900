@@ -12,9 +12,9 @@ from torch import nn, optim
 # %%
 ENV_NAME = "CartPole-v1"
 BATCH_SIZE = 10
-EPOCHS = 2000
+EPOCHS = 2000 // BATCH_SIZE
 GAMMA = 1.0
-N_LAYERS = 5
+N_LAYERS = 1
 STATE_NORMALISER = np.array(
     [
         2.5,
@@ -24,29 +24,34 @@ STATE_NORMALISER = np.array(
     ]
 )
 
-# model = pqcs.SoftmaxPQC(
+model = pqcs.SoftmaxPQC(
+    n_layers=N_LAYERS,
+    n_state=4,
+    init_w=torch.ones(1),
+    entangle_strat="all_to_all",
+    learnable=False,
+    observables=[
+        lambda: qml.expval(
+            qml.PauliX(0)  # @ qml.PauliX(1) @ qml.PauliX(2) @ qml.PauliX(3)
+        ),
+    ],
+    post_obs=lambda x: torch.cat([x, -x], dim=1),
+)
+
+# print number of parameters
+print(sum(p.numel() for p in model.parameters()))
+
+# model = pqcs.RawPQC(
 #     n_layers=N_LAYERS,
 #     n_state=4,
 #     entangle_strat="all_to_all",
 #     observables=[
 #         lambda: qml.expval(
-#             qml.PauliX(0)  # @ qml.PauliX(1) @ qml.PauliX(2) @ qml.PauliX(3)
+#             qml.PauliX(0) @ qml.PauliX(1) @ qml.PauliX(2) @ qml.PauliX(3)
 #         ),
 #     ],
-#     post_obs=lambda x: torch.cat([x, -x], dim=1),
+#     post_obs=lambda x: (torch.cat([x, -x], dim=1) + 1) / 2,
 # )
-
-model = pqcs.RawPQC(
-    n_layers=N_LAYERS,
-    n_state=4,
-    entangle_strat="all_to_all",
-    observables=[
-        lambda: qml.expval(
-            qml.PauliX(0) @ qml.PauliX(1) @ qml.PauliX(2) @ qml.PauliX(3)
-        ),
-    ],
-    post_obs=lambda x: (torch.cat([x, -x], dim=1) + 1) / 2,
-)
 
 
 # %%
@@ -88,23 +93,27 @@ def get_returns(
     rewards: Sequence[float],
     gamma: float = 1.0,
 ) -> list[float]:
+
     returns = [0.0] * len(rewards)
     for i in range(len(rewards) - 2, -1, -1):
         returns[i] = rewards[i] + gamma * returns[i + 1]
+
+    # standardise returns
     arr = np.array(returns)
-    returns = (arr - np.mean(arr)) / (np.std(arr) + 1e-8)
+    arr = (arr - np.mean(arr)) / (np.std(arr) + 1e-8)
     returns = arr.tolist()
+
     return returns
 
 
 # %%
 rewards = np.zeros((EPOCHS, BATCH_SIZE))
 
-optimiser = optim.SGD(
+optimiser = optim.Adam(
     [
         {"params": model.qnn.phi, "lr": 0.01},
         {"params": model.qnn.lam, "lr": 0.1},
-        # {"params": model.w, "lr": 0.1},
+        {"params": model.w, "lr": 0.1},
     ],
     lr=0,
 )
@@ -140,22 +149,14 @@ for epoch in range(EPOCHS):
     loss.backward()
     optimiser.step()
     optimiser.zero_grad()
-
-    # model.update(
-    #     torch.tensor(states),
-    #     actions,
-    #     torch.tensor(returns),
-    #     lr={"qnn.phi": 0.01, "qnn.lam": 0.1, "w": 0.1},
-    #     batch_size=BATCH_SIZE,
-    # )
+    # print(loss.item(), model.w.detatch().numpy())
 
     rewards[epoch] = np.array(
         [sum(trajectory["rewards"]) for trajectory in trajectories]
     )
 
-    # print(list(model.named_parameters()))
-    # print(model.w.item())
     print(f"Epoch {epoch}: {sorted(rewards[epoch])}")
+
 
 torch.save(model.state_dict(), "model.pt")
 

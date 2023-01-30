@@ -1,5 +1,5 @@
 # %%
-from typing import Callable, Iterable, Sequence
+from typing import Callable, Sequence
 
 import pennylane as qml
 import qnn
@@ -14,6 +14,7 @@ class RawPQC(nn.Module):
         n_layers: int = 1,
         n_state: int = 2,
         entangle_strat: str = "circular",
+        learnable: bool = False,
         device: str = "default.qubit",
         post_obs: Callable[[torch.Tensor], torch.Tensor] = lambda x: x,
     ):
@@ -24,22 +25,25 @@ class RawPQC(nn.Module):
 
         self.post_obs = post_obs
 
+        _qnn, shapes = qnn.get_qnn(
+            n_qubits=n_state,
+            n_layers=n_layers,
+            observables=observables,
+            entangle_strat=entangle_strat,
+            learnable=learnable,
+            device=device,
+        )
+
+        init_method = {
+            "phi": lambda x: nn.init.uniform_(x, 0, 2 * torch.pi),
+            "lam": lambda x: nn.init.constant_(x, 1),
+            "theta": lambda x: nn.init.constant_(x, 2 * torch.pi),
+        }
+
         self.qnn = qml.qnn.TorchLayer(
-            qnn.get_qnn(
-                n_qubits=n_state,
-                n_layers=n_layers,
-                observables=observables,
-                entangle_strat=entangle_strat,
-                device=device,
-            ),
-            weight_shapes={
-                "phi": (n_layers + 1, 2 * n_state),
-                "lam": (n_layers, 2 * n_state),
-            },
-            init_method={
-                "phi": lambda x: nn.init.uniform_(x, 0, 2 * torch.pi),
-                "lam": lambda x: nn.init.constant_(x, 1),
-            },
+            _qnn,
+            weight_shapes=shapes,
+            init_method=init_method,
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -51,26 +55,6 @@ class RawPQC(nn.Module):
 
     def _obs(self, x: torch.Tensor) -> torch.Tensor:
         return self.post_obs(self.qnn(x))
-
-    def update(
-        self,
-        states: torch.Tensor,
-        actions: torch.Tensor,
-        returns: torch.Tensor,
-        lr: dict[str, float],
-        batch_size: int,
-    ) -> None:
-
-        probs = self(states)[range(len(actions)), actions]
-        loss = -torch.sum(torch.log(probs) * returns) / batch_size
-        loss.backward()
-
-        with torch.no_grad():
-            for name, param in self.named_parameters():
-                if name in lr:
-
-                    param -= lr[name] * param.grad  # type: ignore
-                    param.grad.zero_()
 
 
 def test_raw_pqc():
@@ -103,6 +87,7 @@ class SoftmaxPQC(RawPQC):
         n_layers: int = 1,
         n_state: int = 2,
         entangle_strat: str = "circular",
+        learnable: bool = False,
         device: str = "default.qubit",
         post_obs: Callable[[torch.Tensor], torch.Tensor] = lambda x: x,
     ):
@@ -111,6 +96,7 @@ class SoftmaxPQC(RawPQC):
             n_layers=n_layers,
             n_state=n_state,
             entangle_strat=entangle_strat,
+            learnable=learnable,
             device=device,
             post_obs=post_obs,
         )
@@ -124,34 +110,25 @@ class SoftmaxPQC(RawPQC):
 
 
 def test_softmax_pqc():
-    observables = [
-        lambda: qml.expval(qml.PauliZ(0) @ qml.PauliZ(1)),
-    ]
 
-    def post_obs(x: torch.Tensor) -> torch.Tensor:
-        return torch.cat([x, -x], dim=1)
+    n_state = 2
+    n_layers = 4
 
-    states = torch.tensor(
-        [
-            [0.1, 0.2],
-            [0.0, 0.0],
-            [0.2, 0.1],
-        ]
-    )
-    actions = torch.tensor([0, 1, 0])
-    test_returns = torch.tensor([1.0, 1.0, 1.0])
-    lr = {"qnn.phi": 0.01, "qnn.lam": 0.1, "w": 0.1}
+    states = torch.rand(3, n_state)
+
     model = SoftmaxPQC(
-        observables,
-        n_state=2,
-        n_layers=1,
+        observables=[
+            lambda: qml.expval(qml.PauliZ(0) @ qml.PauliZ(1)),
+        ],
+        n_state=n_state,
+        n_layers=n_layers,
+        entangle_strat="one_to_one",
+        learnable=True,
         init_w=torch.tensor([1.0]),
-        post_obs=post_obs,
+        post_obs=lambda x: torch.cat([x, -x], dim=1),
     )
     print(model(states))
-    print(list(model.named_parameters()))
-    model.update(states, actions, test_returns, lr, batch_size=1)
-    print(list(model.named_parameters()))
+    print(sum(p.numel() for p in model.parameters() if p.requires_grad))
 
 
 if __name__ == "__main__":
