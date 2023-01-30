@@ -37,8 +37,10 @@ class RawPQC(nn.Module):
         init_method = {
             "phi": lambda x: nn.init.uniform_(x, 0, 2 * torch.pi),
             "lam": lambda x: nn.init.constant_(x, 1),
-            "theta": lambda x: nn.init.constant_(x, 2 * torch.pi),
         }
+
+        if learnable:
+            init_method["theta"] = lambda x: nn.init.constant_(x, torch.pi)
 
         self.qnn = qml.qnn.TorchLayer(
             _qnn,

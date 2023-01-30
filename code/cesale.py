@@ -15,6 +15,7 @@ from qiskit import (
 from qiskit.algorithms import AmplificationProblem, AmplitudeAmplifier, Grover
 from qiskit.circuit import Gate
 from qiskit.quantum_info import Operator, Statevector
+from scipy.stats import norm
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -236,7 +237,7 @@ qbai(2).draw("mpl")
 # %%
 n = 1
 backed = Aer.get_backend("qasm_simulator")
-qc = qbai(100)
+qc = qbai(2)
 job = backed.run(qc, shots=1000)
 result = job.result()
 

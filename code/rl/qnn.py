@@ -1,10 +1,9 @@
-from functools import partial
 from typing import Optional, Sequence
 
 import pennylane as qml
 
 
-def theta_shape(n_qubits: int, entangle_strat: str):
+def theta_shape(n_qubits: int, entangle_strat: str) -> int:
     if entangle_strat == "one_to_one":
         return n_qubits - 1
     elif entangle_strat == "circular":
@@ -36,9 +35,9 @@ def entangle(
 
     func = r_zz if learnable else cz_wrap
     if theta is None:
-        theta = [0.0] * n_qubits
+        theta = [0.0] * n_qubits**2
 
-    assert len(theta) == theta_shape(n_qubits, entangle_strat)
+    # assert len(theta) == theta_shape(n_qubits, entangle_strat)
 
     if entangle_strat == "one_to_one":
         for i in range(n_qubits - 1):
@@ -78,6 +77,81 @@ def u_enc(n_qubits: int, s: Sequence[float], lam: Sequence[float]):
         qml.RZ(lam[n_qubits + i] * s[i], wires=i)
 
 
+def get_unlearnable_qnn(
+    n_qubits: int,
+    n_layers: int,
+    observables: Sequence,
+    entangle_strat: str = "circular",
+    device: str = "default.qubit",
+) -> tuple[qml.QNode, dict[str, tuple[int, int]]]:
+    dev = qml.device(device, wires=n_qubits)
+
+    @qml.qnode(dev, interface="torch")
+    def qnn(inputs, phi, lam):
+        for i in range(n_qubits):
+            qml.Hadamard(wires=i)
+
+        for i in range(n_layers):
+            u_var(
+                n_qubits,
+                phi[i],
+                learnable=False,
+                entangle_strat=entangle_strat,
+            )
+            u_enc(n_qubits, inputs, lam[i])
+        u_var(
+            n_qubits,
+            phi[-1],
+            learnable=False,
+            entangle_strat=entangle_strat,
+        )
+
+        return [o() for o in observables]
+
+    weight_shapes = {
+        "phi": (n_layers + 1, 2 * n_qubits),
+        "lam": (n_layers, 2 * n_qubits),
+    }
+
+    return qnn, weight_shapes
+
+
+def get_learnable_qnn(
+    n_qubits: int,
+    n_layers: int,
+    observables: Sequence,
+    entangle_strat: str = "circular",
+    device: str = "default.qubit",
+) -> tuple[qml.QNode, dict[str, tuple[int, int]]]:
+    dev = qml.device(device, wires=n_qubits)
+
+    @qml.qnode(dev, interface="torch")
+    def qnn(inputs, phi, lam, theta):
+        for i in range(n_qubits):
+            qml.Hadamard(wires=i)
+
+        for i in range(n_layers):
+            u_var(
+                n_qubits,
+                phi[i],
+                theta[i],
+                learnable=True,
+                entangle_strat=entangle_strat,
+            )
+            u_enc(n_qubits, inputs, lam[i])
+        u_var(n_qubits, phi[-1], learnable=True, entangle_strat=entangle_strat)
+
+        return [o() for o in observables]
+
+    weight_shapes = {
+        "phi": (n_layers + 1, 2 * n_qubits),
+        "lam": (n_layers, 2 * n_qubits),
+        "theta": (n_layers + 1, theta_shape(n_qubits, entangle_strat)),
+    }
+
+    return qnn, weight_shapes
+
+
 def get_qnn(
     n_qubits: int,
     n_layers: int,
@@ -86,38 +160,22 @@ def get_qnn(
     learnable: bool = False,
     device: str = "default.qubit",
 ) -> tuple[qml.QNode, dict[str, tuple[int, ...]]]:
-    dev = qml.device(device, wires=n_qubits)
-
-    var = partial(
-        u_var,
-        n_qubits,
-        learnable=learnable,
-        entangle_strat=entangle_strat,
-    )
-
-    @qml.qnode(dev, interface="torch")
-    def qnn(inputs, phi, lam, theta=[None] * n_layers):
-
-        for i in range(n_qubits):
-            qml.Hadamard(wires=i)
-
-        for i in range(n_layers):
-            var(phi[i], theta[i])
-            u_enc(n_qubits, inputs, lam[i])
-        var(phi[-1], theta[-1])
-
-        return [o() for o in observables]
-
-    weight_shapes = {
-        "phi": (n_layers + 1, 2 * n_qubits),
-        "lam": (n_layers, 2 * n_qubits),
-        "theta": (0,),
-    }
 
     if learnable:
-        weight_shapes["theta"] = (
+        qnn, weight_shapes = get_learnable_qnn(
+            n_qubits,
             n_layers,
-            theta_shape(n_qubits, entangle_strat),
+            observables,
+            entangle_strat,
+            device,
+        )
+    else:
+        qnn, weight_shapes = get_unlearnable_qnn(
+            n_qubits,
+            n_layers,
+            observables,
+            entangle_strat,
+            device,
         )
 
     return qnn, weight_shapes  # type: ignore
@@ -132,9 +190,9 @@ if __name__ == "__main__":
         ),
     ]
     test_input = np.array([0.1, 0.2, 0.3, 0.4])
-    qnn, shapes = get_qnn(4, 2, observables)
+    qnn, shapes = get_qnn(4, 2, observables, learnable=True)
     phi = np.random.rand(3, 8)
     lam = np.random.rand(2, 8)
     theta = np.random.rand(3, 4)
-    print(qnn(test_input, phi, lam))
+    print(qnn(test_input, phi, lam, theta))
     print(shapes)
