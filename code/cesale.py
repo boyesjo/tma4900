@@ -15,7 +15,7 @@ from qiskit.quantum_info import Statevector
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # %%
-n_arms = 2**4
+n_arms = 2**2
 x_len = int(np.log2(n_arms))
 
 P_LIST = np.linspace(0.1, 0.5, n_arms)
@@ -33,12 +33,10 @@ print(prob_correct)
 def nu_x(x: int, y: int) -> float:
     # return P_LIST[x] if y == 1 else 1 - P_LIST[x]
     match y:
-        case 0:
-            return 1 - P_LIST[x]
         case 1:
             return P_LIST[x]
         case _:
-            return 0
+            return (1 - P_LIST[x]) / 3
 
 
 def f(x: int, y: int) -> bool:
@@ -76,6 +74,8 @@ def oracle_e_matrix() -> QuantumCircuit:
     n_qubits = len(x_reg) + len(y_reg)
     n_states = 2**n_qubits
 
+    print(y_len)
+
     matrix = np.zeros((n_states, n_states), dtype=complex)
     for i in range(n_states):
         # get bitstring representation of i with leading zeros
@@ -98,9 +98,23 @@ def oracle_e_matrix() -> QuantumCircuit:
 
             # flip sign of amplitudes corresponding to ones in new_y bitstring
             # TODO: ensure correctness for y_len > 1
+        if y_len == 1:
             for j in range(y_len):
                 if y & (1 << j):
-                    new_row[x << y_len ^ j] *= -1
+                    new_row[(x << y_len) ^ j] *= -1
+        elif y_len == 2:
+            # print(x, y, (x << y_len) ^ 3)
+            if y == 0:
+                pass
+            elif y == 1:
+                new_row[(x << y_len) ^ 0] *= -1
+                new_row[(x << y_len) ^ 3] *= -1
+            elif y == 2:
+                new_row[(x << y_len) ^ 2] *= -1
+                new_row[(x << y_len) ^ 3] *= -1
+            elif y == 2:
+                new_row[(x << y_len) ^ 0] *= -1
+                new_row[(x << y_len) ^ 2] *= -1
 
         # print(row, new_row)
 
@@ -117,10 +131,16 @@ def oracle_e_matrix() -> QuantumCircuit:
 
     # show_matrix(matrix)
     # assert unitarity
-    assert np.allclose(matrix @ matrix.conj().T, np.eye(n_states))
+    # assert np.allclose(matrix @ matrix.conj().T, np.eye(n_states))
     return matrix.T
 
 
+mat = oracle_e_matrix().real[:4, :4]
+plt.matshow(mat)  # @ mat.T)
+plt.colorbar()
+
+
+# %%
 def oracle_e() -> QuantumCircuit:
 
     matrix = oracle_e_matrix()

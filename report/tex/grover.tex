@@ -29,102 +29,14 @@ Define the state $\ket{s'}$ by subtracting the projection of $\ket{w}$ onto $\ke
 \end{equation}
 These two orthogonal states from a basis of a two-dimensional subspace of the greater Hilbert space.
 The uniform superposition state $\ket{s}$ serves as a starting point for the algorithm, and is achieved by applying Hadamard gates to all qubits.
-It is expressible as $\ket{s} = \cos(\theta)\ket{s'} + \sin{(\theta)}\ket{w}$, where = $\theta=\arcsin(1/\sqrt{N})$, and it can be seen as a point in the $s$-$w$-plane, thus:
-% define figsize 
-\begin{center}
-    \begin{tikzpicture}
-        \coordinate (O) at (0,0);
-        \coordinate (S) at (5,0);
-        \coordinate (W) at (0,5);
-        \coordinate (P) at ({5*cos(20)}, {5*sin(20)});
-
-        % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
-        \draw[->] (O) -- (W) node[above] {$\ket{w}$};
-        % \draw[->, blue] (o) -- (psi) node[above] {$\ket{\psi}$ = $\ket{s}$};
-
-        \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
-        \draw[->, blue] (O) -- (P) node[right] {$\ket{\psi}$ = $\ket{s}$};
-        \pic[
-            "$\theta$",
-            draw=black,
-            angle radius = 1cm,
-            pic text options={
-                    shift = {(0.6 cm, 0.1 cm)}
-                }
-        ] {angle = S--O--P};
-    \end{tikzpicture}
-\end{center}
+It is expressible as $\ket{s} = \cos(\theta)\ket{s'} + \sin{(\theta)}\ket{w}$, where $\theta=\arcsin\bra{s}\ket{w}=\arcsin{}(1/\sqrt{N})$.x
 
 Applying the oracle on $\ket{s}$ leaves its $\ket{s'}$ component unchanged, but flips the sign of the $\ket{w}$ component.
 This results in the state $\ket{\psi} = \cos(-\theta)\ket{s'} + \sin{(-\theta)}\ket{s'}$, which can be seen as reflection of $\ket{s}$ in the $\ket{s'}$ direction.
 
 
-\begin{center}
-    \begin{tikzpicture}
-        \coordinate (O) at (0,0);
-        \coordinate (S) at (5,0);
-        \coordinate (W) at (0,5);
-        \coordinate (P) at ({5*cos(20)}, {5*sin(20)});
-        \coordinate (P2) at ({5*cos(20)}, {5*sin(-20)});
-
-        % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
-        \draw[->] (O) -- (W) node[above] {$\ket{w}$};
-        % \draw[->, blue] (o) -- (psi) node[above] {$\ket{\psi}$ = $\ket{s}$};
-
-        \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
-        \draw[->] (O) -- (P) node[above] {$\ket{s}$};
-        \draw[->, blue] (O) -- (P2) node[right] {$\ket{\psi}=\mathcal{O}_f\ket{s}$};
-        \pic[
-            "$\theta$",
-            draw=black,
-            angle radius = 1cm,
-            pic text options={
-                    shift = {(0.6 cm, -0.1 cm)}
-                }
-        ] {angle = P2--O--S};
-        \pic[
-            <-,
-            draw=gray,
-            angle radius = 4cm,
-        ] {angle = P2--O--P};
-    \end{tikzpicture}
-\end{center}
-
 Next, the state $\ket{\psi}$ is reflected about the initial $\ket{s}$ state, resulting in the state $\ket{\psi'} = \cos(3\theta)\ket{s'} + \sin(3\theta)\ket{w}$.
 Reflection thus is achieved by the diffusion operator $R=H^{\otimes n} S_0 (H^{\otimes n})^{-1}$ = $H^{\otimes n} S_0 H^{\otimes n}$, where $S_0= 2\ketbra{0}{0} - I$ is the reflection operator about the $\ket{0}$ state, that is an operator that flips the sign of all but the $\ket{0}$ component.
-
-\begin{center}
-    \begin{tikzpicture}
-        \coordinate (O) at (0,0);
-        \coordinate (S) at (5,0);
-        \coordinate (W) at (0,5);
-        \coordinate (P) at ({5*cos(20)}, {5*sin(20)});
-        \coordinate (P2) at ({5*cos(20)}, {5*sin(-20)});
-        \coordinate (P3) at ({5*cos(60)}, {5*sin(60)});
-
-        % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
-        \draw[->] (O) -- (W) node[above] {$\ket{w}$};
-        % \draw[->, blue] (o) -- (psi) node[above] {$\ket{\psi}$ = $\ket{s}$};
-
-        \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
-        \draw[->] (O) -- (P) node[above] {$\ket{s}$};
-        \draw[->] (O) -- (P2) node[right] {$\ket{\psi}=\mathcal{O}_f\ket{s}$};
-        \draw[->, blue] (O) -- (P3) node[right] {$\ket{\psi}=R\mathcal{O}_f\ket{s}$};
-        \pic[
-            "$2\theta$",
-            draw=black,
-            angle radius = 1cm,
-            pic text options={
-                    shift = {(0.6 cm, 0.4 cm)}
-                }
-        ] {angle = P--O--P3};
-        \pic[
-            ->,
-            draw=gray,
-            angle radius = 4cm,
-        ] {angle = P2--O--P3};
-    \end{tikzpicture}
-\end{center}
 
 The product of the oracle and the diffusion operator defines the Grover operator, which is simply applied until the amplitude of the  $\ket{w}$ is sufficiently amplified.
 After $k$ iterations, the state is $\ket{\psi_k} = \cos((2k+1)\theta)\ket{s'} + \sin((2k+1)\theta)\ket{w}$.
@@ -136,10 +48,12 @@ Assuming large $N$, for a short list would not warrant the use of Grover's algor
 \begin{figure}
     \centering
     \begin{tikzpicture}
+        \node (O) at (3,3) {\bf{(a)}};
+        \def\ang{15}
         \coordinate (O) at (0,0);
         \coordinate (S) at (3,0);
         \coordinate (W) at (0,3);
-        \coordinate (P) at ({3*cos(20)}, {3*sin(20)});
+        \coordinate (P) at ({3*cos(\ang)}, {3*sin(\ang)});
 
         % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
         \draw[->] (O) -- (W) node[above] {$\ket{w}$};
@@ -152,68 +66,108 @@ Assuming large $N$, for a short list would not warrant the use of Grover's algor
             draw=black,
             angle radius = 1cm,
             pic text options={
-                    shift = {(0.6 cm, 0.1 cm)}
+                    shift = {(0.8 cm, 0.1 cm)}
                 }
         ] {angle = S--O--P};
 
+        \begin{scope}[shift={(6, 0)}]
+            \node (O) at (3,3) {\bf{(b)}};
+            \coordinate (O) at (0,0);
+            \coordinate (S) at (3,0);
+            \coordinate (W) at (0,3);
+            \coordinate (P) at ({3*cos(\ang)}, {3*sin(\ang)});
+            \coordinate (P2) at ({3*cos(-\ang)}, {3*sin(-\ang)});
 
-        \coordinate (O) at (5,0);
-        \coordinate (S) at (8,0);
-        \coordinate (W) at (5,3);
-        \coordinate (P) at ({5+3*cos(20)}, {3*sin(20)});
-        \coordinate (P2) at ({5+3*cos(20)}, {3*sin(-20)});
+            % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
+            \draw[->] (O) -- (W) node[above] {$\ket{w}$};
+            % \draw[->, blue] (o) -- (psi) node[above] {$\ket{\psi}$ = $\ket{s}$};
 
-        % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
-        \draw[->] (O) -- (W) node[above] {$\ket{w}$};
-        % \draw[->, blue] (o) -- (psi) node[above] {$\ket{\psi}$ = $\ket{s}$};
+            \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
+            \draw[->] (O) -- (P) node[above] {$\ket{s}$};
+            \draw[->, blue] (O) -- (P2) node[right] {$\ket{\psi}=\mathcal{O}_f\ket{s}$};
+            \pic[
+                "-$\theta$",
+                draw=black,
+                angle radius = 1cm,
+                pic text options={
+                        shift = {(0.8 cm, -0.1 cm)}
+                    }
+            ] {angle = P2--O--S};
+            \pic[
+                <-,
+                draw=gray,
+                angle radius = 2.5cm,
+            ] {angle = P2--O--P};
+        \end{scope}
 
-        \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
-        \draw[->] (O) -- (P) node[above] {$\ket{s}$};
-        \draw[->, blue] (O) -- (P2) node[right] {$\ket{\psi}=\mathcal{O}_f\ket{s}$};
-        \pic[
-            "$-\theta$",
-            draw=black,
-            angle radius = 1cm,
-            pic text options={
-                    shift = {(0.8 cm, -0.1 cm)}
-                }
-        ] {angle = P2--O--S};
-        \pic[
-            <-,
-            draw=gray,
-            angle radius = 2.5cm,
-        ] {angle = P2--O--P};
+        \begin{scope}[shift={(0, -6)}]
+            \node (O) at (3,3) {\bf{(c)}};
+            \coordinate (O) at (0,0);
+            \coordinate (S) at (3,0);
+            \coordinate (W) at (0,3);
+            \coordinate (P) at ({3*cos(\ang)}, {3*sin(\ang)});
+            \coordinate (P2) at ({3*cos(-\ang)}, {3*sin(-\ang)});
+            \coordinate (P3) at ({3*cos(3*\ang)}, {3*sin(3*\ang)});
+
+            % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
+            \draw[->] (O) -- (W) node[above] {$\ket{w}$};
+            % \draw[->, blue] (o) -- (psi) node[above] {$\ket{\psi}$ = $\ket{s}$};
+
+            \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
+            \draw[->] (O) -- (P) node[above] {$\ket{s}$};
+            \draw[->] (O) -- (P2) node[right] {$\mathcal{O}_f\ket{s}$};
+            \draw[->, blue] (O) -- (P3) node[right] {$\ket{\psi}=R\mathcal{O}_f\ket{s}$};
+            \pic[
+                "$2\theta$",
+                draw=black,
+                angle radius = 1cm,
+                pic text options={
+                        shift = {(0.6 cm, 0.4 cm)}
+                    }
+            ] {angle = P--O--P3};
+            \pic[
+                ->,
+                draw=gray,
+                angle radius = 2.5cm,
+            ] {angle = P2--O--P3};
+        \end{scope}
 
 
-        \coordinate (O) at (0,-5);
-        \coordinate (S) at (3,-5);
-        \coordinate (W) at (0,-2);
-        \coordinate (P) at ({3*cos(20)}, {-5+3*sin(20)});
-        \coordinate (P2) at ({3*cos(20)}, {-5+3*sin(-20)});
-        \coordinate (P3) at ({3*cos(60)}, {-5+3*sin(60)});
+        \begin{scope}[shift={(6, -6)}]
+            \node (O) at (3,3) {\bf{(d)}};
+            \def\ang{7}
+            \coordinate (O) at (0,0);
+            \coordinate (S) at (3,0);
+            \coordinate (W) at (0,3);
+            \coordinate (P) at ({3*cos(\ang)}, {3*sin(\ang)});
+            % \coordinate (P2) at ({3*cos(-\ang)}, {3*sin(-\ang)});
+            % \coordinate (P3) at ({3*cos(3*\ang)}, {3*sin(3*\ang)});
+            \coordinate (P4) at ({3*cos(12*\ang)}, {3*sin(12*\ang)});
 
-        % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
-        \draw[->] (O) -- (W) node[above] {$\ket{w}$};
-        % \draw[->, blue] (o) -- (psi) node[above] {$\ket{\psi}$ = $\ket{s}$};
+            % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
+            \draw[->] (O) -- (W) node[above] {$\ket{w}$};
+            % \draw[->, blue] (o) -- (psi) node[above] {$\ket{\psi}$ = $\ket{s}$};
 
-        \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
-        \draw[->] (O) -- (P) node[above] {$\ket{s}$};
-        \draw[->] (O) -- (P2) node[right] {$\ket{\psi}=\mathcal{O}_f\ket{s}$};
-        \draw[->, blue] (O) -- (P3) node[right] {$\ket{\psi}=R\mathcal{O}_f\ket{s}$};
-        \pic[
-            "$2\theta$",
-            draw=black,
-            angle radius = 1cm,
-            pic text options={
-                    shift = {(0.6 cm, 0.4 cm)}
-                }
-        ] {angle = P--O--P3};
-        \pic[
-            ->,
-            draw=gray,
-            angle radius = 2.5cm,
-        ] {angle = P2--O--P3};
+            \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
+            \draw[->] (O) -- (P) node[above] {$\ket{s}$};
+            % \draw[->] (O) -- (P2) node[right] {$\ket{\psi}=\mathcal{O}_f\ket{s}$};
+            \draw[->, blue] (O) -- (P4) node[right] {$\ket{\psi}=G^k\ket{s}$};
+            \pic[
+                "$(2k+1)\theta$",
+                draw=black,
+                angle radius = 1cm,
+                pic text options={
+                        shift = {(1.2 cm, 0.4 cm)}
+                    }
+            ] {angle = S--O--P4};
+        \end{scope}
     \end{tikzpicture}
-    \caption{Grover's algorithm.}
+    \caption{
+        Grover's algorithm visualised.
+        (a) The initial uniform superposition state $\ket{s}$ is prepared, which can be seen as a linear combination of $\ket{w}$ and $\ket{s'}$, forming an angle $\theta$ to the $s'$-axis.
+        (b) The oracle $\mathcal{O}_f$ is applied to $\ket{s}$, flipping the sign of its $\ket{w}$ component, inverting the angle $\theta$.
+        (c) The reflection operator $R$ is applied, reflecting the state about the initial state and towards the goal, resulting in a state with an angle $3\theta$ to the $w$-axis.
+        (d) After repeating the previous two steps a $k$ times, the angle is $2k+1\theta$, and if $k$ is chosen wisely, this means that the system is in a state close to the desired state $\ket{w}$, such that measuring the system will likely result in $\ket{w}$.
+    }
     \label{fig:grover}
 \end{figure}
