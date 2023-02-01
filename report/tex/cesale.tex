@@ -1,0 +1,11 @@
+\chapter{Quantum bandits}
+\label{chap:qbandits}
+
+Several formulations of the multi-armed bandit problem have been made for a quantum computing setting.
+As the central issue in bandit problems lie in sample efficiency rather than computational difficulties, quantum computers offer little advantage assuming classical bandits.
+However, by allowing bandits to be queried in superposition, major speed-ups can be achieved.
+For such bandits, regret minimisation is no longer a valid objective, and instead the problem is to find a strategy that maximises the probability of finding the optimal arm with as few queries as possible.
+
+\section{Casalé}
+In \cite{casale2020}, an algorithm based on amplitude amplification is proposed and is shown to find the optimal arm with quadratically fewer queries than the best classical algorithm for classical bandits — albeit with a significant drawback: the probability of the correct arm being suggested can not be set arbitrarily high, but is instead given by the ratio of the best arm's mean to the sum of the means of all arms.
+This

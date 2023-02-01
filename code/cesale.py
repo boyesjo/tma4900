@@ -4,18 +4,13 @@ import warnings
 import matplotlib.pyplot as plt
 import numpy as np
 from qiskit import (
-    IBMQ,
     Aer,
     ClassicalRegister,
     QuantumCircuit,
     QuantumRegister,
     assemble,
-    transpile,
 )
-from qiskit.algorithms import AmplificationProblem, AmplitudeAmplifier, Grover
-from qiskit.circuit import Gate
-from qiskit.quantum_info import Operator, Statevector
-from scipy.stats import norm
+from qiskit.quantum_info import Statevector
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -23,11 +18,27 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 n_arms = 2**4
 x_len = int(np.log2(n_arms))
 
-P_LIST = np.linspace(0, 1, n_arms)
+P_LIST = np.linspace(0.1, 0.5, n_arms)
+# P_LIST = np.random.uniform(0, 1, n_arms) / 100
+# P_LIST = np.sort(P_LIST)
+# P_LIST = np.array([0.5, 0.5, 0.5, 1.0])
+best_arm = np.argmax(P_LIST)
+prob_correct = np.max(P_LIST) / np.sum(P_LIST)
+print(P_LIST)
+print(prob_correct)
+
+# %%
 
 
 def nu_x(x: int, y: int) -> float:
-    return P_LIST[x] if y == 1 else 1 - P_LIST[x]
+    # return P_LIST[x] if y == 1 else 1 - P_LIST[x]
+    match y:
+        case 0:
+            return 1 - P_LIST[x]
+        case 1:
+            return P_LIST[x]
+        case _:
+            return 0
 
 
 def f(x: int, y: int) -> bool:
@@ -35,7 +46,7 @@ def f(x: int, y: int) -> bool:
     return y == 1
 
 
-y_len = 1
+y_len = 2
 x_reg = QuantumRegister(x_len, name="x")
 y_reg = QuantumRegister(y_len, name="y")
 # all_qubits = [*y_reg, *x_reg]
@@ -127,18 +138,20 @@ def oracle_e_adj() -> QuantumCircuit:
     return qc
 
 
-qc = QuantumCircuit(y_reg, x_reg)
-# qc.x(x_reg)
-# qc.x(y_reg)
-qc = qc.compose(oracle_e())
-# qc += oracle_e()
-backend = Aer.get_backend("statevector_simulator")
-job = backend.run(assemble(qc))
-result = job.result()
-statevector = Statevector(result.get_statevector())
-statevector.draw("latex")
-# probs = np.abs(statevector.data) ** 2
-# probs
+def test_oracle_e() -> None:
+    qc = QuantumCircuit(y_reg, x_reg)
+    # qc.x(x_reg)
+    # qc.x(y_reg)
+    qc = qc.compose(oracle_e())
+    # qc += oracle_e()
+    backend = Aer.get_backend("statevector_simulator")
+    job = backend.run(assemble(qc))
+    result = job.result()
+    statevector = Statevector(result.get_statevector())
+    statevector.draw("latex")
+    # probs = np.abs(statevector.data) ** 2
+    # probs
+
 
 # %%
 def a_op() -> QuantumCircuit:
@@ -170,18 +183,19 @@ def oracle_f() -> QuantumCircuit:
     return qc
 
 
-qc = QuantumCircuit(y_reg, x_reg)
-# qc.x(x_reg[0])
-# qc.x(y_reg)
-qc.h(all_qubits)
-qc = qc.compose(oracle_f())
-backend = Aer.get_backend("statevector_simulator")
-job = backend.run(assemble(qc))
-result = job.result()
-statevector = Statevector(result.get_statevector())
-statevector.draw("latex")
-# probs = np.abs(statevector.data) ** 2
-# probs
+def test_oracle_f() -> None:
+    qc = QuantumCircuit(y_reg, x_reg)
+    # qc.x(x_reg[0])
+    # qc.x(y_reg)
+    qc.h(all_qubits)
+    qc = qc.compose(oracle_f())
+    backend = Aer.get_backend("statevector_simulator")
+    job = backend.run(assemble(qc))
+    result = job.result()
+    statevector = Statevector(result.get_statevector())
+    statevector.draw("latex")
+    # probs = np.abs(statevector.data) ** 2
+    # probs
 
 
 # %%
@@ -197,19 +211,21 @@ def s0(reg) -> QuantumCircuit:
     return qc
 
 
-qc = QuantumCircuit(y_reg, x_reg)
-qc.h(all_qubits)
-# qc.x(x_reg)
-# qc.x(y_reg)
-# qc = qc.compose(s0(x_reg), x_reg)
-qc = qc.compose(s0(x_reg), x_reg)
-backend = Aer.get_backend("statevector_simulator")
-job = backend.run(assemble(qc))
-result = job.result()
-statevector = Statevector(result.get_statevector())
-statevector.draw("latex")
-# probs = np.abs(statevector.data) ** 2
-# probs
+def test_s0() -> None:
+
+    qc = QuantumCircuit(y_reg, x_reg)
+    qc.h(all_qubits)
+    # qc.x(x_reg)
+    # qc.x(y_reg)
+    # qc = qc.compose(s0(x_reg), x_reg)
+    qc = qc.compose(s0(x_reg), x_reg)
+    backend = Aer.get_backend("statevector_simulator")
+    job = backend.run(assemble(qc))
+    result = job.result()
+    statevector = Statevector(result.get_statevector())
+    statevector.draw("latex")
+    # probs = np.abs(statevector.data) ** 2
+    # probs
 
 
 # %%
@@ -235,16 +251,62 @@ def qbai(n):
 qbai(2).draw("mpl")
 
 # %%
-n = 1
+SHOTS = 10_000
+# ideal_n = 0.25 * np.pi / np.sqrt(np.mean(P_LIST)) - 0.5
+# n = round(ideal_n)
+# find some multiple of ideal_n that is approximately an integer
+
+
+# def get_n(k=0):
+#     return 0.25 * (np.pi + 2 * k) / np.sqrt(np.mean(P_LIST)) - 0.5
+
+
+# k = 1
+# n = get_n()
+# while abs(round(n) - n) > 1e-2:
+#     n = get_n(k)
+#     k += 1
+# print(n)
+# n = round(n)
+
+
+def optimial_n(theta: float) -> float:
+    # solve for n in the equation
+    # sin((2n+1)theta)^2 = 1
+    from scipy.optimize import fsolve
+
+    def _func(n):
+        return np.sin((2 * n + 1) * theta) - 1
+
+    n = fsolve(_func, 1)
+
+    return float(n)
+
+
+theta = np.arcsin(np.sqrt(np.mean(P_LIST)))
+ideal_n = optimial_n(theta)
+n = round(ideal_n)
+
+# n = max(n, 1)
 backed = Aer.get_backend("qasm_simulator")
-qc = qbai(2)
-job = backed.run(qc, shots=1000)
+qc = qbai(n)
+job = backed.run(qc, shots=SHOTS)
 result = job.result()
 
 # plot results of measurement with int as x-axis
 counts = result.get_counts()
-counts = {int(k, 2): v for k, v in counts.items()}
-plt.bar(counts.keys(), counts.values())
+counts = {int(k, 2): v / SHOTS for k, v in counts.items()}
+colors = ["red" if k == best_arm else "blue" for k in counts.keys()]
+plt.title(f"{ideal_n=:2.2f}, {n=:}")
+plt.bar(counts.keys(), counts.values(), color=colors)
+plt.axhline(prob_correct, color="black", linestyle="--")
+plt.axhline(1 / 2**x_len, color="black", linestyle="--")
 plt.show()
 
+
+# # %%
+# theta = np.arcsin(np.mean(P_LIST))
+# x = np.linspace(0, 200, num=1000)
+# y = np.sin((2 * x + 1) * theta)
+# plt.plot(x, y)
 # %%

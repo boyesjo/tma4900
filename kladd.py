@@ -1,11 +1,12 @@
 # %%
 import numpy as np
 import sympy
+from sympy import kronecker_product as kron
 
 # %%
-pauli_z = sympy.Matrix([[1, 0], [0, -1]])
-pauli_x = sympy.Matrix([[0, 1], [1, 0]])
-pauli_y = sympy.Matrix([[0, -1j], [1j, 0]])
+z = sympy.Matrix([[1, 0], [0, -1]])
+x = sympy.Matrix([[0, 1], [1, 0]])
+y = sympy.Matrix([[0, -1j], [1j, 0]])
 i = sympy.Matrix([[1, 0], [0, 1]])
 theta = sympy.Symbol("theta")
 
@@ -16,16 +17,22 @@ c_x = sympy.Matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 1], [0, 0, 1, 0]])
 c_x
 
 # %%
-zz = sympy.kronecker_product(pauli_z, pauli_z)
+zz = sympy.kronecker_product(z, z)
 r_zz = sympy.exp(-0.5j * theta * zz)
 r_zz
 
 # %%
-rz = sympy.exp(-0.5j * theta * pauli_z)
-rz_neg = sympy.exp(0.5j * theta * pauli_z)
+rz = sympy.exp(-0.5j * theta * z)
+rz_neg = sympy.exp(0.5j * theta * z)
 rz
 
 # %%
-c_x @ sympy.kronecker_product(i, rz) @ c_x
+c_x @ kron(i, rz) @ c_x
+
+# %%
+c_z
+# %%
+
+kron(z, z, z) @ c_x
 
 # %%

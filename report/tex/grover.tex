@@ -1,0 +1,219 @@
+\chapter{Quantum algorithms}
+
+\section{Grover's algorithm}
+The quantum search algorithm of Grover \cite{grover1996} is a quantum algorithm that finds an element in an unstructured list with high probability.
+While such a problem necessarily requires $O(N)$ time in a classical setting, needing on average $N/2$ steps to find the element and in the worst case $N$, Grover's algorithm finds the element in $O(\sqrt{N})$ steps.
+This is a quadratic speed-up.
+
+Grover's algorithm is provably optimal; no quantum algorithm can perform such general searches faster.
+This should not be surprising.
+If an exponential speed-up were possible, it could be used to find the solution to NP-hard problems fast.
+
+For Grover's algorithm to work, assume there is a function $f:\{0,\dots,N-1\}\to\{0,1\}$ that maps the index of an element to $1$ if it is the one desired and $0$ otherwise.
+Then, one assumes access to a quantum oracle, $\mathcal{O}_f$
+(effectively a black box subroutine) that implements $f$ thus:
+\begin{equation}
+    \label{eq:grover_oracle}
+    \mathcal{O}_f \ket{x} = (-1)^{f(x)} \ket{x}.
+\end{equation}
+A single application of this oracle is not enough to find the desired element, as the square of the amplitude of the desired element remains unchanged.
+Central to Grover's algorithm is the idea of amplifying the amplitude of the desired element.
+This is done by applying a sequence of operations that is repeated until the amplitude of the desired element is large enough for it is most likely to be measured, while the amplitudes of the other elements are reduced.
+
+Let the state $\ket{w}$ which be the winner state, a state with amplitude $1$ for the desired element and $0$ for all others.
+Then consider the state $\ket{s}$, which is a uniform superposition state, a state with equal amplitudes for all elements.
+Define the state $\ket{s'}$ by subtracting the projection of $\ket{w}$ onto $\ket{s}$ from $\ket{s}$:
+\begin{equation}
+    \label{eq:grover_s'}
+    \ket{s'} = \ket{s} - \bra{w}\ket{s}\ket{w}.
+\end{equation}
+These two orthogonal states from a basis of a two-dimensional subspace of the greater Hilbert space.
+The uniform superposition state $\ket{s}$ serves as a starting point for the algorithm, and is achieved by applying Hadamard gates to all qubits.
+It is expressible as $\ket{s} = \cos(\theta)\ket{s'} + \sin{(\theta)}\ket{w}$, where = $\theta=\arcsin(1/\sqrt{N})$, and it can be seen as a point in the $s$-$w$-plane, thus:
+% define figsize 
+\begin{center}
+    \begin{tikzpicture}
+        \coordinate (O) at (0,0);
+        \coordinate (S) at (5,0);
+        \coordinate (W) at (0,5);
+        \coordinate (P) at ({5*cos(20)}, {5*sin(20)});
+
+        % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
+        \draw[->] (O) -- (W) node[above] {$\ket{w}$};
+        % \draw[->, blue] (o) -- (psi) node[above] {$\ket{\psi}$ = $\ket{s}$};
+
+        \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
+        \draw[->, blue] (O) -- (P) node[right] {$\ket{\psi}$ = $\ket{s}$};
+        \pic[
+            "$\theta$",
+            draw=black,
+            angle radius = 1cm,
+            pic text options={
+                    shift = {(0.6 cm, 0.1 cm)}
+                }
+        ] {angle = S--O--P};
+    \end{tikzpicture}
+\end{center}
+
+Applying the oracle on $\ket{s}$ leaves its $\ket{s'}$ component unchanged, but flips the sign of the $\ket{w}$ component.
+This results in the state $\ket{\psi} = \cos(-\theta)\ket{s'} + \sin{(-\theta)}\ket{s'}$, which can be seen as reflection of $\ket{s}$ in the $\ket{s'}$ direction.
+
+
+\begin{center}
+    \begin{tikzpicture}
+        \coordinate (O) at (0,0);
+        \coordinate (S) at (5,0);
+        \coordinate (W) at (0,5);
+        \coordinate (P) at ({5*cos(20)}, {5*sin(20)});
+        \coordinate (P2) at ({5*cos(20)}, {5*sin(-20)});
+
+        % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
+        \draw[->] (O) -- (W) node[above] {$\ket{w}$};
+        % \draw[->, blue] (o) -- (psi) node[above] {$\ket{\psi}$ = $\ket{s}$};
+
+        \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
+        \draw[->] (O) -- (P) node[above] {$\ket{s}$};
+        \draw[->, blue] (O) -- (P2) node[right] {$\ket{\psi}=\mathcal{O}_f\ket{s}$};
+        \pic[
+            "$\theta$",
+            draw=black,
+            angle radius = 1cm,
+            pic text options={
+                    shift = {(0.6 cm, -0.1 cm)}
+                }
+        ] {angle = P2--O--S};
+        \pic[
+            <-,
+            draw=gray,
+            angle radius = 4cm,
+        ] {angle = P2--O--P};
+    \end{tikzpicture}
+\end{center}
+
+Next, the state $\ket{\psi}$ is reflected about the initial $\ket{s}$ state, resulting in the state $\ket{\psi'} = \cos(3\theta)\ket{s'} + \sin(3\theta)\ket{w}$.
+Reflection thus is achieved by the diffusion operator $R=H^{\otimes n} S_0 (H^{\otimes n})^{-1}$ = $H^{\otimes n} S_0 H^{\otimes n}$, where $S_0= 2\ketbra{0}{0} - I$ is the reflection operator about the $\ket{0}$ state, that is an operator that flips the sign of all but the $\ket{0}$ component.
+
+\begin{center}
+    \begin{tikzpicture}
+        \coordinate (O) at (0,0);
+        \coordinate (S) at (5,0);
+        \coordinate (W) at (0,5);
+        \coordinate (P) at ({5*cos(20)}, {5*sin(20)});
+        \coordinate (P2) at ({5*cos(20)}, {5*sin(-20)});
+        \coordinate (P3) at ({5*cos(60)}, {5*sin(60)});
+
+        % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
+        \draw[->] (O) -- (W) node[above] {$\ket{w}$};
+        % \draw[->, blue] (o) -- (psi) node[above] {$\ket{\psi}$ = $\ket{s}$};
+
+        \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
+        \draw[->] (O) -- (P) node[above] {$\ket{s}$};
+        \draw[->] (O) -- (P2) node[right] {$\ket{\psi}=\mathcal{O}_f\ket{s}$};
+        \draw[->, blue] (O) -- (P3) node[right] {$\ket{\psi}=R\mathcal{O}_f\ket{s}$};
+        \pic[
+            "$2\theta$",
+            draw=black,
+            angle radius = 1cm,
+            pic text options={
+                    shift = {(0.6 cm, 0.4 cm)}
+                }
+        ] {angle = P--O--P3};
+        \pic[
+            ->,
+            draw=gray,
+            angle radius = 4cm,
+        ] {angle = P2--O--P3};
+    \end{tikzpicture}
+\end{center}
+
+The product of the oracle and the diffusion operator defines the Grover operator, which is simply applied until the amplitude of the  $\ket{w}$ is sufficiently amplified.
+After $k$ iterations, the state is $\ket{\psi_k} = \cos((2k+1)\theta)\ket{s'} + \sin((2k+1)\theta)\ket{w}$.
+Measuring the correct state has probability $\sin^2((2k+1)\theta)$.
+Therefore, $k \approx {\pi}/{4\theta}$ iterations should be completed.
+Assuming large $N$, for a short list would not warrant the use of Grover's algorithm, $\theta = \arcsin{({1}/{\sqrt{N}})} \approx 1/\sqrt{N}$, and so $k \approx \pi\sqrt{N}/4$.
+
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \coordinate (O) at (0,0);
+        \coordinate (S) at (3,0);
+        \coordinate (W) at (0,3);
+        \coordinate (P) at ({3*cos(20)}, {3*sin(20)});
+
+        % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
+        \draw[->] (O) -- (W) node[above] {$\ket{w}$};
+        % \draw[->, blue] (o) -- (psi) node[above] {$\ket{\psi}$ = $\ket{s}$};
+
+        \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
+        \draw[->, blue] (O) -- (P) node[right] {$\ket{\psi}$ = $\ket{s}$};
+        \pic[
+            "$\theta$",
+            draw=black,
+            angle radius = 1cm,
+            pic text options={
+                    shift = {(0.6 cm, 0.1 cm)}
+                }
+        ] {angle = S--O--P};
+
+
+        \coordinate (O) at (5,0);
+        \coordinate (S) at (8,0);
+        \coordinate (W) at (5,3);
+        \coordinate (P) at ({5+3*cos(20)}, {3*sin(20)});
+        \coordinate (P2) at ({5+3*cos(20)}, {3*sin(-20)});
+
+        % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
+        \draw[->] (O) -- (W) node[above] {$\ket{w}$};
+        % \draw[->, blue] (o) -- (psi) node[above] {$\ket{\psi}$ = $\ket{s}$};
+
+        \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
+        \draw[->] (O) -- (P) node[above] {$\ket{s}$};
+        \draw[->, blue] (O) -- (P2) node[right] {$\ket{\psi}=\mathcal{O}_f\ket{s}$};
+        \pic[
+            "$-\theta$",
+            draw=black,
+            angle radius = 1cm,
+            pic text options={
+                    shift = {(0.8 cm, -0.1 cm)}
+                }
+        ] {angle = P2--O--S};
+        \pic[
+            <-,
+            draw=gray,
+            angle radius = 2.5cm,
+        ] {angle = P2--O--P};
+
+
+        \coordinate (O) at (0,-5);
+        \coordinate (S) at (3,-5);
+        \coordinate (W) at (0,-2);
+        \coordinate (P) at ({3*cos(20)}, {-5+3*sin(20)});
+        \coordinate (P2) at ({3*cos(20)}, {-5+3*sin(-20)});
+        \coordinate (P3) at ({3*cos(60)}, {-5+3*sin(60)});
+
+        % \draw[->] (o) -- (sp) node[right] {$\ket{s'}$};
+        \draw[->] (O) -- (W) node[above] {$\ket{w}$};
+        % \draw[->, blue] (o) -- (psi) node[above] {$\ket{\psi}$ = $\ket{s}$};
+
+        \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
+        \draw[->] (O) -- (P) node[above] {$\ket{s}$};
+        \draw[->] (O) -- (P2) node[right] {$\ket{\psi}=\mathcal{O}_f\ket{s}$};
+        \draw[->, blue] (O) -- (P3) node[right] {$\ket{\psi}=R\mathcal{O}_f\ket{s}$};
+        \pic[
+            "$2\theta$",
+            draw=black,
+            angle radius = 1cm,
+            pic text options={
+                    shift = {(0.6 cm, 0.4 cm)}
+                }
+        ] {angle = P--O--P3};
+        \pic[
+            ->,
+            draw=gray,
+            angle radius = 2.5cm,
+        ] {angle = P2--O--P3};
+    \end{tikzpicture}
+    \caption{Grover's algorithm.}
+    \label{fig:grover}
+\end{figure}

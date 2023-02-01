@@ -14,7 +14,7 @@ ENV_NAME = "CartPole-v1"
 BATCH_SIZE = 10
 EPOCHS = 2000 // BATCH_SIZE
 GAMMA = 1.0
-N_LAYERS = 1
+N_LAYERS = 5
 STATE_NORMALISER = np.array(
     [
         2.5,
@@ -29,10 +29,11 @@ model = pqcs.SoftmaxPQC(
     n_state=4,
     init_w=torch.ones(1),
     entangle_strat="all_to_all",
+    # learnable=True,
     learnable=False,
     observables=[
         lambda: qml.expval(
-            qml.PauliX(0)  # @ qml.PauliX(1) @ qml.PauliX(2) @ qml.PauliX(3)
+            qml.PauliX(0) @ qml.PauliX(1) @ qml.PauliX(2) @ qml.PauliX(3)
         ),
     ],
     post_obs=lambda x: torch.cat([x, -x], dim=1),
@@ -115,7 +116,7 @@ optimiser = optim.Adam(
         {"params": model.qnn.lam, "lr": 0.1},
         {"params": model.w, "lr": 0.1},
     ],
-    lr=0,
+    lr=0.01,
 )
 
 for epoch in range(EPOCHS):
