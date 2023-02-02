@@ -1,6 +1,6 @@
-\chapter{Quantum algorithms}
+\section{Quantum algorithms}
 
-\section{Grover's algorithm}
+\subsection{Grover's algorithm}
 The quantum search algorithm of Grover \cite{grover1996} is a quantum algorithm that finds an element in an unstructured list with high probability.
 While such a problem necessarily requires $O(N)$ time in a classical setting, needing on average $N/2$ steps to find the element and in the worst case $N$, Grover's algorithm finds the element in $O(\sqrt{N})$ steps.
 This is a quadratic speed-up.
@@ -29,7 +29,7 @@ Define the state $\ket{s'}$ by subtracting the projection of $\ket{w}$ onto $\ke
 \end{equation}
 These two orthogonal states from a basis of a two-dimensional subspace of the greater Hilbert space.
 The uniform superposition state $\ket{s}$ serves as a starting point for the algorithm, and is achieved by applying Hadamard gates to all qubits.
-It is expressible as $\ket{s} = \cos(\theta)\ket{s'} + \sin{(\theta)}\ket{w}$, where $\theta=\arcsin\bra{s}\ket{w}=\arcsin{}(1/\sqrt{N})$.x
+It is expressible as $\ket{s} = \cos(\theta)\ket{s'} + \sin{(\theta)}\ket{w}$, where $\theta=\arcsin\bra{s}\ket{w}=\arcsin{}(1/\sqrt{N})$.
 
 Applying the oracle on $\ket{s}$ leaves its $\ket{s'}$ component unchanged, but flips the sign of the $\ket{w}$ component.
 This results in the state $\ket{\psi} = \cos(-\theta)\ket{s'} + \sin{(-\theta)}\ket{s'}$, which can be seen as reflection of $\ket{s}$ in the $\ket{s'}$ direction.
