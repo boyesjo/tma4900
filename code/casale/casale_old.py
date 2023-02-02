@@ -15,13 +15,13 @@ from qiskit.quantum_info import Statevector
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 # %%
-n_arms = 2**2
+n_arms = 2**4
 x_len = int(np.log2(n_arms))
 
-P_LIST = np.linspace(0.1, 0.5, n_arms)
+P_LIST = np.linspace(0.1, 0.7, n_arms)
 # P_LIST = np.random.uniform(0, 1, n_arms) / 100
 # P_LIST = np.sort(P_LIST)
-# P_LIST = np.array([0.5, 0.5, 0.5, 1.0])
+P_LIST = np.array([0.1, 0.2, 0.3, 0.5])
 best_arm = np.argmax(P_LIST)
 prob_correct = np.max(P_LIST) / np.sum(P_LIST)
 print(P_LIST)
@@ -33,10 +33,12 @@ print(prob_correct)
 def nu_x(x: int, y: int) -> float:
     # return P_LIST[x] if y == 1 else 1 - P_LIST[x]
     match y:
+        case 0:
+            return 1 - P_LIST[x]
         case 1:
             return P_LIST[x]
         case _:
-            return (1 - P_LIST[x]) / 3
+            return 0
 
 
 def f(x: int, y: int) -> bool:
@@ -87,6 +89,10 @@ def oracle_e_matrix() -> QuantumCircuit:
 
         new_row = np.zeros(n_states, dtype=complex)
         # loop through possible y values
+        if y >= 2:
+            new_row[x << y_len | y] = 1
+            matrix[i] = new_row
+            continue
         for new_y in range(2**y_len):
             # TODO: ensure correctness for y_len > 1
             col = x << y_len | new_y ^ y
@@ -98,23 +104,23 @@ def oracle_e_matrix() -> QuantumCircuit:
 
             # flip sign of amplitudes corresponding to ones in new_y bitstring
             # TODO: ensure correctness for y_len > 1
-        if y_len == 1:
+            # if y_len == 1:
             for j in range(y_len):
                 if y & (1 << j):
                     new_row[(x << y_len) ^ j] *= -1
-        elif y_len == 2:
-            # print(x, y, (x << y_len) ^ 3)
-            if y == 0:
-                pass
-            elif y == 1:
-                new_row[(x << y_len) ^ 0] *= -1
-                new_row[(x << y_len) ^ 3] *= -1
-            elif y == 2:
-                new_row[(x << y_len) ^ 2] *= -1
-                new_row[(x << y_len) ^ 3] *= -1
-            elif y == 2:
-                new_row[(x << y_len) ^ 0] *= -1
-                new_row[(x << y_len) ^ 2] *= -1
+        # elif y_len == 2:
+        #     # print(x, y, (x << y_len) ^ 3)
+        #     if y == 0:
+        #         pass
+        #     elif y == 1:
+        #         new_row[(x << y_len) ^ 0] *= -1
+        #         new_row[(x << y_len) ^ 3] *= -1
+        #     elif y == 2:
+        #         new_row[(x << y_len) ^ 2] *= -1
+        #         new_row[(x << y_len) ^ 3] *= -1
+        #     elif y == 2:
+        #         new_row[(x << y_len) ^ 0] *= -1
+        #         new_row[(x << y_len) ^ 2] *= -1
 
         # print(row, new_row)
 
@@ -131,13 +137,8 @@ def oracle_e_matrix() -> QuantumCircuit:
 
     # show_matrix(matrix)
     # assert unitarity
-    # assert np.allclose(matrix @ matrix.conj().T, np.eye(n_states))
+    assert np.allclose(matrix @ matrix.conj().T, np.eye(n_states))
     return matrix.T
-
-
-mat = oracle_e_matrix().real[:4, :4]
-plt.matshow(mat)  # @ mat.T)
-plt.colorbar()
 
 
 # %%
