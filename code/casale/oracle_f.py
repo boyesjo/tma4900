@@ -15,8 +15,10 @@ def mat(
         # get bitstring representation of i with leading zeros
         row = format(i, f"0{x_len + y_len}b")
         x = int(row[:x_len], 2)
-        y = int(row[x_len:], 2)
-        # print(row, x, y)
+        try:
+            y = int(row[x_len:], 2)
+        except ValueError:
+            y = 0
 
         if f(x, y):
             diag[i] = -1
