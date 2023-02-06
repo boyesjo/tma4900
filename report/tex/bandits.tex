@@ -2,25 +2,25 @@
 \label{chap:bandits}
 
 \section{Problem formulation}
-In the multi-armed bandit problem, there are $k$ distributions (\enquote{arms}), $\{P_1, P_2,\dots,P_k\}$ with unknown means $\{\mu_1, \mu_2,\dots,\mu_k\}$.
+In the multi-armed bandit problem, there are $k$ distributions (\enquote{arms})  with unknown means $\{\mu_1, \mu_2,\dots,\mu_k\}$.
 For a given number of turns $T$, the goal is to maximise the expected reward by iteratively selecting a distribution to sample from.
 In particular, the goal is to minimise the regret defined as
 \begin{equation}
     R(T) = \sum_{t=1}^T \mu^* - \mu_t,
 \end{equation}
 where $\mu^*$ is the mean of the distribution with the highest mean, and $\mu_t$ is the mean of the distribution selected at time $t$.
-The number of turns $T$ is often referred to as the horizon and can be assumed to be greater than $k$.
-This poses a constant struggle between exploration and exploitation, where exploration is the process of trying out new distributions, and exploitation is the process of using the distribution with the highest mean.
+The number of turns $T$ is often referred to as the (time) horizon and will be assumed to be greater than $k$, such that all arms may be pulled.
+This poses a constant struggle between exploration and exploitation, where exploration is the process of trying out new distributions, and exploitation is the process of sampling from the distribution with the highest average thus far.
 
-Almost always, assumptions are made about the distributions.
+Assumptions are made about the distributions.
 Otherwise, composing algorithm with any sort of optimality guarantee would be futile.
-A common assumption, for example, is that the distributions are Bernoulli.
-Often they are assumed to be Gaussian with unknown mean and maybe some restrictions on the variance.
-If no assumptions are made to the type of distributions, there are likely to be assumptions made to the variance or support of the distributions.
+A common assumption, for example, is that the distributions are Bernoulli or Guassian.
+Alternatively, assumptions may be made about the distributions' support or by imposing bounds on their variances.
 
 \subsection{Best-arm identification}
 An alternative problem is to find the best arm with as few turns as possible.
 In this version, a $\delta$ is given, and the goal is to find the best arm with probability at least $1-\delta$.
+The metric here is how the turns needed grows with $\delta$.
 
 \subsection{Bandit generalisations}
 There are many generalisations to the multi-armed bandit problem.

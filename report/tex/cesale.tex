@@ -2,10 +2,26 @@
 \label{chap:qbandits}
 
 Several formulations of the multi-armed bandit problem have been made for a quantum computing setting.
-As the central issue in bandit problems lie in sample efficiency rather than computational difficulties, quantum computers offer little advantage assuming classical bandits.
+As the central issue in bandit problems lie in sample efficiency rather than computational difficulties, quant-um computers offer little advantage assuming classical bandits.
 However, by allowing bandits to be queried in superposition, major speed-ups can be achieved.
-For such bandits, regret minimisation is no longer a valid objective, and instead the problem is to find a strategy that maximises the probability of finding the optimal arm with as few queries as possible.
+
+Querying in superposition may at first appear to remove any real-world relevance; administering medications to patients can not be done in superposition.
+However, with reinforcement learning primarily being done in simulation, it is conceivable that the theory of quantum bandits may be applied to the learning of agents to be deployed in the real world.
+
+
 
 \section{Casalé}
 In \cite{casale2020}, an algorithm based on amplitude amplification is proposed and is shown to find the optimal arm with quadratically fewer queries than the best classical algorithm for classical bandits — albeit with a significant drawback: the probability of the correct arm being suggested can not be set arbitrarily high, but is instead given by the ratio of the best arm's mean to the sum of the means of all arms.
-This
+This greatly limits the usefulness of the algorithm, but it may still serve as a useful baseline for comparison, with the more complicated algorithms discussed in the following sections seeable as extensions hereof.
+
+They assume access to an oracle $O_e$ that encodes the probabilities of the arms,
+\begin{equation}
+    O_e: \ket{x}\ket{0} \mapsto \ket{x} \left(\sum_y \sqrt{p(y|x)} \ket{y}\right),
+\end{equation}
+where $x$ is the arm to be queried, $y$ some internal state and $p(y|x)$ the probability of transitioning into state $y$ given the pulling of arm $x$.
+For a given arm $x$ and the resulting state $\ket{y}$, the reward is determined by some function $f(x,y) \to \{0, 1\}$, accessed through the phase oracle $O_f$,
+\begin{equation}
+    O_f :  \ket{x}\ket{y} \mapsto (-1)^{f(x,y)} \ket{x}\ket{y}.
+\end{equation}
+
+For such bandits, regret minimisation is no longer a valid objective, and instead the problem is to find a strategy that maximises the probability of finding the optimal arm with as few queries as possible.

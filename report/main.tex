@@ -10,8 +10,17 @@
 ]{report} % Template using the report document class.
 % 10 pt font size for b5 paper, twoside adjusts margins on left/right sides, and openright ensures that new chapters start on a right page.
 
+\usepackage[
+    bindingoffset=20mm,
+    twoside,
+]{geometry}
+
 \usepackage{import}
 \usepackage{preamble}
+
+% newpage on sections
+% \usepackage{titlesec}
+% \newcommand{\sectionbreak}{\clearpage}
 
 
 % bibliography
@@ -22,9 +31,10 @@
     style=numeric-comp, 
     citestyle=numeric, 
     sorting=none, 
-    natbib=true
+    % natbib=true
 ]{biblatex}
-\addbibresource{references.bib} 
+\addbibresource{zotero.bib} 
+\addbibresource{refs.bib}
 \usepackage{hyperref}
 \usepackage{cleveref}
 % \hypersetup{colorlinks={false}}
@@ -51,10 +61,19 @@
 \cleardoublepage
 
 \chapter{Introduction}
+ok \cite{grover1996}
+
 \import{tex}{bandits}
 \import{tex/qc}{main}
 \import{tex}{cesale}
 % \import{tex}{fill}
 
+
+\begin{sloppypar}
+    \printbibliography[
+        heading=bibintoc,
+        title={References}
+    ]
+\end{sloppypar}
 
 \end{document}
