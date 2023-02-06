@@ -17,6 +17,13 @@ from qiskit import (
 
 
 # %%
+def ideal_n(p_list: np.ndarray) -> int:
+    theta = np.arcsin(np.sqrt(np.mean(p_list)))
+    n = 0.25 * np.pi / theta - 0.5
+    return max(round(float(n)), 1)
+
+
+# %%
 def qbai(
     x_reg: QuantumRegister,
     y_reg: QuantumRegister,
@@ -29,9 +36,7 @@ def qbai(
     if n is None:
         if p_list is None:
             raise ValueError("Must provide either n or p_list")
-        theta = np.arcsin(np.sqrt(np.mean(p_list)))
-        n = 0.25 * np.pi / theta - 0.5
-        n = max(round(float(n)), 1)
+        n = ideal_n(p_list)
 
     all_reg = y_reg[:] + x_reg[:]
 

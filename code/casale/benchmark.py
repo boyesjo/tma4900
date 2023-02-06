@@ -1,26 +1,15 @@
 # %%
+from typing import Callable
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from qbai import qbai
+from qbai import ideal_n, qbai
 from qiskit import Aer, QuantumCircuit, QuantumRegister, assemble
 
-# %%
-n_arms = 32
-x_len = int(np.log2(n_arms))
-y_len = 1
-x_reg = QuantumRegister(x_len, name="x")  # arms register
-y_reg = QuantumRegister(y_len, name="y")  # internal state
-all_len = x_len + y_len
 
-P_LIST = np.linspace(0.1, 1, n_arms) / 100
-
-
-def nu(x: int, y: int) -> float:
-    return P_LIST[x] if y == 1 else 1 - P_LIST[x]
-
-
-def f(_: int, y: int) -> bool:
-    return y == 1
+def get_nu(p_list: np.ndarray) -> Callable[[int, int], float]:
+    return lambda x, y: p_list[x] if y == 1 else 1 - p_list[x]
 
 
 def benchmark(qc: QuantumCircuit, n_shots: int = 1000) -> dict[int, float]:
@@ -35,17 +24,160 @@ def benchmark(qc: QuantumCircuit, n_shots: int = 1000) -> dict[int, float]:
 
 
 # %%
-n_list = np.arange(0, 100)
-prop_correct_list = []
+def test_n(
+    n_list: np.ndarray,
+    p_list: np.ndarray,
+    shots: int = 1000,
+) -> pd.DataFrame:
 
-for n in n_list:
-    qc = qbai(x_reg, y_reg, nu, f, n)
-    counts = benchmark(qc, 10000)
-    prop_correct = counts[n_arms - 1]
-    prop_correct_list.append(prop_correct)
+    best_arm = int(np.argmax(p_list))
+    n_arms = len(p_list)
+    x_len = int(np.log2(n_arms))
+    y_len = 1
+    x_reg = QuantumRegister(x_len, name="x")
+    y_reg = QuantumRegister(y_len, name="y")
+
+    nu = get_nu(p_list)
+
+    prop_correct_list = []
+
+    for n in n_list:
+        qc = qbai(
+            x_reg,
+            y_reg,
+            nu,
+            f=lambda _, y: y == 1,
+            n=n,
+        )
+        counts = benchmark(qc, shots)
+        prop_correct = counts.get(best_arm, 0)
+        prop_correct_list.append(prop_correct)
+
+    print(ideal_n(p_list))
+
+    return pd.DataFrame(
+        {
+            "n": n_list,
+            "prop_correct": prop_correct_list,
+            "theoretical": np.max(p_list) / np.sum(p_list),
+            "random": 1 / n_arms,
+        }
+    ).set_index("n")
 
 
-df = pd.DataFrame({"n": n_list, "prop_correct": prop_correct_list}).set_index(
-    "n"
+df = test_n(
+    n_list=np.arange(0, 40),
+    # p_list=np.linspace(0.0, 1, 128),
+    p_list=np.linspace(0.0, 0.1, 128),
+    shots=10_000,
 )
+
+df.plot()
+
+
+# %%
+def test_num_arms(
+    n_arms_list: np.ndarray,
+    shots: int = 1000,
+) -> pd.DataFrame:
+
+    results = []
+
+    for n_arms in n_arms_list:
+        p_list = np.linspace(0.0, 1.0, n_arms) / 2
+        # p_list = np.random.uniform(0.0, 1, n_arms)
+        best_arm = int(np.argmax(p_list))
+        nu = get_nu(p_list)
+
+        x_len = int(np.log2(n_arms))
+        y_len = 1
+        x_reg = QuantumRegister(x_len, name="x")
+        y_reg = QuantumRegister(y_len, name="y")
+        n = ideal_n(p_list)
+        qc = qbai(
+            x_reg,
+            y_reg,
+            nu,
+            f=lambda _, y: y == 1,
+            n=n,
+        )
+        counts = benchmark(qc, shots)
+        prop_correct = counts.get(best_arm, 0)
+        results.append(
+            {
+                "n_arms": n_arms,
+                "prop_correct": prop_correct,
+                "n": n,
+                "theoerical": np.max(p_list) / np.sum(p_list),
+                "random": 1 / n_arms,
+            }
+        )
+
+    return pd.DataFrame(results).set_index("n_arms")
+
+
+df = test_num_arms(
+    np.array([2**i for i in range(1, 10)]),
+    shots=10_000,
+)
+
+df[["prop_correct", "theoerical", "random"]].plot()
+plt.title(f"n={int(df.n.mean())}")
+plt.yscale("log")
+plt.xscale("log")
+ax2 = plt.twinx()
+plt.show()
+
+
+# %%
+def test_arms_range(
+    max_p: np.ndarray,
+    n_arms: int,
+    shots: int = 1000,
+) -> pd.DataFrame:
+
+    results = []
+
+    for p_range in max_p:
+        p_list = np.linspace(0.0, p_range, n_arms)
+        best_arm = int(np.argmax(p_list))
+        nu = get_nu(p_list)
+
+        x_len = int(np.log2(n_arms))
+        y_len = 1
+        x_reg = QuantumRegister(x_len, name="x")
+        y_reg = QuantumRegister(y_len, name="y")
+        n = ideal_n(p_list)
+        qc = qbai(
+            x_reg,
+            y_reg,
+            nu,
+            f=lambda _, y: y == 1,
+            n=n,
+        )
+        counts = benchmark(qc, shots)
+        prop_correct = counts.get(best_arm, 0)
+        results.append(
+            {
+                "max_p": p_range,
+                "prop_correct": prop_correct,
+                "n": n,
+                "theoerical": np.max(p_list) / np.sum(p_list),
+                "random": 1 / n_arms,
+            }
+        )
+
+    return pd.DataFrame(results).set_index("max_p")
+
+
+df = test_arms_range(
+    np.linspace(0.01, 1.0, 40),
+    n_arms=64,
+    shots=10_000,
+)
+
+df[["prop_correct", "theoerical", "random"]].plot()
+ax2 = plt.twinx()
+ax2.plot(df.index, df.n, color="black", linestyle="dashed", label="n")
+plt.show()
 # %%
