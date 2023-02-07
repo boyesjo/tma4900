@@ -24,4 +24,5 @@ For a given arm $x$ and the resulting state $\ket{y}$, the reward is determined 
     O_f :  \ket{x}\ket{y} \mapsto (-1)^{f(x,y)} \ket{x}\ket{y}.
 \end{equation}
 
-For such bandits, regret minimisation is no longer a valid objective, and instead the problem is to find a strategy that maximises the probability of finding the optimal arm with as few queries as possible.
+For such bandits, regret minimisation is no longer a valid objective, as all arms are in a sense pulled simultaneously.
+Instead, the problem is to find a strategy that maximises the probability of finding the optimal arm with as few queries as possible.

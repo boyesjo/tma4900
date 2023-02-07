@@ -5,11 +5,11 @@ The quantum search algorithm of Grover \cite{grover1996} is a quantum algorithm 
 While such a problem necessarily requires $O(N)$ time in a classical setting, needing on average $N/2$ steps to find the element and in the worst case $N$, Grover's algorithm finds the element in $O(\sqrt{N})$ steps.
 This is a quadratic speed-up.
 
-Grover's algorithm is provably optimal; no quantum algorithm can perform such general searches faster.
+Grover's algorithm is provably optimal; no quantum algorithm can perform such general searches faster \cite{zalka1999}.
 This should not be surprising.
-If an exponential speed-up were possible, it could be used to find the solution to NP-hard problems fast.
+If an exponential speed-up were possible, Grover search could be used to find the solution to NP-hard problems fast.
 
-For Grover's algorithm to work, assume there is a function $f:\{0,\dots,N-1\}\to\{0,1\}$ that maps the index of an element to $1$ if it is the one desired and $0$ otherwise.
+For Grover's algorithm to work, assume there is a function $f$ that maps the index of an element to $1$ if it is the one desired and $0$ otherwise.
 Then, one assumes access to a quantum oracle, $\mathcal{O}_f$
 (effectively a black box subroutine) that implements $f$ thus:
 \begin{equation}
@@ -28,21 +28,32 @@ Define the state $\ket{s'}$ by subtracting the projection of $\ket{w}$ onto $\ke
     \ket{s'} = \ket{s} - \bra{w}\ket{s}\ket{w}.
 \end{equation}
 These two orthogonal states from a basis of a two-dimensional subspace of the greater Hilbert space.
+This permits a perspicuous visualisation of the algorithm, as in \cref{fig:grover}.
 The uniform superposition state $\ket{s}$ serves as a starting point for the algorithm, and is achieved by applying Hadamard gates to all qubits.
-It is expressible as $\ket{s} = \cos(\theta)\ket{s'} + \sin{(\theta)}\ket{w}$, where $\theta=\arcsin\bra{s}\ket{w}=\arcsin{}(1/\sqrt{N})$.
+It is expressible as
+\begin{equation}
+    \ket{s} = \cos(\theta)\ket{s'} + \sin{(\theta)}\ket{w},
+\end{equation}
+where $\theta=\arcsin\bra{s}\ket{w}=\arcsin{}(1/\sqrt{N})$.
 
 Applying the oracle on $\ket{s}$ leaves its $\ket{s'}$ component unchanged, but flips the sign of the $\ket{w}$ component.
 This results in the state $\ket{\psi} = \cos(-\theta)\ket{s'} + \sin{(-\theta)}\ket{s'}$, which can be seen as reflection of $\ket{s}$ in the $\ket{s'}$ direction.
 
 
 Next, the state $\ket{\psi}$ is reflected about the initial $\ket{s}$ state, resulting in the state $\ket{\psi'} = \cos(3\theta)\ket{s'} + \sin(3\theta)\ket{w}$.
-Reflection thus is achieved by the diffusion operator $R=H^{\otimes n} S_0 (H^{\otimes n})^{-1}$ = $H^{\otimes n} S_0 H^{\otimes n}$, where $S_0= 2\ketbra{0}{0} - I$ is the reflection operator about the $\ket{0}$ state, that is an operator that flips the sign of all but the $\ket{0}$ component.
+Reflection thus is achieved by the diffusion operator
+\begin{equation}
+    D=H^{\otimes n} S_0 (H^{\otimes n})^{-1} = H^{\otimes n} S_0 H^{\otimes n},
+\end{equation}
+where $S_0= 2\ketbra{0}{0} - I$ is the reflection operator about the $\ket{0}$ state, that is an operator that flips the sign of all but the $\ket{0}$ component.
 
 The product of the oracle and the diffusion operator defines the Grover operator, which is simply applied until the amplitude of the  $\ket{w}$ is sufficiently amplified.
 After $k$ iterations, the state is $\ket{\psi_k} = \cos((2k+1)\theta)\ket{s'} + \sin((2k+1)\theta)\ket{w}$.
 Measuring the correct state has probability $\sin^2((2k+1)\theta)$.
 Therefore, $k \approx {\pi}/{4\theta}$ iterations should be completed.
 Assuming large $N$, for a short list would not warrant the use of Grover's algorithm, $\theta = \arcsin{({1}/{\sqrt{N}})} \approx 1/\sqrt{N}$, and so $k \approx \pi\sqrt{N}/4$.
+
+For lists with more than a single desired element, a similar reasoning will lead to the same algorithm, but instead with $k\approx\pi/4\sqrt{N/M}$, where $M$ is the number solutions to $f(x)=1$ \cite{nielsen2012}.
 
 
 \begin{figure}
@@ -116,7 +127,7 @@ Assuming large $N$, for a short list would not warrant the use of Grover's algor
             \draw[->] (O) -- (S) node[right] {$\ket{s'}$};
             \draw[->] (O) -- (P) node[above] {$\ket{s}$};
             \draw[->] (O) -- (P2) node[below] {$\mathcal{O}_f\ket{s}$};
-            \draw[->, blue] (O) -- (P3) node[right] {$\ket{\psi}=R\mathcal{O}_f\ket{s}$};
+            \draw[->, blue] (O) -- (P3) node[right] {$\ket{\psi}=D\mathcal{O}_f\ket{s}$};
             \pic[
                 "$2\theta$",
                 draw=black,
@@ -166,8 +177,52 @@ Assuming large $N$, for a short list would not warrant the use of Grover's algor
         Grover's algorithm visualised.
         (a) The initial uniform superposition state $\ket{s}$ is prepared, which can be seen as a linear combination of $\ket{w}$ and $\ket{s'}$, forming an angle $\theta$ to the $s'$-axis.
         (b) The oracle $\mathcal{O}_f$ is applied to $\ket{s}$, flipping the sign of its $\ket{w}$ component, inverting the angle $\theta$.
-        (c) The reflection operator $R$ is applied, reflecting the state about the initial state and towards the goal, resulting in a state with an angle $3\theta$ to the $w$-axis.
+        (c) The diffusion operator $D$ is applied, reflecting the state about the initial state and towards the goal, resulting in a state with an angle $3\theta$ to the $w$-axis.
         (d) After repeating the previous two steps a $k$ times, the angle is $2k+1\theta$, and if $k$ is chosen wisely, this means that the system is in a state close to the desired state $\ket{w}$, such that measuring the system will likely result in $\ket{w}$.
     }
     \label{fig:grover}
 \end{figure}
+
+\subsection{Amplitude amplification}
+\label{sec:amplitude-amplification}
+Amplitude amplification can be considered a generalisation of Grover's algorithm.
+Instead of a single oracle, let the partitioning of the state space be given by a Hermitian projector $P$, whose image will be the space of states to amplify.
+Then, for some given initial state $\ket{\psi}$, it is decomposed into the orthogonal components
+\begin{equation}
+    \ket{\psi} = \sin(\theta)\ket{\psi_0} + \cos(\theta)\ket{\psi_1},
+\end{equation}
+where $\ket{\psi_1} = P\ket{\psi}$ and $\ket{\psi_0} = \ket{\psi} - \ket{\psi_1}$, effectively the projections onto the image and kernel of $P$.
+Clearly, the angle $\theta$ is given by $\arcsin(|P\ket{\psi}|)$.
+
+The Grover operator is now given by $G=-S_\psi S_P$ where
+\begin{align}
+    S_\psi & = I - 2\ket{\psi}\bra{\psi} \\
+    S_P    & = I - 2P,
+\end{align}
+such that $S_\psi$ being analogue to the diffusion operator $D$ and $S_P$ being the oracle operator.
+
+Following the same reasoning as in the previous section, the state after $k$ iterations is given by
+\begin{equation}
+    G^k \ket{\psi} = \sin((2k+1)\theta)\ket{\psi_1} + \cos((2k+1)\theta)\ket{\psi_0},
+\end{equation}
+meaning that $k \approx \frac{\pi}{4\theta}$ will result in a state close to $\ket{\psi_1}$.
+
+Amplitude amplification can be used to speed up Grover search by using an informed prior rather than a uniform prior.
+Furthermore, it is useful as a subroutine in other algorithms, such as finding the number of \enquote{good} states for a Grover search \cite{brassard2002}, quantum Monte Carlo methods \cite{montanaro2015} and some bandit algorithms to be discussed in what follows.
+
+\subsection{Amplitude estimation}
+\label{sec:amplitude-estimation}
+As with amplitude amplification, amplitude estimation considers states that are decomposed into a superposition of two states, and, as the name suggests, estimates the amplitude of one of the states.
+Given a state, or more generally the algorithm, $\mathcal{A}$ with which it is generated,
+\begin{equation}
+    \mathcal{A} \ket{0} = \sqrt{a} \ket{\psi_1} + \sqrt{1-a} \ket{\psi_0},
+\end{equation}
+where $\ket{\psi_1}$ is a state of interest, the goal is to estimate its amplitude $a = \lvert\bra{\psi_1}\ket{\psi_1}\rvert^2$.
+
+In its original formulation \cite{brassard2002}, it was proven that the amplitude can be estimated with an additive error of
+\begin{equation}
+    \epsilon \leq 2\pi \frac{\sqrt{a(1-a)}}{t} +\frac{\pi^2}{t^2}
+\end{equation}
+with probability at least $8/\pi^2(\approx 81.06\%)$ using $t$ calls to the algorithm $\mathcal{A}$.
+The probability can be increased to $1-\delta$, requiring $O(\log(1/\delta))$ calls to $\mathcal{A}$ \cite{montanaro2015}.
+Later variants have been proposed to reduce the qubits needed and circuit depths \cite{suzuki2020, nakaju2020, grinko2021}, making it more feasible for NISQ devices.
