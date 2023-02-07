@@ -18,7 +18,8 @@ from qiskit import (
 
 # %%
 def ideal_n(p_list: np.ndarray) -> int:
-    theta = np.arcsin(np.sqrt(np.mean(p_list)))
+    # theta = np.arcsin(np.sqrt(np.mean(p_list)))
+    theta = np.mean(p_list)
     n = 0.25 * np.pi / theta - 0.5
     return max(round(float(n)), 1)
 

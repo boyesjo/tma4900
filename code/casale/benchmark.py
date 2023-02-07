@@ -24,6 +24,27 @@ def benchmark(qc: QuantumCircuit, n_shots: int = 1000) -> dict[int, float]:
 
 
 # %%
+def test_ideal_n(
+    p_max: np.ndarray,
+    n_arms: int = 16,
+) -> pd.DataFrame:
+
+    # ideal_n for each p_max
+    return pd.DataFrame(
+        {
+            "p_max": p_max,
+            "n": [ideal_n(np.linspace(0.0, p, n_arms)) for p in p_max],
+        }
+    ).set_index("p_max")
+
+
+df = test_ideal_n(np.linspace(0.001, 1.0, 100))
+df.plot()
+plt.yscale("log")
+plt.show()
+
+
+# %%
 def test_n(
     n_list: np.ndarray,
     p_list: np.ndarray,
@@ -84,7 +105,7 @@ def test_num_arms(
     results = []
 
     for n_arms in n_arms_list:
-        p_list = np.linspace(0.0, 1.0, n_arms) / 2
+        p_list = np.linspace(0.0, 1.0, n_arms)
         # p_list = np.random.uniform(0.0, 1, n_arms)
         best_arm = int(np.argmax(p_list))
         nu = get_nu(p_list)
@@ -128,6 +149,8 @@ plt.xscale("log")
 ax2 = plt.twinx()
 plt.show()
 
+
+# %%
 
 # %%
 def test_arms_range(
@@ -179,5 +202,6 @@ df = test_arms_range(
 df[["prop_correct", "theoerical", "random"]].plot()
 ax2 = plt.twinx()
 ax2.plot(df.index, df.n, color="black", linestyle="dashed", label="n")
+ax2.set_yscale("log")
 plt.show()
 # %%
