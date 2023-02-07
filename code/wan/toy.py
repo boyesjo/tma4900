@@ -101,15 +101,8 @@ def qmc(o: Oracle, t: int, delta: float) -> float:
         .compose(o.w_circ, y_reg[:] + w_reg[:])
     )
 
-    proj = QuantumCircuit(y_reg, w_reg)
-    proj.z(y_reg)
-    # proj = proj.compose(psi, y_reg[:] + w_reg[:])
-    # # reflect about |1>
-    # proj.x(y_reg)
-    # proj.h(y_reg)
-    # proj.append(psi.to_gate(), y_reg[:] + w_reg[:])
-    # proj.h(y_reg)
-    # proj.x(y_reg)
+    grov = QuantumCircuit(y_reg, w_reg)
+    # reflect about psi
 
     problem = EstimationProblem(
         state_preparation=psi,
