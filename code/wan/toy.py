@@ -1,19 +1,19 @@
 # %%
-from typing import Callable
+from typing import Callable, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
+from fae import FasterAmplitudeEstimation
 from qiskit import Aer, ClassicalRegister, QuantumCircuit, QuantumRegister
-from qiskit.algorithms import (
+from qiskit.algorithms import (  # FasterAmplitudeEstimation,
     AmplitudeEstimation,
     EstimationProblem,
-    FasterAmplitudeEstimation,
 )
+from qiskit.primitives import Sampler
 from qiskit.utils import QuantumInstance
 from scipy import linalg
 
-backend = Aer.get_backend("qasm_simulator")
-qi = QuantumInstance(backend)
+qi = QuantumInstance(Aer.get_backend("qasm_simulator"))
 
 
 def mat(size: int) -> np.ndarray:
@@ -36,21 +36,7 @@ def s0(reg: QuantumRegister) -> QuantumCircuit:
     return qc
 
 
-def m1(size: int) -> QuantumCircuit:
-    # flip phases of ALL states
-    # ie apply -I
-    qc = QuantumCircuit(size)
-
-    qc.unitary(
-        np.diag(-1 * np.ones(2**size)),
-        range(size),
-        label="$M_1$",
-    )
-
-    return qc
-
-
-def ortnormalise(dict_of_rows: dict[int, np.ndarray]) -> dict[int, np.ndarray]:
+def ortnormalise(dict_of_rows: dict[int, np.ndarray]) -> np.ndarray:
 
     n_cols = len(list(dict_of_rows.values())[0])
 
@@ -74,7 +60,11 @@ def ortnormalise(dict_of_rows: dict[int, np.ndarray]) -> dict[int, np.ndarray]:
         new_row /= linalg.norm(new_row)
         dict_of_rows[i] = new_row
 
-    return dict_of_rows
+    mat = np.zeros((n_cols, n_cols))
+    for i, row in dict_of_rows.items():
+        mat[i, :] = row
+
+    return mat.T
 
 
 class Oracle:
@@ -88,8 +78,7 @@ class Oracle:
 
     def _build_a_circ(self) -> QuantumCircuit:
 
-        rows = ortnormalise({0: np.sqrt(self.p_omega)})
-        mat = np.array(list(rows.values())).T
+        mat = ortnormalise({0: np.sqrt(self.p_omega)})
 
         q_reg = QuantumRegister(self.n_qubits, name="x")
         qc = QuantumCircuit(q_reg)
@@ -106,8 +95,7 @@ class Oracle:
 
             rows[omega << 1] = row
 
-        rows = ortnormalise(rows)
-        mat = np.array(list(rows.values())).T
+        mat = ortnormalise(rows)
 
         w_reg = QuantumRegister(self.n_qubits, name="w")
         y_reg = QuantumRegister(1, name="y")
@@ -117,17 +105,18 @@ class Oracle:
         return qc
 
 
-pw = np.linspace(0.1, 1, 4)
+pw = np.linspace(0.1, 1, 16)
 pw /= pw.sum()
-o = Oracle(pw, lambda x: x == 4)
+good = 15
+o = Oracle(pw, lambda x: x == good)
 
 
 def qmc(o: Oracle, t: int, delta: float) -> float:
 
-    shots = int(np.log(1 / delta))
+    repeats = int(np.log(1 / delta))
+    assert repeats > 0
     w_reg = QuantumRegister(o.n_qubits, name="w")
     y_reg = QuantumRegister(1, name="y")
-    c_reg = ClassicalRegister(1, name="c")
 
     psi = (
         QuantumCircuit(y_reg, w_reg)
@@ -138,162 +127,43 @@ def qmc(o: Oracle, t: int, delta: float) -> float:
     grov = QuantumCircuit(y_reg, w_reg)
     grov.z(y_reg)
     grov = grov.compose(psi.inverse(), y_reg[:] + w_reg[:])
-    grov = grov.compose(s0(y_reg[:] + w_reg[:]), y_reg[:] + w_reg[:])
+    grov = grov.compose(
+        s0(y_reg[:] + w_reg[:]),
+        y_reg[:] + w_reg[:],
+    )
     grov = grov.compose(psi, y_reg[:] + w_reg[:])
-    grov = grov.compose(m1(o.n_qubits + 1), y_reg[:] + w_reg[:])
 
-    grov.draw("mpl", filename="grov.png")
+    def is_good_state(bitstring: str) -> bool:
+        return all(bit == "1" for bit in bitstring)
 
     problem = EstimationProblem(
         state_preparation=psi,
         objective_qubits=[0],
         grover_operator=grov,
-        is_good_state=lambda x: x == 1,
+        is_good_state=is_good_state,
     )
 
     ae = FasterAmplitudeEstimation(
-        delta=1e-20,
+        delta=1e-10,
+        # delta=1,
         maxiter=t,
         quantum_instance=qi,
         rescale=False,
+        # sampler=sampler,
+        shots=t,
     )
-    # ae = AmplitudeEstimation(
-    #     t,
-    #     quantum_instance=qi,
-    # )
 
-    result = ae.estimate(problem)
-    return result.estimation
-
-
-for t in range(1, 7):
-    val = qmc(o, t, 0.001)
-    print(t, val, pw[-1])  # , val**2, np.sqrt(val))
-
-
-# %%
-
-
-def oracle(prob: float, seed: int = 1337) -> QuantumCircuit:
-
-    rows = {
-        0: np.array([np.sqrt(1 - prob), 0, 0, np.sqrt(prob)]),
-    }
-
-    np.random.seed(seed)
-
-    # add arbitrary rows, ensuring ortonormality
-    for i in range(1, 2**2):
-        # new_row = np.random.rand(2**2)
-        new_row = np.zeros(2**2)
-        new_row[i] = 1
-        for row in rows.values():
-            new_row -= (row @ new_row) * row
-        assert linalg.norm(new_row) > 1e-10
-        new_row /= linalg.norm(new_row)
-        rows[i] = new_row
-
-    qc = QuantumCircuit(2)
-    qc.unitary(np.array(list(rows.values())).T, [0, 1], label="$O_f$")
-
-    return qc
-
-
-qc = QuantumCircuit(2)
-qc.x([0, 1])
-qc = qc.compose(oracle(0.1))
-state = (
-    Aer.get_backend("statevector_simulator").run(qc).result().get_statevector()
-)
-state.draw("latex")
-
-
-# %%
-p_list = np.linspace(0.1, 0.7, 4)
-oracle_list = [oracle(p) for p in p_list]
-
-
-def phi(x: int) -> float:
-    return x & 1
-
-
-def w(phi: Callable[[int], float]) -> QuantumCircuit:
-    # map |x>|0> to |x>|1> if x = 11, else to |x>|0>
-    x_len = 2
-    mat = np.zeros((2 ** (x_len + 1), 2 ** (x_len + 1)))
-    for row in range(2 ** (x_len + 1)):
-        x = row >> 1
-        y = row & 1
-        if y == 0:
-            mat[row, row] = np.sqrt(1 - phi(x))
-            mat[row, row + 1] = np.sqrt(phi(x))
-        else:
-            mat[row, row - 1] = np.sqrt(phi(x))
-            mat[row, row] = -np.sqrt(1 - phi(x))
-
-    x_reg = QuantumRegister(x_len, name="x")
-    y_reg = QuantumRegister(1, name="y")
-
-    qc = QuantumCircuit(y_reg, x_reg)
-    qc.unitary(mat.T, [*y_reg, *x_reg], label="$W$")
-    return qc
-
-
-x_reg = QuantumRegister(2, name="x")
-y_reg = QuantumRegister(1, name="y")
-qc = QuantumCircuit(y_reg, x_reg)
-qc.x(x_reg)
-qc = qc.compose(w(phi))
-state = (
-    Aer.get_backend("statevector_simulator").run(qc).result().get_statevector()
-)
-state.draw("latex")
-
-
-# %%
-calls = 0
-
-
-def qmc(alg: QuantumCircuit, r: float, delta: float) -> QuantumCircuit:
-    n_iter = int(np.ceil(np.log2(1 / delta)))
-    results = np.zeros(n_iter)
-
-    shots = 1000
-    t = 1
-    calls = 0
-
-    x_reg = QuantumRegister(len(alg.qubits), name="x")
-    y_reg = QuantumRegister(1, name="y")
-    c_reg = ClassicalRegister(1, name="c")
-
-    qc = QuantumCircuit(y_reg, x_reg, c_reg)
-
-    for _ in range(t):
-        qc = qc.compose(alg, x_reg)
-        qc = qc.compose(w(phi), [*y_reg, *x_reg])
-    qc.measure(y_reg, c_reg)
-
-    for i in range(n_iter):
-        counts = (
-            Aer.get_backend("qasm_simulator")
-            .run(qc, shots=shots)
-            .result()
-            .get_counts()
-        )
-        results[i] = counts.get("1", 0) / shots
-
+    # print(repeats)
+    results = [ae.estimate(problem).estimation for _ in range(repeats)]
+    print(results)
+    # print(ae.estimate(problem).num_oracle_queries)
+    # print(ae.estimate(problem).success_probability)
+    # print(ae.estimate(problem).num_steps)
     return np.median(results)
 
 
-qmc(oracle_list[0], 0.1, 0.1)
-# %%
+for delta in [0.2, 0.1, 0.01, 0.001]:
+    val = qmc(o, 1, delta)
+    print(delta, val, pw[good])  # , val**2, np.sqrt(val))
 
-# %%
-
-w_reg = QuantumRegister(o.n_qubits, name="w")
-y_reg = QuantumRegister(1, name="y")
-
-psi = QuantumCircuit(y_reg, w_reg)
-psi.x(1)
-psi.draw("mpl")
 # %%
