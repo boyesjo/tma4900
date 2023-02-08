@@ -16,6 +16,40 @@ backend = Aer.get_backend("qasm_simulator")
 qi = QuantumInstance(backend)
 
 
+def mat(size: int) -> np.ndarray:
+    diag = (-1) * np.ones(size, dtype=complex)
+    diag[0] = 1
+    return np.diag(diag)
+
+
+def s0(reg: QuantumRegister) -> QuantumCircuit:
+    # flip phases of all but the 0 state
+    # ie apply 2|0><0| - I
+    qc = QuantumCircuit(reg)
+
+    qc.unitary(
+        mat(size=2 ** len(reg)),
+        reg[:],
+        label="$S_0$",
+    )
+
+    return qc
+
+
+def m1(size: int) -> QuantumCircuit:
+    # flip phases of ALL states
+    # ie apply -I
+    qc = QuantumCircuit(size)
+
+    qc.unitary(
+        np.diag(-1 * np.ones(2**size)),
+        range(size),
+        label="$M_1$",
+    )
+
+    return qc
+
+
 def ortnormalise(dict_of_rows: dict[int, np.ndarray]) -> dict[int, np.ndarray]:
 
     n_cols = len(list(dict_of_rows.values())[0])
@@ -102,28 +136,39 @@ def qmc(o: Oracle, t: int, delta: float) -> float:
     )
 
     grov = QuantumCircuit(y_reg, w_reg)
-    # reflect about psi
+    grov.z(y_reg)
+    grov = grov.compose(psi.inverse(), y_reg[:] + w_reg[:])
+    grov = grov.compose(s0(y_reg[:] + w_reg[:]), y_reg[:] + w_reg[:])
+    grov = grov.compose(psi, y_reg[:] + w_reg[:])
+    grov = grov.compose(m1(o.n_qubits + 1), y_reg[:] + w_reg[:])
+
+    grov.draw("mpl", filename="grov.png")
 
     problem = EstimationProblem(
         state_preparation=psi,
-        objective_qubits=0,
-        grover_operator=proj,
-        # is_good_state=lambda x: x == 1,
+        objective_qubits=[0],
+        grover_operator=grov,
+        is_good_state=lambda x: x == 1,
     )
 
     ae = FasterAmplitudeEstimation(
         delta=1e-20,
         maxiter=t,
         quantum_instance=qi,
-        # sampler=shots,
+        rescale=False,
     )
+    # ae = AmplitudeEstimation(
+    #     t,
+    #     quantum_instance=qi,
+    # )
 
     result = ae.estimate(problem)
     return result.estimation
 
 
 for t in range(1, 7):
-    print(t, qmc(o, t, 0.001))
+    val = qmc(o, t, 0.001)
+    print(t, val, pw[-1])  # , val**2, np.sqrt(val))
 
 
 # %%
@@ -241,4 +286,14 @@ def qmc(alg: QuantumCircuit, r: float, delta: float) -> QuantumCircuit:
 
 
 qmc(oracle_list[0], 0.1, 0.1)
+# %%
+
+# %%
+
+w_reg = QuantumRegister(o.n_qubits, name="w")
+y_reg = QuantumRegister(1, name="y")
+
+psi = QuantumCircuit(y_reg, w_reg)
+psi.x(1)
+psi.draw("mpl")
 # %%

@@ -3,14 +3,14 @@
 
 Several formulations of the multi-armed bandit problem have been made for a quantum computing setting.
 As the central issue in bandit problems lie in sample efficiency rather than computational difficulties, quant-um computers offer little advantage assuming classical bandits.
-However, by allowing bandits to be queried in superposition, major speed-ups can be achieved.
+However, by granting some sort of superposition queries, means can be estimated more efficiently, and so regrets may be reduced, or best arms found more quickly.
 
 Querying in superposition may at first appear to remove any real-world relevance; administering medications to patients can not be done in superposition.
 However, with reinforcement learning primarily being done in simulation, it is conceivable that the theory of quantum bandits may be applied to the learning of agents to be deployed in the real world.
 
 
 
-\section{Casalé}
+\section{Best arm identification}
 In \cite{casale2020}, an algorithm based on amplitude amplification is proposed and is shown to find the optimal arm with quadratically fewer queries than the best classical algorithm for classical bandits — albeit with a significant drawback: the probability of the correct arm being suggested can not be set arbitrarily high, but is instead given by the ratio of the best arm's mean to the sum of the means of all arms.
 This greatly limits the usefulness of the algorithm, but it may still serve as a useful baseline for comparison, with the more complicated algorithms discussed in the following sections seeable as extensions hereof.
 
@@ -25,4 +25,19 @@ For a given arm $x$ and the resulting state $\ket{y}$, the reward is determined 
 \end{equation}
 
 For such bandits, regret minimisation is no longer a valid objective, as all arms are in a sense pulled simultaneously.
-Instead, the problem is to find a strategy that maximises the probability of finding the optimal arm with as few queries as possible.
+Instead, the problem is to find a strategy that maximises the probability of finding the optimal arm with as few applications of $\mathcal{O_e}$ as possible.
+
+\subsection{Proper best arm identification}
+The authors of \cite{wang2021} propose a more sophisticated algorithm, improving the results of \cite{casale2020} by allowing the probability of finding the optimal arm to be set arbitrarily high.
+
+\section{One at a time and regrets}
+By instead having one oracle for each arm $x$,
+\begin{equation}
+    O_x: \ket{0} \mapsto \sum_\omega \sqrt{p_x(\omega)} \ket{\omega} \ket{y_x(\omega)},
+\end{equation}
+where $\omega$ is the internal state of the arm, sampled according to the measure $p_x$, and $y_x{\omega}$ a random variable that is the reward received when pulling arm $x$ and producing state $\omega$.
+The agent then decides for each step in the bandit problem, which oracle to invoke, trying to minimise the cumulative regret, where the means here are given defined as
+\begin{equation}
+    \mu_x = \sum_\omega p_x(\omega) \mathbb{E}[y_x(\omega)].
+\end{equation}
+In \cite{wan2022}, an algorithm for bounded-value arms achieving $O(n \log T)$ regret was proposed, $n$ being the number of arms.
