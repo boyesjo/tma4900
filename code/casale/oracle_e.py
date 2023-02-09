@@ -1,6 +1,7 @@
 from typing import Callable
 
 import numpy as np
+from complete_unitary import complete_unitary
 from qiskit import QuantumCircuit, QuantumRegister
 
 
@@ -10,25 +11,18 @@ def mat(
     nu: Callable[[int, int], float],
 ) -> np.ndarray:
 
-    mat = np.zeros((2 ** (x_len + y_len), 2 ** (x_len + y_len)))
+    d = {}
 
-    for r in range(2 ** (x_len + y_len)):
-        row = np.zeros(2 ** (x_len + y_len))
+    for x in range(2**x_len):
+        idx = x << y_len
+        arr = np.zeros(2 ** (x_len + y_len), dtype=complex)
 
-        row_idx = format(r, f"0{x_len + y_len}b")
-        x = int(row_idx[:x_len], 2)
-        y = int(row_idx[x_len:], 2)
+        for y in range(2**y_len):
+            arr[idx ^ y] = np.sqrt(nu(x, y))
 
-        for new_y in range(2**y_len):
-            col = (x << y_len) | (new_y ^ y)
-            row[col] = np.sqrt(nu(x, new_y))
-            if y == 1 and new_y == 1:
-                row[col] *= -1
+        d[idx] = arr
 
-        mat[r] = row
-
-    # print(mat)
-
+    mat = complete_unitary(d)
     return mat.T
 
 
@@ -57,13 +51,14 @@ def circ(
     return qc
 
 
-if __name__ == "__main__":
+def main() -> None:
+
     from qiskit import Aer, assemble
     from qiskit.quantum_info import Statevector
 
     n_arms = 4
     x_len = int(np.log2(n_arms))
-    y_len = 1
+    y_len = 2
 
     x_reg = QuantumRegister(x_len, name="x")
     y_reg = QuantumRegister(y_len, name="y")
@@ -71,7 +66,7 @@ if __name__ == "__main__":
     P_LIST = np.linspace(0.1, 0.7, n_arms)
 
     def nu(x: int, y: int) -> float:
-        return P_LIST[x] if y == 1 else 1 - P_LIST[x]
+        return P_LIST[x] if y == 0 else (1 - P_LIST[x]) / (2**y_len - 1)
 
     for arm in range(n_arms):
         qc = QuantumCircuit(y_reg, x_reg)
@@ -89,3 +84,7 @@ if __name__ == "__main__":
         for k, v in probs.items():
             print(f"{k}: {v:.2f}")
         print()
+
+
+if __name__ == "__main__":
+    main()
