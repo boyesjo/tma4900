@@ -217,9 +217,9 @@ Given a state, or more generally the algorithm, $\mathcal{A}$ with which it is g
 \begin{equation}
     \mathcal{A} \ket{0} = \sqrt{a} \ket{\psi_1} + \sqrt{1-a} \ket{\psi_0},
 \end{equation}
-where $\ket{\psi_1}$ is a state of interest, the goal is to estimate its amplitude $a = \lvert\bra{\psi_1}\ket{\psi_1}\rvert^2$.
+where $\ket{\psi_1}$ is a state of interest and $\ket{psi_0}$ its orthogonal complement, the goal is to estimate its amplitude $a = \lvert\bra{\psi_1}\ket{\psi_1}\rvert^2$.
 
-In its original formulation \cite{brassard2002}, it was proven that the amplitude can be estimated with an additive error of
+With its original formulation in \cite{brassard2002}, it was proven that the amplitude can be estimated with an additive error of
 \begin{equation}
     \epsilon \leq 2\pi \frac{\sqrt{a(1-a)}}{t} +\frac{\pi^2}{t^2}
 \end{equation}

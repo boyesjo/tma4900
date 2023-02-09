@@ -80,7 +80,7 @@ The Pauli matrices,
     \sigma_z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix},
     \label{eq:pauli}
 \end{equation}
-together with the identity matrix serve as a basis for the real vector-space of Hermitian $2\times 2$ matrices.
+together with the identity matrix serve as a basis for the real vector-space of Hermitian $2\times 2$-matrices.
 Since the diagonal elements of a density matrix must sum to one, the density matrix for a single qubit can be expressed as
 \begin{equation}
     \rho = \frac{1}{2} \left(I + x \sigma_x + y \sigma_y + z \sigma_z\right),
@@ -111,8 +111,8 @@ What makes this so powerful is that the state of a multi-qubit system has the ge
     \begin{aligned}
         \ket{\psi_1 \psi_2 \cdots  \psi_n}
          & = c_1 \ket{0\dots 00} + c_2 \ket{0\dots 01} + \cdots + c_{2^n} \ket{1\dots 11} \\
-         & = (c_1, c_2, \dots, c_{2^n} )^\top
-        \in \mathbb{C}^{2^n},
+         & = (c_1, c_2, \dots, c_{2^n} )^\top                                             \\
+         & \in \mathbb{C}^{2^n},
         \label{eq:superposition}
     \end{aligned}
 \end{equation}
