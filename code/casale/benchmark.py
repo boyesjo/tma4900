@@ -8,8 +8,16 @@ from qbai import ideal_n, qbai
 from qiskit import Aer, QuantumCircuit, QuantumRegister, assemble
 
 
-def get_nu(p_list: np.ndarray) -> Callable[[int, int], float]:
-    return lambda x, y: p_list[x] if y == 1 else 1 - p_list[x]
+def get_nu(p_list: np.ndarray, y_len: int = 1) -> Callable[[int, int], float]:
+    return (
+        lambda x, y: p_list[x]
+        if y == 0
+        else (1 - p_list[x]) / (2**y_len - 1)
+    )
+
+
+def f(x: int, y: int) -> bool:
+    return y == 0
 
 
 def benchmark(qc: QuantumCircuit, n_shots: int = 1000) -> dict[int, float]:
@@ -38,7 +46,13 @@ def test_ideal_n(
     ).set_index("p_max")
 
 
-df = test_ideal_n(np.linspace(0.001, 1.0, 100))
+df = test_ideal_n(
+    np.linspace(
+        0.001,
+        1,
+        100,
+    )
+)
 df.plot()
 plt.yscale("log")
 plt.show()
@@ -54,11 +68,11 @@ def test_n(
     best_arm = int(np.argmax(p_list))
     n_arms = len(p_list)
     x_len = int(np.log2(n_arms))
-    y_len = 1
+    y_len = 2
     x_reg = QuantumRegister(x_len, name="x")
     y_reg = QuantumRegister(y_len, name="y")
 
-    nu = get_nu(p_list)
+    nu = get_nu(p_list, y_len)
 
     prop_correct_list = []
 
@@ -67,7 +81,7 @@ def test_n(
             x_reg,
             y_reg,
             nu,
-            f=lambda _, y: y == 1,
+            f=f,
             n=n,
         )
         counts = benchmark(qc, shots)
@@ -87,9 +101,9 @@ def test_n(
 
 
 df = test_n(
-    n_list=np.arange(0, 40),
+    n_list=np.arange(0, 20),
     # p_list=np.linspace(0.0, 1, 128),
-    p_list=np.linspace(0.0, 0.1, 128),
+    p_list=np.linspace(0.0, 0.1, 64),
     shots=10_000,
 )
 
@@ -105,21 +119,22 @@ def test_num_arms(
     results = []
 
     for n_arms in n_arms_list:
-        p_list = np.linspace(0.0, 1.0, n_arms)
+        p_list = np.linspace(0.0, 0.3, n_arms)
         # p_list = np.random.uniform(0.0, 1, n_arms)
         best_arm = int(np.argmax(p_list))
-        nu = get_nu(p_list)
 
         x_len = int(np.log2(n_arms))
-        y_len = 1
+        y_len = 2
         x_reg = QuantumRegister(x_len, name="x")
         y_reg = QuantumRegister(y_len, name="y")
+
+        nu = get_nu(p_list, y_len)
         n = ideal_n(p_list)
         qc = qbai(
             x_reg,
             y_reg,
             nu,
-            f=lambda _, y: y == 1,
+            f=f,
             n=n,
         )
         counts = benchmark(qc, shots)
@@ -138,19 +153,16 @@ def test_num_arms(
 
 
 df = test_num_arms(
-    np.array([2**i for i in range(1, 10)]),
-    shots=10_000,
+    np.array([2**i for i in range(1, 8)]),
+    shots=1_000,
 )
 
 df[["prop_correct", "theoerical", "random"]].plot()
 plt.title(f"n={int(df.n.mean())}")
 plt.yscale("log")
 plt.xscale("log")
-ax2 = plt.twinx()
 plt.show()
 
-
-# %%
 
 # %%
 def test_arms_range(
@@ -164,18 +176,18 @@ def test_arms_range(
     for p_range in max_p:
         p_list = np.linspace(0.0, p_range, n_arms)
         best_arm = int(np.argmax(p_list))
-        nu = get_nu(p_list)
 
         x_len = int(np.log2(n_arms))
         y_len = 1
         x_reg = QuantumRegister(x_len, name="x")
         y_reg = QuantumRegister(y_len, name="y")
+        nu = get_nu(p_list, y_len)
         n = ideal_n(p_list)
         qc = qbai(
             x_reg,
             y_reg,
             nu,
-            f=lambda _, y: y == 1,
+            f=f,
             n=n,
         )
         counts = benchmark(qc, shots)
