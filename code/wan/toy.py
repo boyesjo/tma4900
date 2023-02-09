@@ -3,17 +3,21 @@ from typing import Callable, Sequence
 
 import matplotlib.pyplot as plt
 import numpy as np
-from fae import FasterAmplitudeEstimation
+
+# from fae import FasterAmplitudeEstimation
 from qiskit import Aer, ClassicalRegister, QuantumCircuit, QuantumRegister
-from qiskit.algorithms import (  # FasterAmplitudeEstimation,
+from qiskit.algorithms import (
     AmplitudeEstimation,
     EstimationProblem,
+    FasterAmplitudeEstimation,
 )
 from qiskit.primitives import Sampler
 from qiskit.utils import QuantumInstance
 from scipy import linalg
 
 qi = QuantumInstance(Aer.get_backend("qasm_simulator"))
+sampler = Sampler()
+sampler.set_options(shots=1000)
 
 
 def mat(size: int) -> np.ndarray:
@@ -149,14 +153,13 @@ def qmc(o: Oracle, t: int, delta: float) -> float:
         maxiter=t,
         quantum_instance=qi,
         rescale=False,
-        # sampler=sampler,
-        shots=t,
+        sampler=sampler,
     )
 
     # print(repeats)
     results = [ae.estimate(problem).estimation for _ in range(repeats)]
-    print(results)
-    # print(ae.estimate(problem).num_oracle_queries)
+    # print(results)
+    print(ae.estimate(problem).num_oracle_queries)
     # print(ae.estimate(problem).success_probability)
     # print(ae.estimate(problem).num_steps)
     return np.median(results)
