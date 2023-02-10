@@ -3,10 +3,10 @@ from qiskit import QuantumCircuit
 
 
 class ZeroReflection(QuantumCircuit):
-    def __init__(self, n: int, label: str = "$S_0$"):
-        super().__init__(n)
+    def __init__(self, n: int, name: str = "$S_0$"):
+        super().__init__(n, name=name)
         self.n = n
-        self.label = label
+        self.name = name
         self._build()
 
     def _build(self) -> None:
@@ -15,16 +15,16 @@ class ZeroReflection(QuantumCircuit):
         self.unitary(
             np.diag(diag),
             self.qubits,
-            label=self.label,
+            label=self.name,
         )
 
     def adjoint(self) -> QuantumCircuit:
-        qc = ZeroReflection(n=self.n, label=self.label)
+        qc = ZeroReflection(n=self.n, name=self.name)
         qc.data = qc.data[::-1]
         return qc
 
     def inverse(self) -> QuantumCircuit:
-        qc = ZeroReflection(n=self.n, label=self.label)
+        qc = ZeroReflection(n=self.n, name=self.name)
         qc.data = qc.data[::-1]
         return qc
 

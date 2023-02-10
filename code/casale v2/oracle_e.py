@@ -11,16 +11,18 @@ class OracleE(QuantumCircuit):
         x_len: int,
         y_len: int,
         nu: Callable[[int, int], float],
-        label: str = "$O_e$",
+        name: str = "$O_e$",
+        adj: bool = False,
     ):
-        super().__init__(x_len + y_len)
+        super().__init__(x_len + y_len, name=name)
         self.x_len = x_len
         self.y_len = y_len
         self.nu = nu
-        self.label = label
+        self.name = name
+        self.adj = adj
         self._build()
 
-    def _build(self) -> None:
+    def _matrix(self) -> np.ndarray:
         d = {}
 
         for x in range(2**self.x_len):
@@ -31,12 +33,19 @@ class OracleE(QuantumCircuit):
                 arr[idx ^ y] = np.sqrt(self.nu(x, y))
 
             d[idx] = arr
-        mat = complete_unitary(d).T
+
+        return complete_unitary(d).T
+
+    def _build(self) -> None:
+        mat = self._matrix()
+
+        if self.adj is True:
+            mat = mat.conj().T
 
         self.unitary(
             mat,
             self.qubits,
-            label=self.label,
+            label=self.name,
         )
 
     def adjoint(self) -> QuantumCircuit:
@@ -44,17 +53,8 @@ class OracleE(QuantumCircuit):
             x_len=self.x_len,
             y_len=self.y_len,
             nu=self.nu,
-            label=self.label + "^\\dagger",
-        )
-        qc.data = qc.data[::-1]
-        return qc
-
-    def inverse(self) -> QuantumCircuit:
-
-        qc = OracleE(
-            x_len=self.x_len,
-            y_len=self.y_len,
-            nu=self.nu,
+            name=self.name + "^\\dagger",
+            adj=not self.adj,
         )
         qc.data = qc.data[::-1]
         return qc

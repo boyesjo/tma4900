@@ -48,13 +48,9 @@ class QBAI(QuantumCircuit):
             n = self.ideal_n(p_list)
         self._build(n)
 
-    def set_n(self, n: int) -> None:
-        self._build(n)
-
     @staticmethod
     def ideal_n(p_list: np.ndarray) -> int:
-        theta = np.arcsin(np.mean(p_list))
-        n = 0.25 * np.pi / theta - 0.5
+        n = 0.25 * np.pi * np.sqrt(np.mean(p_list) ** (-1)) - 0.5
         return max(round(float(n)), 1)
 
     def _build(self, n: int) -> None:
@@ -65,7 +61,7 @@ class QBAI(QuantumCircuit):
         for _ in range(n):
             self.append(self.o_f, range(self.len))
 
-            self.append(self.o_e.inverse(), range(self.len))
+            self.append(self.o_e.adjoint(), range(self.len))
             self.h(range(self.y_len, self.len))
 
             self.barrier()
@@ -84,13 +80,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 from qiskit import Aer, execute
 
-x_len = 3
+x_len = 4
 y_len = 2
 shots = 10_000
 
-# p_list = np.linspace(0, 0.01, 2**x_len)
-p_list = np.random.rand(2**x_len) * 0.1
-p_list = np.sort(p_list)
+p_list = np.linspace(0.01, 0.1, 2**x_len)
+# p_list = np.zeros(2**x_len)
+# p_list[0] = 1
+# p_list = np.random.rand(2**x_len) * 0.1
+# p_list = np.sort(p_list)
 
 random_prob = 1 / np.size(p_list)
 expected_prob = (np.max(p_list) / np.mean(p_list)) * random_prob
@@ -99,31 +97,34 @@ qc = QBAI(
     x_len,
     y_len,
     p_list,
+    n=1,
 )
 
-counts = (
-    execute(qc, Aer.get_backend("qasm_simulator"), shots=shots)
-    .result()
-    .get_counts()
-)
+qc.draw("mpl")
 
-# counts = {int(k, 2): v / shots for k, v in counts.items()}  # int(k[::-1], 2):
-counts_1 = {int(k[::-1], 2): v / shots for k, v in counts.items()}
-plt.title(f"n = {qc.n}")
-plt.bar(counts_1.keys(), counts_1.values())
-plt.axhline(expected_prob, color="red")
-plt.axhline(random_prob, color="green")
-plt.show()
+# counts = (
+#     execute(qc, Aer.get_backend("qasm_simulator"), shots=shots)
+#     .result()
+#     .get_counts()
+# )
 
-counts_2 = {int(k, 2): v / shots for k, v in counts.items()}
-plt.title(f"n = {qc.n}")
-plt.bar(counts_2.keys(), counts_2.values())
-plt.axhline(expected_prob, color="red")
-plt.axhline(random_prob, color="green")
-plt.show()
+# # counts = {int(k, 2): v / shots for k, v in counts.items()}  # int(k[::-1], 2):
+# counts_1 = {int(k[::-1], 2): v / shots for k, v in counts.items()}
+# plt.title(f"n = {qc.n}")
+# plt.bar(counts_1.keys(), counts_1.values())
+# plt.axhline(expected_prob, color="red")
+# plt.axhline(random_prob, color="green")
+# plt.show()
+
+# counts_2 = {int(k, 2): v / shots for k, v in counts.items()}
+# plt.title(f"n = {qc.n}")
+# plt.bar(counts_2.keys(), counts_2.values())
+# plt.axhline(expected_prob, color="red")
+# plt.axhline(random_prob, color="green")
+# plt.show()
 
 
-print(p_list)
+# print(p_list)
 
 
 # %%

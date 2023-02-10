@@ -10,27 +10,27 @@ class OracleF(QuantumCircuit):
         x_len: int,
         y_len: int,
         f: Callable[[int, int], bool],
-        label: str = "$O_f$",
+        name: str = "$O_f$",
     ):
-        super().__init__(x_len + y_len)
+        super().__init__(x_len + y_len, name=name)
         self.x_len = x_len
         self.y_len = y_len
         self.f = f
-        self.label = label
+        self.name = name
         self._build()
 
     def _build(self) -> None:
         diag = np.ones(2 ** (self.x_len + self.y_len), dtype=complex)
         for i in range(len(diag)):
             x = i >> self.y_len
-            y = i & ((1 << self.y_len) - 1)
+            y = i & (2**self.y_len - 1)
             if self.f(x, y):
                 diag[i] = -1
 
         self.unitary(
             np.diag(diag),
             self.qubits,
-            label=self.label,
+            label=self.name,
         )
 
     def adjoint(self) -> QuantumCircuit:
@@ -38,7 +38,7 @@ class OracleF(QuantumCircuit):
             x_len=self.x_len,
             y_len=self.y_len,
             f=self.f,
-            label=self.label + "^\\dagger",
+            name=self.name + "$^\\dagger$",
         )
         qc.data = qc.data[::-1]
         return qc

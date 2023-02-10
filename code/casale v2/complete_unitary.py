@@ -2,6 +2,17 @@ import numpy as np
 import scipy.linalg as la
 
 
+def ortonormalise(
+    new: np.ndarray, dict_of_rows: dict[int, np.ndarray]
+) -> np.ndarray:
+    for row in dict_of_rows.values():
+        new -= (row @ new) * row
+
+    assert la.norm(new) > 1e-10
+    new /= la.norm(new)
+    return new
+
+
 def complete_unitary(dict_of_rows: dict[int, np.ndarray]) -> np.ndarray:
     """Given a dictionary of orthonormal rows,
     return a complete unitary matrix."""
@@ -24,14 +35,17 @@ def complete_unitary(dict_of_rows: dict[int, np.ndarray]) -> np.ndarray:
         if i in d:
             continue
 
-        new_row = rs.rand(n_cols)
-        new_row = new_row.astype(complex)
+        try:
+            # assert False
+            # attempt using basis vectors, preserving some sparsity
+            new_row = np.zeros(n_cols, dtype=complex)
+            new_row[i] = 1
+            new_row = ortonormalise(new_row, d)
+        except AssertionError:
+            new_row = rs.rand(n_cols)
+            new_row = new_row.astype(complex)
+            new_row = ortonormalise(new_row, d)
 
-        for row in d.values():
-            new_row -= (row @ new_row) * row
-
-        assert la.norm(new_row) > 1e-10
-        new_row /= la.norm(new_row)
         d[i] = new_row
 
     for i, row in d.items():
@@ -42,8 +56,8 @@ def complete_unitary(dict_of_rows: dict[int, np.ndarray]) -> np.ndarray:
 
 def main() -> None:
     d = {
-        0: np.array([1, 0, 0, 0]),
-        1: np.array([0, np.sqrt(0.5), np.sqrt(0.5), 0]),
+        0: np.array([0, 1, 0, 0]),
+        # 1: np.array([0, np.sqrt(0.5), np.sqrt(0.5), 0]),
     }
     mat = complete_unitary(d)
     print(mat)
