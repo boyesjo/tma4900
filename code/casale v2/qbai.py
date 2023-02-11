@@ -1,6 +1,3 @@
-# %%
-from typing import Callable
-
 import numpy as np
 from oracle_e import OracleE
 from oracle_f import OracleF
@@ -14,8 +11,6 @@ class QBAI(QuantumCircuit):
         x_len: int,
         y_len: int,
         p_list: np.ndarray,
-        # nu: Callable[[int, int], float],
-        # f: Callable[[int, int], bool],
         label: str = "$QBAI$",
         n: int | None = None,
     ):
@@ -50,7 +45,7 @@ class QBAI(QuantumCircuit):
 
     @staticmethod
     def ideal_n(p_list: np.ndarray) -> int:
-        n = 0.25 * np.pi * np.sqrt(np.mean(p_list) ** (-1)) - 0.5
+        n = 0.25 * np.pi * np.sqrt(1 / np.mean(p_list)) - 0.5
         return max(round(float(n)), 1)
 
     def _build(self, n: int) -> None:
@@ -75,56 +70,50 @@ class QBAI(QuantumCircuit):
         self.measure(range(self.y_len, self.len), self.c_reg)
 
 
-# %%
-import matplotlib.pyplot as plt
-import numpy as np
-from qiskit import Aer, execute
+def main() -> None:
+    import matplotlib.pyplot as plt
+    from qiskit import Aer, execute
 
-x_len = 4
-y_len = 2
-shots = 10_000
+    x_len = 4
+    y_len = 2
+    shots = 10_000
 
-p_list = np.linspace(0.01, 0.1, 2**x_len)
-# p_list = np.zeros(2**x_len)
-# p_list[0] = 1
-# p_list = np.random.rand(2**x_len) * 0.1
-# p_list = np.sort(p_list)
+    p_list = np.linspace(0.01, 0.02, 2**x_len)
 
-random_prob = 1 / np.size(p_list)
-expected_prob = (np.max(p_list) / np.mean(p_list)) * random_prob
+    # p_list = np.zeros(2**x_len)
+    # p_list = np.ones(2**x_len) * 0.5
+    # p_list[10] = 1
 
-qc = QBAI(
-    x_len,
-    y_len,
-    p_list,
-    n=1,
-)
+    # p_list = np.random.rand(2**x_len) * 0.01
+    # p_list = np.sort(p_list)
 
-qc.draw("mpl")
+    random_prob = 1 / np.size(p_list)
+    expected_prob = (np.max(p_list) / np.mean(p_list)) * random_prob
 
-# counts = (
-#     execute(qc, Aer.get_backend("qasm_simulator"), shots=shots)
-#     .result()
-#     .get_counts()
-# )
+    qc = QBAI(
+        x_len,
+        y_len,
+        p_list,
+    )
 
-# # counts = {int(k, 2): v / shots for k, v in counts.items()}  # int(k[::-1], 2):
-# counts_1 = {int(k[::-1], 2): v / shots for k, v in counts.items()}
-# plt.title(f"n = {qc.n}")
-# plt.bar(counts_1.keys(), counts_1.values())
-# plt.axhline(expected_prob, color="red")
-# plt.axhline(random_prob, color="green")
-# plt.show()
+    counts = (
+        execute(qc, Aer.get_backend("qasm_simulator"), shots=shots)
+        .result()
+        .get_counts()
+    )
 
-# counts_2 = {int(k, 2): v / shots for k, v in counts.items()}
-# plt.title(f"n = {qc.n}")
-# plt.bar(counts_2.keys(), counts_2.values())
-# plt.axhline(expected_prob, color="red")
-# plt.axhline(random_prob, color="green")
-# plt.show()
+    counts = {int(k, 2): v / shots for k, v in counts.items()}
+    plt.title(f"n = {qc.n}")
+    plt.bar(counts.keys(), counts.values())
+    plt.axhline(expected_prob, color="red")
+    plt.axhline(random_prob, color="green")
+    plt.show()
+
+    print(p_list)
+
+    QBAI(4, 2, np.linspace(0.01, 0.1, 2**4), n=2).draw("mpl")
+    plt.show()
 
 
-# print(p_list)
-
-
-# %%
+if __name__ == "__main__":
+    main()

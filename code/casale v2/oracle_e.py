@@ -53,7 +53,7 @@ class OracleE(QuantumCircuit):
             x_len=self.x_len,
             y_len=self.y_len,
             nu=self.nu,
-            name=self.name + "^\\dagger",
+            name=self.name + "$^\\dagger$",
             adj=not self.adj,
         )
         qc.data = qc.data[::-1]
