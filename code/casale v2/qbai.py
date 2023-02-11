@@ -11,7 +11,7 @@ class QBAI(QuantumCircuit):
         x_len: int,
         y_len: int,
         p_list: np.ndarray,
-        label: str = "$QBAI$",
+        name: str = "$QBAI$",
         n: int | None = None,
     ):
         self.q_reg = QuantumRegister(x_len + y_len, name="q")
@@ -19,11 +19,12 @@ class QBAI(QuantumCircuit):
         super().__init__(
             self.q_reg,
             self.c_reg,
+            name=name,
         )
         self.x_len = x_len
         self.y_len = y_len
         self.len = x_len + y_len
-        self.label = label
+        self.name = name
         self.p_list = p_list
 
         self.nu = (
@@ -44,9 +45,14 @@ class QBAI(QuantumCircuit):
         self._build(n)
 
     @staticmethod
+    def ideal_n_exact(p_list: np.ndarray) -> float:
+        theta = np.arcsin(np.sqrt(np.mean(p_list)))
+        n = 0.25 * np.pi / theta - 0.5
+        return float(n)
+
+    @staticmethod
     def ideal_n(p_list: np.ndarray) -> int:
-        n = 0.25 * np.pi * np.sqrt(1 / np.mean(p_list)) - 0.5
-        return max(round(float(n)), 1)
+        return max(round(QBAI.ideal_n_exact(p_list)), 1)
 
     def _build(self, n: int) -> None:
         self.n = n
