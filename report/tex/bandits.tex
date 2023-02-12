@@ -1,21 +1,88 @@
 \chapter{Multi-armed bandits}
 \label{chap:bandits}
 
-\section{Problem formulation}
-In the multi-armed bandit problem, there are $k$ distributions (\enquote{arms})  with unknown means $\{\mu_1, \mu_2,\dots,\mu_k\}$.
-For a given number of turns $T$, the goal is to maximise the expected reward by iteratively selecting a distribution to sample from.
-In particular, the goal is to minimise the regret defined as
-\begin{equation}
-    R(T) = \sum_{t=1}^T \mu^* - \mu_t,
-\end{equation}
-where $\mu^*$ is the mean of the distribution with the highest mean, and $\mu_t$ is the mean of the distribution selected at time $t$.
-The number of turns $T$ is often referred to as the (time) horizon and will be assumed to be greater than $k$, such that all arms may be pulled.
-This poses a constant struggle between exploration and exploitation, where exploration is the process of trying out new distributions, and exploitation is the process of sampling from the distribution with the highest average thus far.
+The multi-armed bandit (MAB) problem is a classic problem in reinforcement learning and probability theory.
+It poses a simple yet challenging problem, where the agent must sequentially choose between a number of arms (distributions) of which the mean reward is unknown, trying to maximise the cumulative reward.
+This poses a constant struggle between exploration and exploitation, where exploration is the process of trying out new arms, and exploitation is the process of sampling from the distribution with the highest average thus far.
 
-Assumptions are made about the distributions.
-Otherwise, composing algorithm with any sort of optimality guarantee would be futile.
-A common assumption, for example, is that the distributions are Bernoulli or Guassian.
-Alternatively, assumptions may be made about the distributions' support or by imposing bounds on their variances.
+Bandit problems were first considered in 1933 \cite{thompson1933}, but the term was not coined before 1952 \cite{robbins1952}.
+Some of the many real-world setting where the multi-armed bandit problem is applicable are listed in \cref{tab:mab_applications}.
+Despite being a simple problem, its countless variants and applications make it not only a useful tool for real-world problems.
+Netflix uses MAB theory to recommend movies \cite{kawale2018}, Amazon for its website layout \cite{hill2017}, Facebook for video compression \cite{daulton2019} and Doordash to identify responsive deliverymen \cite{sharma2022}.
+The problem and its variations are still being studied with several results in what follows being recent.
+
+\begin{table}
+    \centering
+    \caption{
+        Some applications of the multi-armed bandit problem.
+    }
+    \label{tab:mab_applications}
+    \begin{tblr}{
+            width=\linewidth,
+            colspec={Q[l] Q[r] Q[r]}
+        }
+        \toprule
+        Application            & Arms                 & Reward            \\
+        \midrule
+        Medical trials         & Drugs                & Patient health    \\
+        Online advertising     & Ad placements        & Number of clicks  \\
+        Website design         & Layouts/fonts \&c.   & Number of clicks  \\
+        Recommendation systems & Items                & Number of clicks  \\
+        Dynamic pricing        & Prices               & Profit            \\
+        Networking             & Routes, settings     & Ping              \\
+        Lossy compression      & Compression settings & Quality preserved \\
+        Tasking employees      & Which employee       & Productivity      \\
+        \bottomrule
+    \end{tblr}
+
+\end{table}
+
+
+\section{Formal definition}
+In the multi-armed bandit problem, a set of $k$ distributions are given, each with an unknown mean $\mu_i$.
+Denote the set of distributions by $\mathcal{A}$ and the distributions by $A_i$, $i \in \{1,2,\dots,k\}$.
+These distributions have unknown means $\{\mu_1, \mu_2,\dots,\mu_k\}$.
+The agent is given a number of turns $T$, known as the (time-) horizon, and at each turn $t$, the agent selects an arm $i_t$ to sample from, receiving a reward $r_{i_t}$ from the corresponding distribution $A_{i_t}$.
+
+For the analysis of algorithm performance, the regret is used.
+At round $T$, the regret is defined as
+\begin{equation}
+    R(T) = \sum_{t=1}^T \mu^* - \mu_{i_t},
+\end{equation}
+where $\mu^*$ is the highest, optimal mean, and $\mu_{i_t}$ is the mean of the arm selected at time $t$.
+Algorithms are often probabilistic, so often the expected regret is of more interest.
+Regret will be used interchangeably with expected regret, with the meaning being clear from the context.
+When discussing algorithms in general, the expected regret is of concern, while considering particular simulations, the regret is of interest.
+The number of turns $T$ is often referred to as the (time-) horizon and will be assumed to be greater than $k$, such that all arms may be pulled.
+While $T$ is assumed given, many algorithms are designed to work independently of it, being known as anytime algorithms.
+
+While the mean rewards always are unknown, some assumptions will be made about the distributions, of which some common ones are listed in \cref{tab:mab_assumptions}.
+Naturally, stronger assumptions lead to better algorithms.
+
+\begin{table}
+    \centering
+    \caption{
+        Common assumptions made about MAB distributions.
+    }
+    \label{tab:mab_assumptions}
+    \begin{tblr}{
+            width=\linewidth,
+            colspec={Q[l]}
+        }
+        \toprule
+        Assumption                 \\
+        \midrule
+        Bernoulli                  \\
+        Gaussian, unit variance    \\
+        Gaussian, unknown variance \\
+        Sub-Gaussian               \\
+        Support on $[0,1]$         \\
+        Support on $(-\infty,b]$   \\
+        \bottomrule
+    \end{tblr}
+\end{table}
+
+
 
 \subsection{Best-arm identification}
 An alternative problem is to find the best arm with as few turns as possible.
@@ -27,7 +94,7 @@ There are many generalisations to the multi-armed bandit problem.
 For instance, the distributions may not be stationary, but instead change throughout the game.
 Alternatively, with contextual bandits, information about a context is given before each turn, which must then be taken into account when selecting an arm.
 Adversarial bandits complicates matters further, where the rewards are not stochastic from some distribution, but are instead selected by an adversary.
-
+Such problems are beyond the scope of this report, but are interesting in their own right, and much of the theory developed for the standard, stochastic MAB problem can be extended to these problems as well.
 
 \section{Strategies}
 
@@ -48,24 +115,22 @@ Adversarial bandits complicates matters further, where the rewards are not stoch
         Greedy         & Linear      & NA        \\
         Epsilon-greedy & Linear      & Difficult \\
         Epsilon-decay  & Logarithmic & Difficult \\
-        UCB            & Logarithmic & Optional  \\
+        UCB            & Logarithmic & Barely    \\
         Thompson       & Logarithmic & Priors    \\
         \bottomrule
     \end{tblr}
 \end{table}
 
 \subsection{Explore-only}
-Pure exploration is obviously a suboptimal strategy, but it is a good baseline to compare against.
+Pure exploration is obviously a suboptimal strategy, but it is a good baseline against which to compare.
 It can be implemented by selecting an arm uniformly or in order, but it will perform poorly either way.
-The arm-selection procedure is described by \cref{alg:greedy}.
+The arm-selection procedure is described by \cref{alg:random}.
 \begin{algorithm}
     \caption{Random arm selection}
     \label{alg:random}
     \begin{algorithmic}
-        \Procedure{SelectArm}{$t$}
         \State Sample $i$ from $\{1,\dots, k\}$ uniformly
         \State \Return $i$
-        \EndProcedure
     \end{algorithmic}
 \end{algorithm}
 
@@ -73,12 +138,11 @@ It is easy that the expected regret is
 \begin{equation}
     R(T) = T\left(\mu^* - \frac{1}{k}\sum_{i=1}^k \mu_i\right),
 \end{equation}
-which is $\Theta(T)$.
+which is necessarily linear in $T$.
 This motivates the search for an algorithm with sublinear regret.
 
-
 \subsection{Greedy}
-A simple algorithm and a good baseline is the greedy algorithm.
+Going the other way, a greedy algorithm will always select the arm with the highest empirical mean.
 Here, all arms are tried $N$ initial times, and the empirical means are used to select the best arm.
 Afterwards, the arm with the highest empirical mean is selected for all remaining turns.
 The arm-selection procedure is listed in \cref{alg:greedy}, where $\hat{\mu}_i$ is the empirical mean of arm $i$.
@@ -86,21 +150,16 @@ The arm-selection procedure is listed in \cref{alg:greedy}, where $\hat{\mu}_i$ 
     \caption{Greedy arm selection}
     \label{alg:greedy}
     \begin{algorithmic}
-        \Procedure{SelectArm}{$t$}
         \If{$t \leq Nk$}
         \State \Return $(t \mod k) + 1$
         \Else
         \State \Return $\argmax_{i=1,\dots,k} \hat{\mu}_i$
         \EndIf
-        \EndProcedure
     \end{algorithmic}
 \end{algorithm}
 
-With greedy selection, the expected regret is
-\begin{equation}
-    R(T) = \sum_{t=1}^T \mu^* - \hat{\mu}_t,
-\end{equation}
-
+With greedy selection, the expected regret is clearly still linear in the horizon, as there is a non-zero probability of selecting the wrong arm.
+Still, there is a chance of achieving zero regret and the constant factor is reduced compared to random selection.
 
 
 \subsection{Epsilon-greedy}
@@ -108,31 +167,81 @@ The problem with the greedy algorithm is that it may be unlucky and not discover
 To mitigate this, the epsilon-greedy algorithm may be used.
 In this algorithm, the estimated arm is pulled with probability $1-\epsilon$ and a random arm is pulled with probability $\epsilon$.
 This ensures convergence to correct exploitation as the horizon increases, and it will generally reduce the regret.
-Still, with a constant $\epsilon$, a constant proportion of the turns will be spent exploring, keeping the regret linear in the horizon.
+
+Still, with a constant $\epsilon$, a constant proportion of the turns will be spent exploring, keeping the regret necessarily linear in the horizon.
 Choosing $\epsilon$ is a trade-off between exploration and exploitation and can significantly affect the regret.
+This problem of tuning $\epsilon$ makes the epsilon-greedy algorithm difficult to use in practice, as the optimal value will vary greatly with the problem \cite{citation needed}.
+
+\begin{algorithm}
+    \caption{Epsilon-greedy arm selection}
+    \label{alg:eps_greedy}
+    \begin{algorithmic}
+        \If{$t \leq Nk$}
+        \State \Return $(t \mod k) + 1$
+        \Else
+        \State Sample $u$ from $[0,1)$ uniformly
+        \If{$u < \epsilon$}
+        \State Sample $i$ from $\{1,\dots, k\}$ uniformly
+        \State \Return $i$
+        \Else
+        \State \Return $\argmax_{i=1,\dots,k} \hat{\mu}_i$
+        \EndIf
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
 
 \subsubsection{Epsilon-decay}
-If one allows the $\epsilon$ to decay over time, the regret can be reduced even further.
-This makes sense, as exploration is less worthwhile as estimates become ever more accurate.
-A common choice is to decay $\epsilon$ as $\epsilon_t = \epsilon_0 / t$.
+To remedy the linear term in the regret, the epsilon-greedy algorithm can be modified to change $\epsilon$ as a function of $t$.
+Clearly, decaying towards zero is needed to achieve sublinear regret, and having a decreasing $\epsilon$ makes sense; the algorithm should explore more in the beginning and exploit more when it has better estimates of the means.
+For instance, setting $\epsilon \sim \frac{1}{t}$ has been proven to achieve logarithmic regret \cite{auer2002}.
 
 \subsection{UCB}
 The upper confidence bound (UCB) algorithm is a more sophisticated algorithm based on estimating an upper bound for the mean of each arm.
 One always chooses the arm whose upper confidence bound is highest, a principle known as \enquote{optimism in the face of uncertainty}.
+This should make sense, as if the wrong arm appears best, it will be pulled more often and the empirical mean will be corrected, while the true best arm with its larger bound will eventually become highest and so pulled.
+When exploiting the actual best arm, the agent can trust it to be the best, as the confidence bound will remain above those of all the other arms.
 
-In the original formulation, where support on only $[0,1]$ is assumed, the upper confidence bound is given by
+Assuming rewards in $[0,1]$ and using Hoeffding's inequality, one has
 \begin{equation}
-    \text{UCB}_t(a) = \hat{\mu}_t(a) + \sqrt{\frac{2\ln t}{N_t(a)}},
+    p
+    = P \left(\mu_i > \hat{\mu_i} + \text{UCB}_i \right)
+    \leq \exp \left(-2N_i \text{UCB}_i^2 \right),
 \end{equation}
-where $\hat{\mu}_t(a)$ is the empirical mean of arm $a$ at time $t$, $N_t(a)$ is the number of times arm $a$ has been pulled at time $t$.
-It generally achieves logarithmic regret.
+where $\text{UCB}_i$ is the upper confidence bound for arm $i$ and $N$ is the number of times arm $i$ has been pulled.
+Solving for $\text{UCB}_i$ gives
+\begin{equation}
+    \text{UCB}_i = \sqrt{\frac{-\ln p}{2N_i}},
+\end{equation}
+and letting $p = t^{-4}$ gives
+\begin{equation}
+    \text{UCB}_i = \sqrt{\frac{2 \ln t}{N_i}},
+\end{equation}
+which is a common choice for the upper confidence bound, leading to the UCB1-algorithm.
+In \cite{auer2002}, it was shown that this algorithm achieves $O(\ln T)$ regret.
+Regardless of the assumptions made, the procedure follows as in \cref{alg:ucb}.
+Many variants of the algorithm exist; different assumptions about the distributions change the confidence bounds.
+While the choice of $p$ is arbitrary, it is less of nuisance than the choice of $\epsilon$ in the epsilon-greedy algorithm, with specific choices of $p$, such as the UCB1-algorithm, being well-studied and known to achieve logarithmic regret.
 
-Many variants of the UCB algorithm exist.
-Different assumptions about the distributions changes the confidence bounds.
+\begin{algorithm}
+    \caption{UCB arm selection}
+    \label{alg:ucb}
+    \begin{algorithmic}
+        \If{$t \leq k$}
+        \State \Return $t$
+        \Else
+        \State \Return $\argmax_{i=1,\dots,k} \hat{\mu}_i + \text{UCB}_i$
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
 
 \subsection{Bayesian: Thompson sampling}
-Thompson sampling is a Bayesian approach to the multi-armed bandit problem, originally described in 1933 as a way to handle the exploration-exploitation dilemma in the context of medical trials.
+Thompson sampling is a Bayesian approach to the multi-armed bandit problem, being the original approach to the problem \cite{thompson1933}, where Bernoulli distributions were assumed.
 The idea is to sample from the posterior distribution of the means of the arms and pull the arm with the highest sample.
 
+
+\subsection{Optimality}
+Lai Robbins etc.
 
 \section{Simulations}
