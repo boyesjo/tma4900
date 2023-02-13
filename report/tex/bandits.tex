@@ -160,17 +160,17 @@ The arm-selection procedure is listed in \cref{alg:greedy}, where $\hat{\mu}_i$ 
 
 With greedy selection, the expected regret is clearly still linear in the horizon, as there is a non-zero probability of selecting the wrong arm.
 Still, there is a chance of achieving zero regret and the constant factor is reduced compared to random selection.
+To improve hereupon, it is necessary to occasionally explore other arms, which leads into the epsilon-greedy algorithm.
 
 
 \subsection{Epsilon-greedy}
 The problem with the greedy algorithm is that it may be unlucky and not discover the best arm in the initial exploration phase.
 To mitigate this, the epsilon-greedy algorithm may be used.
-In this algorithm, the estimated arm is pulled with probability $1-\epsilon$ and a random arm is pulled with probability $\epsilon$.
+In this algorithm, the presumed best arm is pulled with probability $1-\epsilon$, while in the other $\epsilon$ proportion of the turns, an arm is pulled uniformly at random.
 This ensures convergence to correct exploitation as the horizon increases, and it will generally reduce the regret.
 
 Still, with a constant $\epsilon$, a constant proportion of the turns will be spent exploring, keeping the regret necessarily linear in the horizon.
 Choosing $\epsilon$ is a trade-off between exploration and exploitation and can significantly affect the regret.
-This problem of tuning $\epsilon$ makes the epsilon-greedy algorithm difficult to use in practice, as the optimal value will vary greatly with the problem \cite{citation needed}.
 
 \begin{algorithm}
     \caption{Epsilon-greedy arm selection}
@@ -194,7 +194,7 @@ This problem of tuning $\epsilon$ makes the epsilon-greedy algorithm difficult t
 \subsubsection{Epsilon-decay}
 To remedy the linear term in the regret, the epsilon-greedy algorithm can be modified to change $\epsilon$ as a function of $t$.
 Clearly, decaying towards zero is needed to achieve sublinear regret, and having a decreasing $\epsilon$ makes sense; the algorithm should explore more in the beginning and exploit more when it has better estimates of the means.
-For instance, setting $\epsilon \sim \frac{1}{t}$ has been proven to achieve logarithmic regret \cite{auer2002}.
+For instance, setting $\epsilon \sim 1/t$ has been proven to achieve logarithmic regret \cite{auer2002}.
 
 \subsection{UCB}
 The upper confidence bound (UCB) algorithm is a more sophisticated algorithm based on estimating an upper bound for the mean of each arm.
@@ -221,7 +221,7 @@ which is a common choice for the upper confidence bound, leading to the UCB1-alg
 In \cite{auer2002}, it was shown that this algorithm achieves $O(\ln T)$ regret.
 Regardless of the assumptions made, the procedure follows as in \cref{alg:ucb}.
 Many variants of the algorithm exist; different assumptions about the distributions change the confidence bounds.
-While the choice of $p$ is arbitrary, it is less of nuisance than the choice of $\epsilon$ in the epsilon-greedy algorithm, with specific choices of $p$, such as the UCB1-algorithm, being well-studied and known to achieve logarithmic regret.
+While the choice of $p$ is arbitrary, it is less of nuisance than the choice of $\epsilon$ in the epsilon-greedy algorithm, with specific choices of $p$, such as the UCB1-algorithm, being well-studied and known to perform well, achieving logarithmic regret.
 
 \begin{algorithm}
     \caption{UCB arm selection}
