@@ -10,9 +10,11 @@ from qiskit import Aer, execute
 
 # %%
 def probs(qc: QBAI, shots: int = 10_000) -> dict[int, float]:
+    alg = qc.copy()
+    alg.add_measurements()
     counts = (
         execute(
-            qc,
+            alg,
             backend=Aer.get_backend("aer_simulator"),
             shots=shots,
         )
@@ -32,6 +34,31 @@ def prob_correct(
     return counts.get(best_arm, 0.0)
 
 
+def probs_statevec(qc: QBAI) -> dict[int, float]:
+    statevec = (
+        execute(
+            qc,
+            backend=Aer.get_backend("statevector_simulator"),
+        )
+        .result()
+        .get_statevector()
+    )
+    prob = np.abs(np.asarray(statevec)) ** 2
+    new_prob = {x: 0.0 for x in range(2**qc.x_len)}
+    for x in range(2**qc.x_len):
+        for y in range(2**qc.y_len):
+            new_prob[x] += prob[x << qc.y_len | y]
+    return new_prob
+
+
+def prob_correct_statevec(
+    qc: QBAI,
+    best_arm: int,
+) -> float:
+    counts = probs_statevec(qc)
+    return counts.get(best_arm, 0.0)
+
+
 # %%
 p_list = np.linspace(0.0, 0.1, 32)
 qc = QBAI(
@@ -39,7 +66,7 @@ qc = QBAI(
     y_len=2,
     p_list=p_list,
 )
-counts = probs(qc)
+counts = probs_statevec(qc)
 plt.title(f"n = {qc.n}")
 plt.bar(counts.keys(), counts.values())
 plt.axhline(1 / np.size(p_list), color="green")
@@ -82,7 +109,7 @@ def test_n(
     for n in n_list:
         qc = QBAI(
             x_len=x_len,
-            y_len=2,
+            y_len=1,
             p_list=p_list,
             n=n,
         )
@@ -91,6 +118,9 @@ def test_n(
                 "n": n,
                 "ideal_n": QBAI.ideal_n_exact(p_list),
                 "simulated": prob_correct(qc, np.argmax(p_list)),
+                "simulated_statevec": prob_correct_statevec(
+                    qc, np.argmax(p_list)
+                ),
                 "random": 1 / np.size(p_list),
                 "theoretical": np.max(p_list) / np.sum(p_list),
             }
@@ -101,7 +131,7 @@ def test_n(
 
 df = test_n(
     np.arange(1, 20),
-    p_list=np.linspace(0.0, 0.1, 32),
+    p_list=np.linspace(0.0, 0.01, 32),
 )
 
 df.drop("ideal_n", axis=1).plot()
@@ -119,7 +149,7 @@ def test_num_arms(
     for n_arms in n_arms_list:
         x_len = np.log2(n_arms).astype(int)
         assert 2**x_len == n_arms
-        p_list = np.linspace(0.0, 0.01, n_arms)
+        p_list = np.linspace(0.0, 0.05, n_arms)
         qc = QBAI(
             x_len=x_len,
             y_len=1,
@@ -130,6 +160,9 @@ def test_num_arms(
                 "n_arms": n_arms,
                 "n": qc.n,
                 "simulated": prob_correct(qc, np.argmax(p_list)),
+                "simulated_statevec": prob_correct_statevec(
+                    qc, np.argmax(p_list)
+                ),
                 "random": 1 / np.size(p_list),
                 "theoretical": np.max(p_list) / np.sum(p_list),
             }
@@ -156,7 +189,7 @@ def test_arm_range(
         p_list = np.linspace(0.0, max_p, n_arms)
         qc = QBAI(
             x_len=x_len,
-            y_len=2,
+            y_len=3,
             p_list=p_list,
         )
         results.append(
@@ -164,6 +197,9 @@ def test_arm_range(
                 "max_p": max_p,
                 "n": qc.n,
                 "simulated": prob_correct(qc, np.argmax(p_list)),
+                "simulated_statevec": prob_correct_statevec(
+                    qc, np.argmax(p_list)
+                ),
                 "random": 1 / np.size(p_list),
                 "theoretical": np.max(p_list) / np.sum(p_list),
             }

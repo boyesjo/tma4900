@@ -18,9 +18,9 @@ class QBAI(QuantumCircuit):
         self.c_reg = ClassicalRegister(x_len, name="c")
         super().__init__(
             self.q_reg,
-            self.c_reg,
             name=name,
         )
+
         self.x_len = x_len
         self.y_len = y_len
         self.len = x_len + y_len
@@ -73,6 +73,8 @@ class QBAI(QuantumCircuit):
             self.h(range(self.y_len, self.len))
             self.append(self.o_e, range(self.len))
 
+    def add_measurements(self) -> None:
+        self.add_register(self.c_reg)
         self.measure(range(self.y_len, self.len), self.c_reg)
 
 
