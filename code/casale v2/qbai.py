@@ -46,7 +46,8 @@ class QBAI(QuantumCircuit):
 
     @staticmethod
     def ideal_n_exact(p_list: np.ndarray) -> float:
-        theta = np.arcsin(np.sqrt(np.mean(p_list)))
+        # theta = np.arcsin(np.sqrt(np.mean(p_list)))
+        theta = np.sqrt(np.max(p_list))
         n = 0.25 * np.pi / theta - 0.5
         return float(n)
 
@@ -86,11 +87,11 @@ def main() -> None:
     y_len = 2
     shots = 10_000
 
-    p_list = np.linspace(0.01, 0.02, 2**x_len)
+    # p_list = np.linspace(0.01, 0.02, 2**x_len)
 
-    # p_list = np.zeros(2**x_len)
-    # p_list = np.ones(2**x_len) * 0.5
-    # p_list[10] = 1
+    p_list = np.zeros(2**x_len)
+    p_list = np.ones(2**x_len) * 0.1
+    p_list[10] = 1
 
     # p_list = np.random.rand(2**x_len) * 0.01
     # p_list = np.sort(p_list)
@@ -103,6 +104,7 @@ def main() -> None:
         y_len,
         p_list,
     )
+    qc.add_measurements()
 
     counts = (
         execute(qc, Aer.get_backend("qasm_simulator"), shots=shots)
