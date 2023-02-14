@@ -32,7 +32,7 @@ The problem and its variations are still being studied with several results in w
         Networking             & Routes, settings     & Ping              \\
         Lossy compression      & Compression settings & Quality preserved \\
         Tasking employees      & Which employee       & Productivity      \\
-        Finace                 & Investment options   & Profit            \\
+        Finance                & Investment options   & Profit            \\
         \bottomrule
     \end{tblr}
 
@@ -43,8 +43,14 @@ The problem and its variations are still being studied with several results in w
 In the multi-armed bandit problem, a set of $k$ distributions are given, each with an unknown mean $\mu_i$.
 Denote the set of distributions by $\mathcal{A}$ and the distributions by $A_i$, $i \in \{1,2,\dots,k\}$.
 These distributions have unknown means $\{\mu_1, \mu_2,\dots,\mu_k\}$.
-The agent is given a number of turns $T$, known as the (time-) horizon, and at each turn $t$, the agent selects an arm $i_t$ whence it samples independently of previous samples, receiving a reward $r_{i_t}$ from the corresponding distribution $A_{i_t}$.
+The agent is given a number of turns $T$, known as the (time-) horizon, and at each turn $t$, the agent selects an arm $i_t$ whence it samples independently of previous samples, receiving a reward $r_{i_t} \sim P_{i_t}$.
+The goal is to maximise the expected sum of rewards.
 
+While the mean rewards always are unknown, some assumptions will be made about the distributions, of which some common ones are listed in \cref{tab:mab_assumptions}.
+Naturally, stronger assumptions lead to better algorithms.
+
+
+\subsection{Performance}
 For the analysis of algorithm performance, the regret is used.
 At round $T$, the regret is defined as
 \begin{equation}
@@ -57,9 +63,6 @@ When discussing algorithms in general, the expected regret is of concern, while 
 The number of turns $T$ is often referred to as the (time-) horizon and will be assumed to be greater than $k$, such that all arms may be pulled.
 While $T$ is assumed given, many algorithms are designed to work independently of it, being known as anytime algorithms.
 
-While the mean rewards always are unknown, some assumptions will be made about the distributions, of which some common ones are listed in \cref{tab:mab_assumptions}.
-Naturally, stronger assumptions lead to better algorithms.
-
 \begin{table}
     \centering
     \caption{
@@ -68,17 +71,16 @@ Naturally, stronger assumptions lead to better algorithms.
     \label{tab:mab_assumptions}
     \begin{tblr}{
             width=\linewidth,
-            colspec={Q[l]}
+            colspec={Q[l] Q[r]}
         }
         \toprule
-        Assumption                 \\
+        Assumption                 & Description                                                       \\
         \midrule
-        Bernoulli                  \\
-        Gaussian, unit variance    \\
-        Gaussian, unknown variance \\
-        Sub-Gaussian               \\
-        Support on $[0,1]$         \\
-        Support on $(-\infty,b]$   \\
+        Bernoulli                  & $r \sim \mathcal{B}(\mu)$                                         \\
+        Gaussian, unit variance    & $r \sim \mathcal{N}(\mu,1)$                                       \\
+        Gaussian, unknown variance & $r \sim \mathcal{N}(\mu,\sigma^2)$                                \\
+        Sub-Gaussian               & $\exists C > 0: P(|r| \geq \epsilon) \leq 2\exp(-\epsilon^2/C^2)$ \\
+        Bounded value              & $r \in [0,1]$                                                     \\
         \bottomrule
     \end{tblr}
 \end{table}
@@ -92,13 +94,33 @@ The metric here is how the turns needed grows with $\delta$.
 Unlike regret minimisation, exploitation is less of a concern, but much theory can be transferred from the regret minimisation problem.
 Though less is gained from repeatedly pulling the assumed best arm, there is still incentive to investigate the better arms than the worse.
 
+\subsection{Optimality}
+In the realm of multi-armed banditry, expressing optimality is fraught with difficulties.
+Any precise formulation is contingent upon not only the assumptions made, but also the particular instance, namely actual means and any other parameters.
+
+In order to meaningfully define a lower bound, its imperative to assume a reasonoble algorithm.
+Otherwise, trivial policies, such as always pulling the first arm, would achieve zero regret.
+One may therefore impose asymptotic consistency, which by definition means that for all inferior arms and all $\alpha > 0$,
+\begin{equation}
+    E(N_i(T)) = o(T^{\alpha}),
+\end{equation}
+where $N_i(T)$ is the number of times arm $i$ have been pulled in the first $T$ turns.
+For algorithms obeying this property, the Lai-Robbins bound holds \cite{lai1985}, namely that
+\begin{equation}
+    \lim_{T\to\infty} \inf \frac{E(N_i(T))}{\ln T} \geq \frac{1}{D(P_i || P^*)},
+\end{equation}
+where $P_i$ is the reward distribution of arm $i$, $P^*$ that of the optimal distribution and $D(\cdot || \cdot)$ is the Kullback-Leibler divergence.
+Effectively then, any asymptotically consistent algorithm will suffer a regret of at least $\Omega(\ln T)$.
+
 
 \subsection{Bandit generalisations}
-There are many generalisations to the multi-armed bandit problem.
-For instance, the distributions may not be stationary, but instead change throughout the game.
-Alternatively, with contextual bandits, information about a context is given before each turn, which must then be taken into account when selecting an arm.
-Adversarial bandits complicates matters further, where the rewards are not stochastic from some distribution, but are instead selected by an adversary.
-Such problems are beyond the scope of this report, but are interesting in their own right, and much of the theory developed for the standard, stochastic MAB problem can be extended to these problems as well.
+The multi-armed bandit problem has numerous generalisations, including the non-stationary multi-armed bandit where the underlying reward distributions change over time, presenting a challenging environment for traditional algorithms developed for the standard, stationary multi-armed bandit problem.
+In this variant, agents must continuously explore and adapt to the changing environment.
+Other cases give the agent more info, such as letting it know what the rewards for all arms, were they pulled instead, would have been.
+Another area of study is the contextual multi-armed bandit problem, in which contextual information must be incorporated into the decision-making process for arm selection, adding a layer of complexity to the standard multi-armed bandit problem, particularly useful for recommender systems, where the context is the user and their preferences.
+Moreover, the adversarial multi-armed bandit problem represents a significant departure from the standard, stochastic multi-armed bandit problem, where rewards are chosen by an adversary instead of following a stationary distribution.
+The infinite-armed variants, where the arm space is infinite but constrained by linearity or Lipschitz continuity, also have practical applications.
+While beyond the scope of this report, these generalisations of the multi-armed bandit problem represent important areas of study and much of the theory developed for the standard, stochastic multi-armed bandit problem can be extended to these problems as well.
 
 \section{Strategies}
 
@@ -240,6 +262,8 @@ While the choice of $p$ is arbitrary, it is less of nuisance than the choice of 
 \end{algorithm}
 
 
+
+
 \subsection{Bayesian: Thompson sampling}
 Thompson sampling is a Bayesian approach to the multi-armed bandit problem, being the original approach to the problem \cite{thompson1933}, where Bernoulli distributions were assumed.
 The idea is to sample from the posterior distribution of the means of the arms and pull the arm with the highest sample.
@@ -247,12 +271,17 @@ The idea is to sample from the posterior distribution of the means of the arms a
 In 2012, it was proven optimal for Bernoulli rewards \cite{kaufmann2012} with uniform priors.
 Also for Gaussian rewards, it was proven optimal \cite{honda2014} with uniform priors.
 However, Jeffreys prior was proven unable to achieve optimal regret, making clear the importance of the prior.
-\subsection{Optimality}
-The Lai-Robbins lower bound \cite{lai1985} gives a lower bound on the regret of any algorithm, it is known that no algorithm can achieve a regret lower than this.
-The lower bound is given by
-\begin{equation}
-    \text{lim inf}_{T \to \infty} \frac{R(T)}{\ln T}
-    \geq \sum_{i=1}^k \frac{\mu_i - \mu^*}{D(P_i \Vert P^*)},
-\end{equation}
-where $P_i$ is the distribution of arm $i$, $P^*$ the distribution of the best arm and $D(P_i || P^*)$ the Kullback-Leibler divergence between $P_i$ and $P^*$.
+
+\begin{algorithm}
+    \caption{Thompson sampling arm selection}
+    \label{alg:thompson}
+    \begin{algorithmic}
+        \For {$i=1,\dots,k$}
+        \State Sample $\theta_i$ from $P(\mu_i | \{r_i^{(1)}, \dots, r_i^{(N_i(t))}\})$
+        \EndFor
+        \State \Return $\argmax_{i=1,\dots,k} \theta_i$
+        \State Update posterior for arm $i$ with reward $r_i$
+    \end{algorithmic}
+\end{algorithm}
+
 \section{Simulations}
