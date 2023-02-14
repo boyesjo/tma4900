@@ -57,7 +57,14 @@ At round $T$, the regret is defined as
     R(T) = \sum_{t=1}^T \mu^* - \mu_{i_t},
 \end{equation}
 where $\mu^*$ is the highest, optimal mean, and $\mu_{i_t}$ is the mean of the arm selected at time $t$.
-Algorithms are often probabilistic, so often the expected regret is of more interest.
+Denoting by $N_i(T)$ the number of times arm $i$ is pulled and $\Delta_i$ the difference between the mean of arm $i$ and the optimal mean, the regret can be rewritten as
+\begin{equation}
+    R(T) = \sum_{i=1}^k N_i(T) \Delta_i.
+\end{equation}
+Algorithms are often probabilistic, so often the expected regret is of more interest, given by
+\begin{equation}
+    E(R(T)) = \sum_{i=1}^k E(N_i(T)) \Delta_i.
+\end{equation}
 Regret will be used interchangeably with expected regret, with the meaning being clear from the context.
 When discussing algorithms in general, the expected regret is of concern, while considering particular simulations, the regret is of interest.
 The number of turns $T$ is often referred to as the (time-) horizon and will be assumed to be greater than $k$, such that all arms may be pulled.
@@ -87,22 +94,17 @@ While $T$ is assumed given, many algorithms are designed to work independently o
 
 
 
-\subsection{Best-arm identification}
-An alternative problem is to find the best arm with as few turns as possible.
-In this version, a $\delta$ is given, and the goal is to find the best arm with probability at least $1-\delta$.
-The metric here is how the turns needed grows with $\delta$.
-Unlike regret minimisation, exploitation is less of a concern, but much theory can be transferred from the regret minimisation problem.
-Though less is gained from repeatedly pulling the assumed best arm, there is still incentive to investigate the better arms than the worse.
+
 
 \subsection{Optimality}
 In the realm of multi-armed banditry, expressing optimality is fraught with difficulties.
 Any precise formulation is contingent upon not only the assumptions made, but also the particular instance, namely actual means and any other parameters.
 
-In order to meaningfully define a lower bound, its imperative to assume a reasonoble algorithm.
-Otherwise, trivial policies, such as always pulling the first arm, would achieve zero regret.
-One may therefore impose asymptotic consistency, which by definition means that for all inferior arms and all $\alpha > 0$,
+In order to meaningfully define a lower bound, it is imperative to assume a reasonable algorithm.
+Otherwise, trivial policies, such as always pulling the first arm, would achieve zero regret, hindering any meaningful comparison.
+One may therefore impose asymptotic consistency, which by definition means that for all inferior arms and all $\alpha \in (0, 1)$,
 \begin{equation}
-    E(N_i(T)) = o(T^{\alpha}),
+    E(R(T)) = o(T^{\alpha}),
 \end{equation}
 where $N_i(T)$ is the number of times arm $i$ have been pulled in the first $T$ turns.
 For algorithms obeying this property, the Lai-Robbins bound holds \cite{lai1985}, namely that
@@ -112,6 +114,19 @@ For algorithms obeying this property, the Lai-Robbins bound holds \cite{lai1985}
 where $P_i$ is the reward distribution of arm $i$, $P^*$ that of the optimal distribution and $D(\cdot || \cdot)$ is the Kullback-Leibler divergence.
 Effectively then, any asymptotically consistent algorithm will suffer a regret of at least $\Omega(\ln T)$.
 
+The Lai-Robbins bound is instance-dependent through its dependence on the Kullback-Leibler divergences.
+An alternative bound is proved in \cite{slivkins2019}, states that for all algorithms, given a fixed horizon $T$ and number of arms $K$, there is at least one problem instance such that
+\begin{equation}
+    E(R(T)) \geq \Omega(\sqrt{KT}).
+\end{equation}
+This is truly a worst-case bound; good algorithms will typically perform much better.
+
+\subsection{Best-arm identification}
+An alternative problem is to find the best arm with as few turns as possible.
+In this version, a $\delta$ is given, and the goal is to find the best arm with probability at least $1-\delta$.
+The metric here is how the turns needed grows with $\delta$.
+Unlike regret minimisation, exploitation is less of a concern, but much theory can be transferred from the regret minimisation problem.
+Though less is gained from repeatedly pulling the assumed best arm, there is still incentive to investigate the better arms than the worse.
 
 \subsection{Bandit generalisations}
 The multi-armed bandit problem has numerous generalisations, including the non-stationary multi-armed bandit where the underlying reward distributions change over time, presenting a challenging environment for traditional algorithms developed for the standard, stationary multi-armed bandit problem.
@@ -119,11 +134,14 @@ In this variant, agents must continuously explore and adapt to the changing envi
 Other cases give the agent more info, such as letting it know what the rewards for all arms, were they pulled instead, would have been.
 Another area of study is the contextual multi-armed bandit problem, in which contextual information must be incorporated into the decision-making process for arm selection, adding a layer of complexity to the standard multi-armed bandit problem, particularly useful for recommender systems, where the context is the user and their preferences.
 Moreover, the adversarial multi-armed bandit problem represents a significant departure from the standard, stochastic multi-armed bandit problem, where rewards are chosen by an adversary instead of following a stationary distribution.
-The infinite-armed variants, where the arm space is infinite but constrained by linearity or Lipschitz continuity, also have practical applications.
-While beyond the scope of this report, these generalisations of the multi-armed bandit problem represent important areas of study and much of the theory developed for the standard, stochastic multi-armed bandit problem can be extended to these problems as well.
+The infinite-armed variants, where the arm space is infinite but constrained by for example linearity, also have practical applications.
+While beyond the scope of this report, these generalisations of the multi-armed bandit problem represent important areas of study and much of the theory developed for the standard, stochastic multi-armed bandit problem can be extended to these problems as well\footnotemark.
+\footnotetext{
+    C.v. \cite{slivkins2019,lattimore2020}.
+}
+
 
 \section{Strategies}
-
 \begin{table}
     \centering
     \caption{
@@ -284,4 +302,4 @@ However, Jeffreys prior was proven unable to achieve optimal regret, making clea
     \end{algorithmic}
 \end{algorithm}
 
-\section{Simulations}
+\section{Simulations?}
