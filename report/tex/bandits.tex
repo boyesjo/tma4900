@@ -32,6 +32,7 @@ The problem and its variations are still being studied with several results in w
         Networking             & Routes, settings     & Ping              \\
         Lossy compression      & Compression settings & Quality preserved \\
         Tasking employees      & Which employee       & Productivity      \\
+        Finace                 & Investment options   & Profit            \\
         \bottomrule
     \end{tblr}
 
@@ -42,7 +43,7 @@ The problem and its variations are still being studied with several results in w
 In the multi-armed bandit problem, a set of $k$ distributions are given, each with an unknown mean $\mu_i$.
 Denote the set of distributions by $\mathcal{A}$ and the distributions by $A_i$, $i \in \{1,2,\dots,k\}$.
 These distributions have unknown means $\{\mu_1, \mu_2,\dots,\mu_k\}$.
-The agent is given a number of turns $T$, known as the (time-) horizon, and at each turn $t$, the agent selects an arm $i_t$ to sample from, receiving a reward $r_{i_t}$ from the corresponding distribution $A_{i_t}$.
+The agent is given a number of turns $T$, known as the (time-) horizon, and at each turn $t$, the agent selects an arm $i_t$ whence it samples independently of previous samples, receiving a reward $r_{i_t}$ from the corresponding distribution $A_{i_t}$.
 
 For the analysis of algorithm performance, the regret is used.
 At round $T$, the regret is defined as
@@ -88,6 +89,9 @@ Naturally, stronger assumptions lead to better algorithms.
 An alternative problem is to find the best arm with as few turns as possible.
 In this version, a $\delta$ is given, and the goal is to find the best arm with probability at least $1-\delta$.
 The metric here is how the turns needed grows with $\delta$.
+Unlike regret minimisation, exploitation is less of a concern, but much theory can be transferred from the regret minimisation problem.
+Though less is gained from repeatedly pulling the assumed best arm, there is still incentive to investigate the better arms than the worse.
+
 
 \subsection{Bandit generalisations}
 There are many generalisations to the multi-armed bandit problem.
@@ -240,8 +244,15 @@ While the choice of $p$ is arbitrary, it is less of nuisance than the choice of 
 Thompson sampling is a Bayesian approach to the multi-armed bandit problem, being the original approach to the problem \cite{thompson1933}, where Bernoulli distributions were assumed.
 The idea is to sample from the posterior distribution of the means of the arms and pull the arm with the highest sample.
 
-
+In 2012, it was proven optimal for Bernoulli rewards \cite{kaufmann2012} with uniform priors.
+Also for Gaussian rewards, it was proven optimal \cite{honda2014} with uniform priors.
+However, Jeffreys prior was proven unable to achieve optimal regret, making clear the importance of the prior.
 \subsection{Optimality}
-Lai Robbins etc.
-
+The Lai-Robbins lower bound \cite{lai1985} gives a lower bound on the regret of any algorithm, it is known that no algorithm can achieve a regret lower than this.
+The lower bound is given by
+\begin{equation}
+    \text{lim inf}_{T \to \infty} \frac{R(T)}{\ln T}
+    \geq \sum_{i=1}^k \frac{\mu_i - \mu^*}{D(P_i \Vert P^*)},
+\end{equation}
+where $P_i$ is the distribution of arm $i$, $P^*$ the distribution of the best arm and $D(P_i || P^*)$ the Kullback-Leibler divergence between $P_i$ and $P^*$.
 \section{Simulations}

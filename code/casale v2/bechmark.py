@@ -131,7 +131,7 @@ def test_n(
 
 df = test_n(
     np.arange(1, 20),
-    p_list=np.linspace(0.0, 0.01, 32),
+    p_list=np.linspace(0.0, 1, 32),
 )
 
 df.drop("ideal_n", axis=1).plot()
