@@ -41,10 +41,18 @@ The problem and its variations are still being studied with several results in w
 
 \section{Formal definition}
 In the multi-armed bandit problem, a set of $k$ distributions are given, each with an unknown mean $\mu_i$.
-Denote the set of distributions by $\mathcal{A}$ and the distributions by $A_i$, $i \in \{1,2,\dots,k\}$.
+Denote the set of distributions by $\mathcal{A}$ and the distributions by $P_i$, $i \in \{1,2,\dots,k\}$.
 These distributions have unknown means $\{\mu_1, \mu_2,\dots,\mu_k\}$.
 The agent is given a number of turns $T$, known as the (time-) horizon, and at each turn $t$, the agent selects an arm $i_t$ whence it samples independently of previous samples, receiving a reward $r_{i_t} \sim P_{i_t}$.
 The goal is to maximise the expected sum of rewards.
+
+To summarise:
+\begin{description}
+    \item[Known:] Number of arms $k$, number of rounds $T$
+    \item[Unknown:] Mean rewards $\{\mu_1, \mu_2,\dots,\mu_k\}$, distributions $\{P_1, P_2,\dots,P_k\}$
+    \item[Game:] For $t=1,\dots,T$: select arm $i_t$ and receive reward $r_{i_t} \sim P_{i_t}$ (independently of previous samples)
+    \item[Goal:] Maximise $E(\sum_{t=1}^T r_{i_t})$
+\end{description}
 
 While the mean rewards always are unknown, some assumptions will be made about the distributions, of which some common ones are listed in \cref{tab:mab_assumptions}.
 Naturally, stronger assumptions lead to better algorithms.
@@ -121,6 +129,7 @@ An alternative bound is proved in \cite{slivkins2019}, states that for all algor
 \end{equation}
 This is truly a worst-case bound; good algorithms will typically perform much better.
 
+
 \subsection{Best-arm identification}
 An alternative problem is to find the best arm with as few turns as possible.
 In this version, a $\delta$ is given, and the goal is to find the best arm with probability at least $1-\delta$.
@@ -150,17 +159,17 @@ While beyond the scope of this report, these generalisations of the multi-armed 
     \label{tab:strategies}
     \begin{tblr}{
             width=\linewidth,
-            colspec={Q[l] Q[r] Q[r]}
+            colspec={Q[l] Q[r] Q[r] Q[r]}
         }
         \toprule
-        Strategy       & Regret      & Tuning    \\
+        Strategy       & Regret      & Tuning    & Ease of implementation \\
         \midrule
-        Random         & Linear      & NA        \\
-        Greedy         & Linear      & NA        \\
-        Epsilon-greedy & Linear      & Difficult \\
-        Epsilon-decay  & Logarithmic & Difficult \\
-        UCB            & Logarithmic & Barely    \\
-        Thompson       & Logarithmic & Priors    \\
+        Random         & Linear      & NA        & Easy                   \\
+        Greedy         & Linear      & NA        & Easy                   \\
+        Epsilon-greedy & Linear      & Difficult & Easy                   \\
+        Epsilon-decay  & Logarithmic & Difficult & Easy                   \\
+        UCB            & Logarithmic & Barely    & Medium                 \\
+        Thompson       & Logarithmic & Priors    & Harder                 \\
         \bottomrule
     \end{tblr}
 \end{table}
@@ -236,9 +245,11 @@ Choosing $\epsilon$ is a trade-off between exploration and exploitation and can 
 
 
 \subsubsection{Epsilon-decay}
-To remedy the linear term in the regret, the epsilon-greedy algorithm can be modified to change $\epsilon$ as a function of $t$.
-Clearly, decaying towards zero is needed to achieve sublinear regret, and having a decreasing $\epsilon$ makes sense; the algorithm should explore more in the beginning and exploit more when it has better estimates of the means.
-For instance, setting $\epsilon \sim 1/t$ has been proven to achieve logarithmic regret \cite{auer2002}.
+To remedy the linear term in the regret, modifications to the epsilon-greedy algorithm have been proposed wherein $\epsilon$ is a function of the number of trials, $t$.
+Specifically, in order to achieve sublinear regret, it is necessary to decay $\epsilon$ towards zero.
+Decreasing $\epsilon$ over time makes intuitive sense; exploration is more crucial in the beginning stages of the algorithm, whereas exploitation is more important when the agent has more reliable estimates of the reward means.
+For example, one popular strategy is to set $\epsilon \sim 1/t$, which has been shown to achieve logarithmic regret \cite{auer2002}.
+It is worth noting, however, that the optimal decay rate depends on the specific problem instance, and achieving logarithmic regret can be challenging in practice \cite{bubeck2012}.
 
 \subsection{UCB}
 The upper confidence bound (UCB) algorithm is a more sophisticated algorithm based on estimating an upper bound for the mean of each arm.
@@ -283,12 +294,13 @@ While the choice of $p$ is arbitrary, it is less of nuisance than the choice of 
 
 
 \subsection{Bayesian: Thompson sampling}
-Thompson sampling is a Bayesian approach to the multi-armed bandit problem, being the original approach to the problem \cite{thompson1933}, where Bernoulli distributions were assumed.
+Thompson sampling is a Bayesian approach to the multi-armed bandit problem, being the original approach to the problem \cite{thompson1933}.
+This method is noteworthy for its ability to incorporate Bayesian modelling concepts into the fundamentally frequentist problem of multi-armed banditry.
 The idea is to sample from the posterior distribution of the means of the arms and pull the arm with the highest sample.
 
-In 2012, it was proven optimal for Bernoulli rewards \cite{kaufmann2012} with uniform priors.
+It was first in 2012 that Thompson sampling was proven optimal for Bernoulli rewards \cite{kaufmann2012} with uniform priors.
 Also for Gaussian rewards, it was proven optimal \cite{honda2014} with uniform priors.
-However, Jeffreys prior was proven unable to achieve optimal regret, making clear the importance of the prior.
+Notably, the Jeffreys prior was shown to be inadequate in achieving optimal regret, highlighting the importance of the prior selection.
 
 \begin{algorithm}
     \caption{Thompson sampling arm selection}
@@ -301,5 +313,11 @@ However, Jeffreys prior was proven unable to achieve optimal regret, making clea
         \State Update posterior for arm $i$ with reward $r_i$
     \end{algorithmic}
 \end{algorithm}
+
+One of the key advantages of Thompson sampling is that it can natively incorporate prior knowledge about the arms, whereas doing so with the above methods would require some sort of ad-hoc manipulation of the recorded rewards and arm pulls.
+Furthermore, empirical results indicate it achieving lower regrets than the other algorithms \cite{kaufmann2012}.
+Still, Thompson sampling is not without its drawbacks.
+The algorithm can be computationally expensive, as it requires sampling from the posterior distribution for each arm at each time step.
+Even with conjugate priors, the computational costs of sampling will be higher than the simple computations required by UCB and epsilon-greedy algorithms.
 
 \section{Simulations?}
