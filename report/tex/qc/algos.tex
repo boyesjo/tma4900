@@ -217,7 +217,7 @@ Given a state, or more generally the algorithm, $\mathcal{A}$ with which it is g
 \begin{equation}
     \mathcal{A} \ket{0} = \sqrt{a} \ket{\psi_1} + \sqrt{1-a} \ket{\psi_0},
 \end{equation}
-where $\ket{\psi_1}$ is a state of interest and $\ket{psi_0}$ its orthogonal complement, the goal is to estimate its amplitude $a = \lvert\bra{\psi_1}\ket{\psi_1}\rvert^2$.
+where $\ket{\psi_1}$ is a state of interest and $\ket{\psi_0}$ its orthogonal complement, the goal is to estimate its amplitude $a = \lvert\bra{\psi_1}\ket{\psi_1}\rvert^2$.
 
 With its original formulation in \cite{brassard2002}, it was proven that the amplitude can be estimated with an additive error of
 \begin{equation}
@@ -226,3 +226,33 @@ With its original formulation in \cite{brassard2002}, it was proven that the amp
 with probability at least $8/\pi^2(\approx 81.06\%)$ using $t$ calls to the algorithm $\mathcal{A}$.
 The probability can be increased to $1-\delta$, requiring $O(\log(1/\delta))$ calls to $\mathcal{A}$ \cite{montanaro2015}.
 Later variants have been proposed to reduce the qubits needed and circuit depths \cite{suzuki2020, nakaji2020, grinko2021}, making it more feasible for NISQ devices, while still achieving similar asymptotic error bounds.
+
+
+\subsection{Quantum Monte Carlo}
+\label{sec:quantum-monte-carlo}
+Monte Carlo methods have been a powerful tool to analyse the behaviour of quantum mechanical systems, where probabilistic methods are natural to describe probabilistic physics \cite{ceperley1986, austin2012,gubernatis2016}.
+On the other hand, more in line with the scope of this report, recent advances in quantum computing have opened up a new avenue for the intersection of quantum mechanics and Monte Carlo methods.
+
+In the problem of estimating the mean of a random variable, the additive error can be bounded by Chebyshev's inequality as
+\begin{equation}
+    P(\lvert \hat\mu - \mu \rvert \geq \epsilon) \leq \frac{\sigma^2}{n \epsilon^2},
+\end{equation}
+where $\hat\mu$ is the sample mean, $\mu$ is the true mean, $\sigma$ is the standard deviation and $n$ is the number of samples.
+Consequently, there is a need of quadratically many samples to achieve a given error, which for example means that estimating the mean of a random variable with a standard deviation of $1$ with four decimals' accuracy and a certainty of $99.9\%$ would require $10^9$ samples.
+Moreover, this is provably optimal asymptotically \cite{dagum2000}.
+
+Generalising amplitude estimation, in \cite{montanaro2015}, a near-quadratic speed-up of Monte Carlo methods was achieved by using amplitude estimation to estimate the mean of a random variable encoded by quantum algorithms.
+Given an algorithm $\mathcal{A}$ whose outputs are assigned real values such that $v(\mathcal{A})$ is a random variable with mean $\mu$ and variance $\sigma^2$, it is proved that approximating $\mu$ with an additive error of $\epsilon$ can be achieved with only $\tilde{O}(\sigma/\epsilon)$ calls to $\mathcal{A}$ and its inverse, which is a near-quadratic speed-up over the classical case\footnotemark{}.
+
+\footnotetext{
+    The $\tilde{O}$ ignores logarithmic factors.
+}
+
+The simpler version on which the general builds, $v(\mathcal{A})$ is assumed to lie in the interval $[0,1]$.
+Thus, the value can be encoded in a single qubit by through a unitary
+\begin{equation}
+    W\ket{x}\ket{0} = \ket{x}\left(\sqrt{1 - \phi(x)}\ket{0} + \sqrt{\phi(x)}\ket{1}\right),
+\end{equation}
+where $\phi(x)$ is the output of the algorithm were $x$ to be measured.
+Thence, the amplitude is simply estimated using amplitude estimation with an appropriate number of repeats and iterations, where the initial state is $\ket{\psi} = W(\mathcal{A} \otimes I)\ket{0}$.
+In particular, for these bounded random variables, $O(1/\epsilon)$ iterations suffices to achieve an additive error of $\epsilon$, repeating the whole procedure $O(1/\log(\delta))$ times to achieve a certainty $1-\delta$ \cite{montanaro2015}.
