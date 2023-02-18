@@ -38,25 +38,14 @@ def qucb1(p_list: np.ndarray, horizon: float, delta: float = 0.1):
 
     while sum(times_played) < int(horizon):
 
+        print(sum(times_played), end="\r")
+
         arm = np.argmax(estimate_list + r_list)
         oracle = oracle_list[arm]
         r_list[arm] /= 2
         n = n_turns(r_list[arm])
 
         estimate, n_queries = qmc(oracle, n, delta, method="canonical")
-        for val in (
-            arm,
-            estimate_list[arm],
-            estimate,
-            r_list[arm],
-            p_list[arm],
-        ):
-            # print with 2 decimal places if float
-            if isinstance(val, float):
-                print(f"{val:.2f}", end=" ")
-            else:
-                print(val, end=" ")
-        print()
 
         estimate_list[arm] = (estimate + estimate_list[arm]) / 2
         arms_played.append(arm)
@@ -105,10 +94,11 @@ def ucb(p_list: np.ndarray, horizon: float, delta: float = 0.1):
     return reg
 
 
-T = 5000
+T = 1e5
 
-p_list = np.random.uniform(0.01, 0.999, 16)
-res = qucb1(p_list, T)
+# p_list = np.random.uniform(0.01, 0.999, 16)
+p_list = np.array([0.5, 0.5 + 1e-2])
+res = qucb1(p_list, T, delta=0.03)
 
 
 # %%
