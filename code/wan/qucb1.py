@@ -1,70 +1,83 @@
 # %%
 import matplotlib.pyplot as plt
 import numpy as np
+from loguru import logger
 from oracle import Oracle
 from qmc import qmc
 
 np.seterr(all="ignore")
 
+
 # %%
-idk = 0
+class QUCB1:
+    def __init__(
+        self,
+        p_list: np.ndarray,
+        C1: float = 2,
+    ):
 
+        self.C1 = C1
+        self.n_arms = len(p_list)
+        self.p_list = p_list
 
-def qucb1(p_list: np.ndarray, horizon: float, delta: float = 0.1):
-    C1 = 2
-    n_arms = len(p_list)
+        self.r_list = np.ones_like(p_list)
+        self.oracle_list = [Oracle(p, 1) for p in p_list]
+        self.estimate_list = np.zeros_like(p_list)
 
-    def n_turns(r: float) -> int:
-        return int(np.ceil(C1 * np.log(1 / delta) / r))
+        self.end_explore_turn = None
 
-    r_list = np.ones_like(p_list)
-    oracle_list = [Oracle(p, 1) for p in p_list]
-    estimate_list = np.zeros_like(p_list)
+        self.arms_played = []
+        self.times_played = []
 
-    arms_played = []
-    times_played = []
+    def n_turns(self, r: float) -> int:
+        return int(np.ceil(self.C1 * np.log(1 / self.delta) / r))
 
-    for arm in range(n_arms):
-        oracle = oracle_list[arm]
-        n = n_turns(r_list[arm])
+    def _log(self):
+        logger.debug(f"arms played: {self.arms_played}")
+        logger.debug(f"times played: {self.times_played}")
+        logger.debug(f"estimates: {self.estimate_list}")
 
-        estimate, n_queries = qmc(oracle, n, delta, method="canonical")
-        estimate_list[arm] = estimate
-        arms_played.append(arm)
-        times_played.append(n_queries)
+    def run(self, horizon: int, delta: float = 0.1):
+        self.horizon = horizon
+        self.delta = delta
 
-    global idk
-    idk = sum(times_played)
+        for arm in range(self.n_arms):
+            oracle = self.oracle_list[arm]
+            n = self.n_turns(self.r_list[arm])
 
-    while sum(times_played) < int(horizon):
+            estimate, n_queries = qmc(oracle, n, delta, method="canonical")
+            self.estimate_list[arm] = estimate
+            self.arms_played.append(arm)
+            self.times_played.append(n_queries)
+            self._log()
 
-        print(sum(times_played), end="\r")
+        self.end_explore_turn = sum(self.times_played)
+        logger.debug(f"end explore turn: {self.end_explore_turn}")
 
-        arm = np.argmax(estimate_list + r_list)
-        oracle = oracle_list[arm]
-        r_list[arm] /= 2
-        n = n_turns(r_list[arm])
+        while sum(self.times_played) < int(horizon):
+            logger.warning(f"turn {sum(self.times_played)}")
+            logger.warning(f"{self.horizon=}")
+            arm = np.argmax(self.estimate_list + self.r_list)
+            oracle = self.oracle_list[arm]
+            self.r_list[arm] /= 2
+            n = self.n_turns(self.r_list[arm])
 
-        estimate, n_queries = qmc(oracle, n, delta, method="canonical")
+            estimate, n_queries = qmc(oracle, n, delta, method="canonical")
 
-        estimate_list[arm] = (estimate + estimate_list[arm]) / 2
-        arms_played.append(arm)
-        times_played.append(n_queries)
+            self.estimate_list[arm] = (estimate + self.estimate_list[arm]) / 2
+            self.arms_played.append(arm)
+            self.times_played.append(n_queries)
+            self._log()
 
-    return arms_played, times_played
+        return self.arms_played, self.times_played
 
-
-def regret(p_list, arms_played, times_played):
-    """Given a list of probabilities, a list of each arm played in order
-    and a list of the number of times the respecive arm was played at that time
-    return the regret for each time step.
-    """
-    ret = []
-    p_max = max(p_list)
-    for arm, n in zip(arms_played, times_played):
-        p = p_list[arm]
-        ret += [p_max - p] * n
-    return ret
+    def regret(self) -> np.ndarray:
+        max_p = max(self.p_list)
+        regret_list = []
+        for arm, n in zip(self.arms_played, self.times_played):
+            p = self.p_list[arm]
+            regret_list += [max_p - p] * n
+        return np.asarray(regret_list)
 
 
 # %%
@@ -91,29 +104,22 @@ def ucb(p_list: np.ndarray, horizon: float, delta: float = 0.1):
 
         times_pulled[arm] += 1
 
-    return reg
-
-
-T = 1e5
-
-# p_list = np.random.uniform(0.01, 0.999, 16)
-p_list = np.array([0.5, 0.5 + 1e-2])
-res = qucb1(p_list, T, delta=0.03)
+    return np
 
 
 # %%
-plt.plot(np.cumsum(regret(p_list, *res)), label="qucb1")
-plt.plot(np.cumsum(ucb(p_list, T)), label="ucb1")
-plt.xscale("log")
-plt.axvline(x=idk, color="red")
-plt.legend()
-plt.show()
+if __name__ == "__main__":
+    T = 1e5
 
-plt.plot(np.cumsum(regret(p_list, *res)), label="qucb1")
-plt.plot(np.cumsum(ucb(p_list, T)), label="ucb1")
-# plt.xscale("log")
-# plt.axvline(x=idk, color="red")
-plt.legend()
-plt.show()
+    # p_list = np.random.uniform(0.01, 0.999, 16)
+    p_list = np.array([0.5, 0.5 + 1e-2])
+    # res = qucb1(p_list, T, delta=0.03)
+    qucb = QUCB1(p_list)
+    qucb.run(T, delta=0.03)
 
-# %%
+    # %%
+    plt.plot(qucb.regret(), label="qucb1")
+    plt.plot(ucb(p_list, T), label="ucb1")
+    # plt.xscale("log")
+    plt.legend()
+    plt.savefig("2 arms p=0.5 and 0.51.png")
