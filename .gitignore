@@ -1,6 +1,6 @@
 # File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,macos,jupyternotebooks,latex,python,r
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,macos,jupyternotebooks,latex,python,r
+# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,r,python,macos,latex,jupyternotebooks,venv,virtualenv
+# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,r,python,macos,latex,jupyternotebooks,venv,virtualenv
 
 ### JupyterNotebooks ###
 # gitignore template for Jupyter Notebooks
@@ -156,9 +156,6 @@ acs-*.bib
 *.lg
 *.trc
 *.xref
-
-# hypdoc
-*.hd
 
 # hyperref
 *.brf
@@ -520,6 +517,13 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+### Python Patch ###
+# Poetry local configuration file - https://python-poetry.org/docs/configuration/#local-configuration
+poetry.toml
+
+# ruff
+.ruff_cache/
+
 ### R ###
 # History files
 .Rhistory
@@ -575,6 +579,22 @@ rsconnect/
 # R package: bookdown caching files
 /*_files/
 
+### venv ###
+# Virtualenv
+# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+[Ss]cripts
+pyvenv.cfg
+pip-selfcheck.json
+
+### VirtualEnv ###
+# Virtualenv
+# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
@@ -594,15 +614,10 @@ rsconnect/
 .history
 .ionide
 
-# Support for Project snippet scope
-.vscode/*.code-snippets
-
-# Ignore code-workspaces
-*.code-workspace
-
-# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,macos,jupyternotebooks,latex,python,r
+# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,r,python,macos,latex,jupyternotebooks,venv,virtualenv
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
+
 # synctex
 **/*.synctex.gz
 # refs
@@ -614,3 +629,6 @@ data/
 #
 maxcut_qml.ipynb
 kladd.ipynb
+
+# pyenv
+.python-version

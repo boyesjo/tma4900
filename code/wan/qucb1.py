@@ -55,13 +55,13 @@ class QUCB1:
         logger.debug(f"end explore turn: {self.end_explore_turn}")
 
         while sum(self.times_played) < int(horizon):
-            logger.warning(f"turn {sum(self.times_played)}")
-            logger.warning(f"{self.horizon=}")
+            logger.debug(f"turn {sum(self.times_played)}, {self.horizon=}")
             arm = np.argmax(self.estimate_list + self.r_list)
             oracle = self.oracle_list[arm]
             self.r_list[arm] /= 2
             n = self.n_turns(self.r_list[arm])
 
+            logger.debug(f"{arm=}, {n=}, {self.r_list=} {self.estimate_list=}")
             estimate, n_queries = qmc(oracle, n, delta, method="canonical")
 
             self.estimate_list[arm] = (estimate + self.estimate_list[arm]) / 2
@@ -104,7 +104,7 @@ def ucb(p_list: np.ndarray, horizon: float, delta: float = 0.1):
 
         times_pulled[arm] += 1
 
-    return np
+    return np.asarray(reg)
 
 
 # %%

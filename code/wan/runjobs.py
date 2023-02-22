@@ -11,7 +11,7 @@ def run_qucb1(
     filename: str,
     p_list: np.ndarray,
     horizon: int,
-    delta: float = 0.1,
+    delta: float,
 ) -> None:
     logger.info(f"{filename} started")
     qucb1 = QUCB1(p_list, C1=2)
@@ -22,13 +22,13 @@ def run_qucb1(
             "arm": np.repeat(arms_played, times_played),
             "regret": qucb1.regret(),
         }
-    ).to_csv(Path("results") / f"{filename}.csv", index_label="turn")
+    ).to_csv(Path("results") / "big2" / f"{filename}.csv", index_label="turn")
 
 
 if __name__ == "__main__":
-    p_list = np.array([0.5, 0.501])
-    horizon = int(1e5)
-    delta = 0.1
+    p_list = np.array([0.5, 0.505])
+    horizon = 200_000
+    delta = 0.01
 
     tasks = np.arange(100)
     with multiprocessing.Pool() as pool:
