@@ -18,6 +18,10 @@
         "**/*.bbl": true,
         "**/*.blg": true,
         "**/*.fls": true,
+        "**/*.ilg": true,
+        "**/*.nlo": true,
+        "**/*.nls": true,
+        "**/*.out": true,
         "**/*.fdb_latexmk": true,
         "**/__pycache__": true,
     }
