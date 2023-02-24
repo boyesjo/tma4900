@@ -72,7 +72,7 @@
 % tables
 \usepackage{booktabs}
 \usepackage{array}
-\usepackage{tabularx} 
+\usepackage{tabularx}
 \usepackage{multirow}
 \usepackage{nicematrix}
 \usepackage{tablefootnote}
@@ -86,12 +86,12 @@
 \ExplSyntaxOn\makeatletter
 
 \RenewDocumentEnvironment{quantikz}{O{} +b}
- {
-  \tl_set:Nn \l__quantikz_body_tl { \tikzcd@ [#1] #2 }
-  \regex_replace_all:nnN { \& } { \cA\& } \l__quantikz_body_tl
-  \tl_use:N \l__quantikz_body_tl
-  \endtikzcd
- }{}
+{
+    \tl_set:Nn \l__quantikz_body_tl { \tikzcd@ [#1] #2 }
+    \regex_replace_all:nnN { \& } { \cA\& } \l__quantikz_body_tl
+    \tl_use:N \l__quantikz_body_tl
+    \endtikzcd
+}{}
 \tl_new:N \l__quantikz_body_tl
 
 \makeatother\ExplSyntaxOff
@@ -106,3 +106,6 @@
 \DeclareMathOperator*{\argmin}{argmin}
 \DeclareMathOperator{\Ima}{Im}
 
+
+% 
+\usepackage{microtype}
