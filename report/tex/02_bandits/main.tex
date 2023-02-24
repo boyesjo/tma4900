@@ -1,0 +1,46 @@
+\chapter{Multi-armed bandits}
+\label{chap:bandits}
+
+The multi-armed bandit (MAB) problem is a classic problem in reinforcement learning and probability theory.
+It poses a simple yet challenging problem, where the agent must sequentially choose between a number of arms (distributions) of which the mean reward is unknown, trying to maximise the cumulative reward.
+This poses a constant struggle between exploration and exploitation, where exploration is the process of trying out new arms, and exploitation is the process of sampling from the distribution with the highest average thus far.
+
+Bandit problems were first considered in 1933 \cite{thompson1933}, where the problem of choosing between two treatments for patients was considered: to what degree should the most effective treatment be used versus testing the other to ensure the best treatment is indeed used?
+The bandit term was not coined before 1952 \cite{robbins1952}.
+Some of the many real-world setting where the multi-armed bandit problem is applicable are listed in \cref{tab:mab_applications}.
+Despite being a simple problem, its countless variants and applications make it not only a useful tool for real-world problems.
+Netflix uses MAB theory to recommend movies \cite{kawale2018}, Amazon for its website layout \cite{hill2017}, Facebook for video compression \cite{daulton2019} and Doordash to identify responsive deliverymen \cite{sharma2022}.
+The problem and its variations are still being studied with several results in what follows being recent.
+
+\begin{table}
+    \centering
+    \caption{
+        Some applications of the multi-armed bandit problem.
+    }
+    \label{tab:mab_applications}
+    \begin{tblr}{
+            width=\linewidth,
+            colspec={Q[l] Q[r] Q[r]}
+        }
+        \toprule
+        Application            & Arms                 & Reward            \\
+        \midrule
+        Medical trials         & Drugs                & Patient health    \\
+        Online advertising     & Ad placements        & Number of clicks  \\
+        Website design         & Layouts/fonts \&c.   & Number of clicks  \\
+        Recommendation systems & Items                & Number of clicks  \\
+        Dynamic pricing        & Prices               & Profit            \\
+        Networking             & Routes, settings     & Ping              \\
+        Lossy compression      & Compression settings & Quality preserved \\
+        Tasking employees      & Which employee       & Productivity      \\
+        Finance                & Investment options   & Profit            \\
+        \bottomrule
+    \end{tblr}
+
+\end{table}
+
+
+\subimport{}{def}
+\subimport{}{variants}
+\subimport{}{optimality}
+\subimport{}{strats}
