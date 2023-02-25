@@ -1,0 +1,125 @@
+\section{Problem definition}
+In the multi-armed bandit problem the agent has knowledge of the set of available actions $\mathcal{A}=\{1, \dots, k\}$, but not the reward distributions $\nu = \{P_a : a \in \mathcal{A}\}$.
+For each time step $t=1, \dots, T$, the agent selects an action $a_t \in \mathcal{A}$ and receives a reward $X_t \sim P_{a_t}$, independent of previous samples.
+The time horizon $T$ is usually finite and given, but for many applications, knowledge of it unreasonable, motivating the need for anytime algorithms.
+Nonetheless, it will be assumed greater than $k$, such that all arms may be pulled.
+The goal of the agent is to maximise its cumulative rewards.
+
+\subsection{Assumptions}
+With no assumptions on the reward distributions, analysis is difficult.
+It is therefore common to make some assumptions on the reward distributions, defining bandit classes
+\begin{equation}
+    \mathcal{E} = \{\nu = \{P_a : a \in \mathcal{A}\} : P_a \text{ satisfies some property } \forall a \in \mathcal{A}\}.
+\end{equation}
+
+Some common bandit classes are listed in \cref{tab:bandit_classes}.
+Note than some classes are parametric, like Bernoulli and Gaussian bandits, while others are non-parametric, such as the sub-Gaussian and bounded value bandits.
+Only cases void of any inter-arm structure are considered; knowledge of the mean of one arm should never be used to infer the mean of another.
+
+\begin{table}
+    \centering
+    \caption{
+        Common bandit classes.
+    }
+    \label{tab:bandit_classes}
+    \begin{tblr}{
+            width=\linewidth,
+            colspec={Q[l] Q[l] Q[r]}
+        }
+        \toprule
+        Class
+         &
+        Symbol
+         &
+        Definition
+        \\
+        \midrule
+        Bernoulli
+         &
+        $\mathcal{E}_\mathcal{B}^k$
+         &
+        $r \sim \mathcal{B}(\mu_a)$
+        \\
+        Gaussian, unit variance
+         &
+        $\mathcal{E}_\mathcal{N}^k (1)$
+         &
+        $r \sim \mathcal{N}(\mu_a,1)$
+        \\
+        Gaussian, known variance
+         &
+        $\mathcal{E}_\mathcal{N}^k \left(\sigma^2\right)$
+         &
+        $X_a \sim \mathcal{N}(\mu_a,\sigma^2)$
+        \\
+        Gaussian, unknown variance
+         &
+        $\mathcal{E}_\mathcal{N}^k$
+         &
+        $X_a \sim \mathcal{N}(\mu_a,\sigma_a^2)$
+        \\
+        Sub-Gaussian
+         &
+        $\mathcal{E}_{\text{SG}}^k \left(\sigma^2\right)$
+         &
+        $P(|X_a| \geq \epsilon) \leq 2\exp(-\epsilon^2/\sigma^2)$
+        \\
+        Bounded value
+         &
+        $\mathcal{E}_{[0,1]}^k$
+         &
+        $X_a \in [0,1]$
+        \\
+        Bounded variance
+         &
+        $\mathcal{E}_{\text{Var}}^k \left(\sigma^2\right)$
+         &
+        $\text{Var}(X_a) \leq \sigma^2$
+        \\
+        Bounded kurtosis
+         &
+        $\mathcal{E}_{\text{Kurt}}^k \left(\kappa\right)$
+         &
+        $\text{Kurt}(X_a) \leq \kappa$
+        \\
+        \bottomrule
+    \end{tblr}
+\end{table}
+
+\subsection{Policies}
+When interacting with the environment, the agent must select an action at each time step.
+Hence, a history,
+\begin{equation}
+    \mathcal{D} = \{A_1, X_1, \dots, A_t, X_t\},
+\end{equation}
+is formed, where $A_t$ is the action taken at time $t$ and $X_t$ is the reward received according to the distribution $P_{A_t}$.
+The policy $\pi = (\pi_t)_{t=1}^T$ is a sequence of probability distributions over the set of actions $\mathcal{A}$.
+At each time step $t$, the agent selects an action $a_t \sim \pi_t \mid \mathcal{D}$.
+To define an algorithm, a policy
+\begin{equation}
+    \pi_t(a \mid A_1, X_1, \dots, A_{t-1}, X_{t-1}) = \pi_t(a \mid \mathcal{D})
+\end{equation}
+is needed for each time step $t$, from which samples can be drawn.
+
+\subsection{Regret}
+For the analysis of algorithm performance, the regret is used.
+Given a bandit instance $nu$ and a policy $\pi$, at round $T$, the regret is defined as
+\begin{equation}
+    R_T(\pi, \nu) = \mathbb{E}\left[\sum_{t=1}^T \mu^* - X_t\right],
+    \label{eq:regret1}
+\end{equation}
+where $\mu^*$ is the highest mean reward and the expectation is taken over both the reward distributions and the potentially probabilistic policy.
+Often the dependence on particular instances and policies are irrelevant or clear from the context and are therefore omitted.
+
+The usage of regret over the sum of rewards provides several advantages.
+Firstly, it serves as a normalised measure of performance, wherein perfect performance is achieved when the regret is zero.
+Secondly, it permits the usage of asymptotic notation for the analysis of algorithm performance as a function of the time horizon $T$.
+Finally, considering expectation rather than the stochastic sum of rewards makes the optimisation problem well-defined without having to introduce any utility measure or other assumptions.
+
+It may be more convenient to express the regret in terms of the number of times each action has been selected, irrespective of time.
+Letting $N_a(t)$ be the number of times action $a$ has been selected up to time $t$, and using the finitude of $\mathcal{A}$ and linearity of expectations, the regret can be rewritten as
+\begin{equation}
+    R_T = \sum_{a \in \mathcal{A}} \Delta_a  \mathbb{E}[N_a(T)],
+    \label{eq:regret2}
+\end{equation}
+where $\Delta_a = \mu^* - \mu_a$ is what is known as the suboptimality gap of action $a$.
