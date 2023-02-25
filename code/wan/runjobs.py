@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 from qucb1 import QUCB1
+from scipy.stats import beta
 
 
 def run_qucb1(
@@ -25,14 +26,38 @@ def run_qucb1(
     ).to_csv(Path("results") / "big2" / f"{filename}.csv", index_label="turn")
 
 
+def run_thompson(filename: str, p_list: np.ndarray, horizon: int) -> None:
+    posteriors = [{"a": 1, "b": 1} for _ in p_list]
+    regret = np.zeros(horizon)
+
+    p_max = np.max(p_list)
+
+    for t in range(horizon):
+        arm = np.argmax([beta.rvs(**post) for post in posteriors])
+        reward = np.random.binomial(1, p_list[arm])
+        posteriors[arm]["a"] += reward
+        posteriors[arm]["b"] += 1 - reward
+        regret[t] = p_max - p_list[arm]
+
+    regret = np.cumsum(regret)
+    pd.DataFrame({"regret": regret}).to_csv(
+        Path("results") / "big2" / f"{filename}.csv", index_label="turn"
+    )
+    logger.success(f"{filename} finished")
+
+
 if __name__ == "__main__":
     p_list = np.array([0.5, 0.505])
-    horizon = 200_000
-    delta = 0.01
+    horizon = 250_000
+    # delta = 0.01
 
     tasks = np.arange(100)
     with multiprocessing.Pool() as pool:
+        # pool.starmap(
+        #     run_qucb1,
+        #     [(f"qucb1_{task}", p_list, horizon, delta) for task in tasks],
+        # )
         pool.starmap(
-            run_qucb1,
-            [(f"qucb1_{task}", p_list, horizon, delta) for task in tasks],
+            run_thompson,
+            [(f"thompson_{task}", p_list, horizon) for task in tasks],
         )
