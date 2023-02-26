@@ -7,62 +7,61 @@
     \label{tab:strategies}
     \begin{tblr}{
             width=\linewidth,
-            colspec={Q[l] Q[r] Q[r] Q[r]}
+            colspec={X[l] X[r] X[r]}
         }
         \toprule
-        Strategy       & Regret      & Tuning    & Ease of implementation \\
+        Strategy       & Regret      & Tuning    \\
         \midrule
-        Random         & Linear      & NA        & Easy                   \\
-        Greedy         & Linear      & NA        & Easy                   \\
-        Epsilon-greedy & Linear      & Difficult & Easy                   \\
-        Epsilon-decay  & Logarithmic & Difficult & Easy                   \\
-        UCB            & Logarithmic & Barely    & Medium                 \\
-        Thompson       & Logarithmic & Priors    & Harder                 \\
+        Random         & $\Theta(T)$ & NA        \\
+        Greedy         & $\Theta(T)$ & NA        \\
+        Epsilon-greedy & $\Theta(T)$ & Difficult \\
+        Epsilon-decay  & Logarithmic & Difficult \\
+        UCB            & Logarithmic & Barely    \\
+        Thompson       & Logarithmic & Priors    \\
         \bottomrule
     \end{tblr}
 \end{table}
 
 \subsection{Explore-only}
 Pure exploration is obviously a suboptimal strategy, but it is a good baseline against which to compare.
-It can be implemented by selecting an arm uniformly or in order, but it will perform poorly either way.
-The arm-selection procedure is described by \cref{alg:random}.
+It can be implemented by selecting an arm uniformly or in order, performing poorly either way.
+A random arm-selection procedure is described by \cref{alg:random}.
 \begin{algorithm}
     \caption{Random arm selection}
     \label{alg:random}
     \begin{algorithmic}
-        \State Sample $i$ from $\{1,\dots, k\}$ uniformly
-        \State \Return $i$
+        \State Sample $a$ from $\mathcal{A}$ uniformly
+        \State \Return $a$
     \end{algorithmic}
 \end{algorithm}
 
-It is easy that the expected regret is
+It is easy that the regret is
 \begin{equation}
-    R(T) = T\left(\mu^* - \frac{1}{k}\sum_{i=1}^k \mu_i\right),
+    R_T = T\left(\mu^* - \frac{1}{k}\sum_{i=1}^k \mu_i\right),
 \end{equation}
 which is necessarily linear in $T$.
 This motivates the search for an algorithm with sublinear regret.
 
 \subsection{Greedy}
-Going the other way, a greedy algorithm will always select the arm with the highest empirical mean.
-Here, all arms are tried $N$ initial times, and the empirical means are used to select the best arm.
+Tending away from pure exploration to exploitation, a greedy algorithm will always select the arm with the highest empirical mean.
+Here, all arms are pulled an initial $m \geq 1$ times, after which estimated means are used to select the best arm.
 Afterwards, the arm with the highest empirical mean is selected for all remaining turns.
-The arm-selection procedure is listed in \cref{alg:greedy}, where $\hat{\mu}_i$ is the empirical mean of arm $i$.
+The arm-selection procedure is listed in \cref{alg:greedy}, where $\hat{\mu}_a$ is the estimated mean of arm $a$.
 \begin{algorithm}
     \caption{Greedy arm selection}
     \label{alg:greedy}
     \begin{algorithmic}
-        \If{$t \leq Nk$}
+        \If{$t \leq mk$}
         \State \Return $(t \mod k) + 1$
         \Else
-        \State \Return $\argmax_{i=1,\dots,k} \hat{\mu}_i$
+        \State \Return $\argmax_{a \in \mathcal{A}} \hat{\mu}_a$
         \EndIf
     \end{algorithmic}
 \end{algorithm}
 
 With greedy selection, the expected regret is clearly still linear in the horizon, as there is a non-zero probability of selecting the wrong arm.
-Still, there is a chance of achieving zero regret and the constant factor is reduced compared to random selection.
+Still, there is a chance of achieving zero regret and the constant factor is reduced compared to pure exploration selection.
 To improve hereupon, it is necessary to occasionally explore other arms, which leads into the epsilon-greedy algorithm.
-
 
 \subsection{Epsilon-greedy}
 The problem with the greedy algorithm is that it may be unlucky and not discover the best arm in the initial exploration phase.
@@ -77,15 +76,15 @@ Choosing $\epsilon$ is a trade-off between exploration and exploitation and can 
     \caption{Epsilon-greedy arm selection}
     \label{alg:eps_greedy}
     \begin{algorithmic}
-        \If{$t \leq Nk$}
+        \If{$t \leq mk$}
         \State \Return $(t \mod k) + 1$
         \Else
         \State Sample $u$ from $[0,1)$ uniformly
         \If{$u < \epsilon$}
-        \State Sample $i$ from $\{1,\dots, k\}$ uniformly
+        \State Sample $a$ from $\mathcal{A}$ uniformly
         \State \Return $i$
         \Else
-        \State \Return $\argmax_{i=1,\dots,k} \hat{\mu}_i$
+        \State \Return $\argmax_{a in \mathcal{A}}\hat{\mu}_a$
         \EndIf
         \EndIf
     \end{algorithmic}
@@ -108,23 +107,26 @@ When exploiting the actual best arm, the agent can trust it to be the best, as t
 Assuming rewards in $[0,1]$ and using Hoeffding's inequality, one has
 \begin{equation}
     p
-    = P \left(\mu_i > \hat{\mu_i} + \text{UCB}_i \right)
-    \leq \exp \left(-2N_i \text{UCB}_i^2 \right),
+    = P \left(\mu_a > \hat{\mu_a} + \text{UCB}_a \right)
+    \leq \exp \left(-2T_a \text{UCB}_a^2 \right),
 \end{equation}
-where $\text{UCB}_i$ is the upper confidence bound for arm $i$ and $N$ is the number of times arm $i$ has been pulled.
-Solving for $\text{UCB}_i$ gives
+where $\text{UCB}_a$ is the upper confidence bound for arm $a$ and $T_a$ is the number of times arm $a$ has been pulled.
+Solving for $\text{UCB}_a$ gives
 \begin{equation}
-    \text{UCB}_i = \sqrt{\frac{-\ln p}{2N_i}},
+    \text{UCB}_a = \sqrt{\frac{-\ln p}{2T_a}}.
 \end{equation}
-and letting $p = t^{-4}$ gives
+Letting $p(t) = t^{-4}$ gives
 \begin{equation}
-    \text{UCB}_i = \sqrt{\frac{2 \ln t}{N_i}},
+    \text{UCB}_a = \sqrt{\frac{2 \ln t}{T_a}},
 \end{equation}
 which is a common choice for the upper confidence bound, leading to the UCB1-algorithm.
 In \cite{auer2002}, it was shown that this algorithm achieves $O(\ln T)$ regret.
 Regardless of the assumptions made, the procedure follows as in \cref{alg:ucb}.
+
 Many variants of the algorithm exist; different assumptions about the distributions change the confidence bounds.
-While the choice of $p$ is arbitrary, it is less of nuisance than the choice of $\epsilon$ in the epsilon-greedy algorithm, with specific choices of $p$, such as the UCB1-algorithm, being well-studied and known to perform well, achieving logarithmic regret.
+While the choice of $p$ is arbitrary, it is less of nuisance than the choice of $\epsilon$ in the epsilon-greedy algorithm, with specific choices of $p$, such as the UCB1-algorithm, being well-studied and known to perform well.
+For example, MOSS, a modification of UCB1, has be shown to minimax-optimal for $\mathcal{E}_{[0,1]}^k$ \cite{audibert2009}.
+Further, incorporating estimates of second moments improve performance in some cases \cite{audibert2009a}, while incorporating the whole empirical distributions of observed rewards appear to be the most effective approach \cite{maillard2011}.
 
 \begin{algorithm}
     \caption{UCB arm selection}
@@ -133,35 +135,35 @@ While the choice of $p$ is arbitrary, it is less of nuisance than the choice of 
         \If{$t \leq k$}
         \State \Return $t$
         \Else
-        \State \Return $\argmax_{i=1,\dots,k} \hat{\mu}_i + \text{UCB}_i$
+        \State \Return $\argmax_{a \in \mathcal{A}} (\hat{\mu}_a + \text{UCB}_a)$
         \EndIf
     \end{algorithmic}
 \end{algorithm}
 
 
 \subsection{Thompson sampling}
-Thompson sampling is a Bayesian approach to the multi-armed bandit problem, being the original approach to the problem \cite{thompson1933}.
+Thompson sampling is a Bayesian approach to the multi-armed bandit problem, being the original approach to the problem \cite{thompson1933} in 1933, though only in the case of two arms and Bernoulli rewards and without any theoretical guarantees.
 This method is noteworthy for its ability to incorporate Bayesian modelling concepts into the fundamentally frequentist problem of multi-armed banditry.
 The idea is to sample from the posterior distribution of the means of the arms and pull the arm with the highest sample.
 
-It was first in 2012 that Thompson sampling was proven optimal for Bernoulli rewards with uniform priors \cite{kaufmann2012}.
-Also for Gaussian rewards, it was proven optimal with uniform priors \cite{honda2014}.
-Notably, the Jeffreys prior was shown to be inadequate in achieving optimal regret, highlighting the importance of the prior selection.
+It was first in 2012 that Thompson sampling was proven asymptotically optimal for Bernoulli rewards with uniform priors \cite{kaufmann2012}.
+Also for Gaussian rewards, it was proven asymptotically optimal with uniform priors \cite{honda2014}.
+Notably, the Jeffreys prior was shown to be inadequate in achieving optimal regret, highlighting the importance of the prior selection for the algorithm's performance.
 
 \begin{algorithm}
     \caption{Thompson sampling arm selection}
     \label{alg:thompson}
     \begin{algorithmic}
-        \For {$i=1,\dots,k$}
-        \State Sample $\theta_i$ from $P(\mu_i | \{r_i^{(1)}, \dots, r_i^{(N_i(t))}\})$
+        \For {$a \in \mathcal{A}$}
+        \State Sample $\theta_a \sim P(\mu_a \mid \mathcal{D})$
         \EndFor
-        \State \Return $\argmax_{i=1,\dots,k} \theta_i$
-        \State Update posterior for arm $i$ with reward $r_i$
+        \State \Return $\argmax_{a \in \mathcal{A}} \theta_a$
+        \State Update posterior for arm $a$ with reward $X_t$
     \end{algorithmic}
 \end{algorithm}
 
 One of the key advantages of Thompson sampling is that it can natively incorporate prior knowledge about the arms, whereas doing so with the above methods would require some sort of ad-hoc manipulation of the recorded rewards and arm pulls.
-Furthermore, empirical results indicate it achieving lower regrets than the other algorithms \cite{kaufmann2012}.
+Furthermore, empirical results generally indicate better performance than UCB variants \cite{kaufmann2012}.
 Still, Thompson sampling is not without its drawbacks.
 The algorithm can be computationally expensive, as it requires sampling from the posterior distribution for each arm at each time step.
 Even with conjugate priors, the computational costs of sampling will be higher than the simple computations required by UCB and epsilon-greedy algorithms.

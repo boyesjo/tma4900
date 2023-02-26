@@ -7,33 +7,39 @@ Lower bounds resort then to either determine what a reasonable policy can achiev
 \subsection{Instance-dependent lower bound}
 In order to meaningfully define a lower bound, it is imperative to assume a reasonable algorithm.
 Otherwise, trivial policies, such as always pulling the first arm, could achieve zero regret, hindering any meaningful comparison.
-One may therefore impose asymptotic consistency, which by definition means that for all inferior arms and all $\alpha \in (0, 1)$,
+A useful assumption is that the algorithm is asymptotically consistent in some class $\mathcal{E}$, which by definition means that for all inferior arms and all $\eta \in (0, 1)$, it holds that
 \begin{equation}
-    \mathbb{E}[N_a(T)] = o(T^{\alpha}).
+    \mathbb{E}[T_a] = o(T^{\eta}),
 \end{equation}
+for all instances $\nu \in \mathcal{E}$.
+
 For policies obeying this property, the Lai-Robbins bound \cite{lai1985} holds, namely that
 \begin{equation}
-    \liminf_{T\to\infty} \frac{\mathbb{E}[N_a(T)]}{\ln T} \geq \frac{1}{D(P_a || P^*)},
+    \liminf_{T\to\infty} \frac{\mathbb{E}[T_a]}{\ln T} \geq \frac{1}{D(P_a || P^*)},
 \end{equation}
-where $P_a$ is the reward distribution of arm $a$, $P^*$ that of the optimal distribution and $D(\cdot || \cdot)$ is the Kullback-Leibler divergence.
+where $P_a$ is the reward distribution of arm $a$, $P^*$ that of the optimal distribution and $D(\cdot || \cdot)$ the Kullback-Leibler divergence.
 From \cref{eq:regret2}, it follows that
 \begin{equation}
     \liminf_{T\to\infty} \frac{R_T}{\ln T} \geq \sum_{a \in \mathcal{A}}\frac{\Delta_a}{D(P_a || P^*)}.
 \end{equation}
 The Lai-Robbins bound is instance-dependent through its dependence on the Kullback-Leibler divergences.
-Its dependence on the divergences which are not known makes it inapplicable to real-world problems, and as reward distributions approach the optimal distribution, the bound diverges.
+Its dependence on the divergences which are not known makes it inapplicable to real-world problems,
+and as reward distributions approach the optimal distribution, the bound diverges.
+
 
 \subsection{Instance-independent lower bound}
 A more general lower bound is the minimax regret.
 Given some problem class $\mathcal{E}$, it is defined as
 \begin{equation}
-    \Inf_{\pi \in \Pi} \sup_{\nu \in \mathcal{E}} R(\nu, \pi),
+    \Inf_{\pi} \sup_{\nu \in \mathcal{E}} R(\nu, \pi),
 \end{equation}
 where $\pi$ is the algorithm and $\nu$ is the problem instance.
 The minimax regret is a lower bound on the whole class rather than one particular instance; algorithms may achieve better in some or even most instances, but no algorithm can do better than the minimax regret in all.
-In \cite{lattimore2020}, it is proven that for all algorithms, given a fixed horizon $T$ and number of arms $K$, there is at least one problem instance such that
+In \cite{auer2002a}, it is proven that for all algorithms, given a fixed horizon $T$ and number of arms $K$, there is at least one problem instance such that
 \begin{equation}
-    R_T \geq \Omega(\sqrt{KT}).
+    R_T = \Omega\sqrt{KT},
 \end{equation}
-Such a bound is independent of the reward distributions, and as such, it is applicable to real-world problems, but may be overly robust.
-It may be preferable to sacrifice performance on some instances to gain performance on others.
+
+Such a bound is independent of the reward distributions, and as such, it is applicable in practice, but it may be overly robust.
+It can be preferable to sacrifice performance on some instances to gain performance on others.
+Minimax regret optimality implies a flat risk profile, while in practice, performance may be desired to correlate with instance difficulty.

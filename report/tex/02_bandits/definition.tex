@@ -24,7 +24,7 @@ Only cases void of any inter-arm structure are considered; knowledge of the mean
     \label{tab:bandit_classes}
     \begin{tblr}{
             width=\linewidth,
-            colspec={Q[l] Q[l] Q[r]}
+            colspec={Q[l] X[l] Q[r]}
         }
         \toprule
         Class
@@ -38,13 +38,13 @@ Only cases void of any inter-arm structure are considered; knowledge of the mean
          &
         $\mathcal{E}_\mathcal{B}^k$
          &
-        $r \sim \mathcal{B}(\mu_a)$
+        $X_a \sim \mathcal{B}(\mu_a)$
         \\
         Gaussian, unit variance
          &
         $\mathcal{E}_\mathcal{N}^k (1)$
          &
-        $r \sim \mathcal{N}(\mu_a,1)$
+        $X_a \sim \mathcal{N}(\mu_a,1)$
         \\
         Gaussian, known variance
          &
@@ -69,6 +69,12 @@ Only cases void of any inter-arm structure are considered; knowledge of the mean
         $\mathcal{E}_{[0,1]}^k$
          &
         $X_a \in [0,1]$
+        \\
+        Bounded maximum
+         &
+        $\mathcal{E}_{(-\infty, b]}^k$
+         &
+        $X_a \leq b$
         \\
         Bounded variance
          &
@@ -117,9 +123,9 @@ Secondly, it permits the usage of asymptotic notation for the analysis of algori
 Finally, considering expectation rather than the stochastic sum of rewards makes the optimisation problem well-defined without having to introduce any utility measure or other assumptions.
 
 It may be more convenient to express the regret in terms of the number of times each action has been selected, irrespective of time.
-Letting $N_a(t)$ be the number of times action $a$ has been selected up to time $t$, and using the finitude of $\mathcal{A}$ and linearity of expectations, the regret can be rewritten as
+Letting $T_a$ be the number of times action $a$ has been selected up to time $T$, and using the finitude of $\mathcal{A}$ and linearity of expectations, the regret can be rewritten as
 \begin{equation}
-    R_T = \sum_{a \in \mathcal{A}} \Delta_a  \mathbb{E}[N_a(T)],
+    R_T = \sum_{a \in \mathcal{A}} \Delta_a  \mathbb{E}[T_a],
     \label{eq:regret2}
 \end{equation}
 where $\Delta_a = \mu^* - \mu_a$ is what is known as the suboptimality gap of action $a$.
