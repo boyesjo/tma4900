@@ -2,9 +2,9 @@
 \subsection{Best-arm identification}
 An alternative problem is to find the best arm with as few turns as possible.
 In this version, a $\delta$ is given, and the goal is to find the best arm with probability at least $1-\delta$.
-The metric here is how the turns needed grows with $\delta$.
+The metric here is how the turns needed grows as a function of $\delta$.
 Unlike regret minimisation, exploitation is less of a concern, but much theory can be transferred from the regret minimisation problem.
-Though less is gained from repeatedly pulling the assumed best arm, there is still incentive to investigate the better arms than the worse.
+Though there is no direct benefit from exploitation, as there is in regret optimisation, it is still desirable to mainly pull good arms, as these will need more consideration to be distinguished from the best.
 
 \subsection{Bandit generalisations}
 The multi-armed bandit problem has numerous generalisations, including the non-stationary multi-armed bandit where the underlying reward distributions change over time, presenting a challenging environment for traditional algorithms developed for the standard, stationary multi-armed bandit problem.
@@ -13,9 +13,6 @@ Other cases give the agent more info, such as letting it know what the rewards f
 Another area of study is the contextual multi-armed bandit problem, in which contextual information must be incorporated into the decision-making process for arm selection, adding a layer of complexity to the standard multi-armed bandit problem, particularly useful for recommender systems, where the context is the user and their preferences.
 Moreover, the adversarial multi-armed bandit problem represents a significant departure from the standard, stochastic multi-armed bandit problem, where rewards are chosen by an adversary instead of following a stationary distribution.
 The infinite-armed variants, where the arm space is infinite but constrained by for example linearity, also have practical applications.
-While beyond the scope of this report, these generalisations of the multi-armed bandit problem represent important areas of study and much of the theory developed for the standard, stochastic multi-armed bandit problem can be extended to these problems as well\footnotemark.
-\footnotetext{
-    C.v. \cite{slivkins2019,lattimore2020}.
-}
+While beyond the scope of this report, these generalisations of the multi-armed bandit problem represent important areas of study and much of the theory developed for the standard, stochastic multi-armed bandit problem can be extended to these problems as well \autocite{slivkins2019,lattimore2020}.
 
 

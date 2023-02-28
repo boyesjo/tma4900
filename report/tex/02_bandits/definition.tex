@@ -16,6 +16,9 @@ Some common bandit classes are listed in \cref{tab:bandit_classes}.
 Note than some classes are parametric, like Bernoulli and Gaussian bandits, while others are non-parametric, such as the sub-Gaussian and bounded value bandits.
 Only cases void of any inter-arm structure are considered; knowledge of the mean of one arm should never be used to infer the mean of another.
 
+It is assumed to be only one optimal arm, which is the arm with the highest mean reward.
+
+
 \begin{table}
     \centering
     \caption{
@@ -36,33 +39,33 @@ Only cases void of any inter-arm structure are considered; knowledge of the mean
         \midrule
         Bernoulli
          &
-        $\mathcal{E}_\mathcal{B}^k$
+        $\mathcal{E}_\text{B}^k$
          &
-        $X_a \sim \mathcal{B}(\mu_a)$
+        $X_a \sim \text{B}(\mu_a)$
         \\
         Gaussian, unit variance
          &
-        $\mathcal{E}_\mathcal{N}^k (1)$
+        $\mathcal{E}_\text{N}^k (1)$
          &
-        $X_a \sim \mathcal{N}(\mu_a,1)$
+        $X_a \sim \text{N}(\mu_a,1)$
         \\
         Gaussian, known variance
          &
-        $\mathcal{E}_\mathcal{N}^k \left(\sigma^2\right)$
+        $\mathcal{E}_\text{N}^k \left(\sigma^2\right)$
          &
-        $X_a \sim \mathcal{N}(\mu_a,\sigma^2)$
+        $X_a \sim \text{N}(\mu_a,\sigma^2)$
         \\
         Gaussian, unknown variance
          &
-        $\mathcal{E}_\mathcal{N}^k$
+        $\mathcal{E}_\text{N}^k$
          &
-        $X_a \sim \mathcal{N}(\mu_a,\sigma_a^2)$
+        $X_a \sim \text{N}(\mu_a,\sigma_a^2)$
         \\
         Sub-Gaussian
          &
         $\mathcal{E}_{\text{SG}}^k \left(\sigma^2\right)$
          &
-        $P(|X_a| \geq \epsilon) \leq 2\exp(-\epsilon^2/\sigma^2)$
+        $P(|X_a| \geq \epsilon) \leq 2e^{-\epsilon^2/\sigma^2}$
         \\
         Bounded value
          &
@@ -111,7 +114,7 @@ is needed for each time step $t$, from which samples can be drawn.
 For the analysis of algorithm performance, the regret is used.
 Given a bandit instance $nu$ and a policy $\pi$, at round $T$, the regret is defined as
 \begin{equation}
-    R_T(\pi, \nu) = \mathbb{E}\left[\sum_{t=1}^T \mu^* - X_t\right],
+    R_T(\pi, \nu) = \mathbb{E}_{\pi, \nu}\left[\sum_{t=1}^T \mu^* - X_t\right],
     \label{eq:regret1}
 \end{equation}
 where $\mu^*$ is the highest mean reward and the expectation is taken over both the reward distributions and the potentially probabilistic policy.

@@ -1,11 +1,11 @@
 \section{Quantum algorithms}
 
 \subsection{Grover's algorithm}
-The quantum search algorithm of Grover \cite{grover1996} is a quantum algorithm that finds an element in an unstructured list with high probability.
+The quantum search algorithm of Grover \autocite{grover1996} is a quantum algorithm that finds an element in an unstructured list with high probability.
 While such a problem necessarily requires $O(N)$ time in a classical setting, needing on average $N/2$ steps to find the element and in the worst case $N$, Grover's algorithm finds the element in $O(\sqrt{N})$ steps.
 This is a quadratic speed-up.
 
-Grover's algorithm is provably optimal; no quantum algorithm can perform such general searches faster \cite{zalka1999}.
+Grover's algorithm is provably optimal; no quantum algorithm can perform such general searches faster \autocite{zalka1999}.
 This should not be surprising.
 If an exponential speed-up were possible, Grover search could be used to find the solution to NP-hard problems fast.
 
@@ -53,7 +53,7 @@ Measuring the correct state has probability $\sin^2((2k+1)\theta)$.
 Therefore, $k \approx {\pi}/{4\theta}$ iterations should be completed.
 Assuming large $N$, for a short list would not warrant the use of Grover's algorithm, $\theta = \arcsin{({1}/{\sqrt{N}})} \approx 1/\sqrt{N}$, and so $k \approx \pi\sqrt{N}/4$.
 
-For lists with more than a single desired element, a similar reasoning will lead to the same algorithm, but instead with $k\approx\pi/4\sqrt{N/M}$, where $M$ is the number solutions to $f(x)=1$ \cite{nielsen2012}.
+For lists with more than a single desired element, a similar reasoning will lead to the same algorithm, but instead with $k\approx\pi/4\sqrt{N/M}$, where $M$ is the number solutions to $f(x)=1$ \autocite{nielsen2012}.
 
 
 \begin{figure}
@@ -208,7 +208,7 @@ Following the same reasoning as in the previous section, the state after $k$ ite
 meaning that $k \approx \frac{\pi}{4\theta}$ will result in a state close to $\ket{\psi_1}$.
 
 Amplitude amplification can be used to speed up Grover search by using an informed prior rather than a uniform prior.
-Furthermore, it is useful as a subroutine in other algorithms, such as finding the number of \enquote{good} states for a Grover search \cite{brassard2002}, quantum Monte Carlo methods \cite{montanaro2015} and some bandit algorithms to be discussed in what follows.
+Furthermore, it is useful as a subroutine in other algorithms, such as finding the number of \enquote{good} states for a Grover search \autocite{brassard2002}, quantum Monte Carlo methods \autocite{montanaro2015} and some bandit algorithms to be discussed in what follows.
 
 \subsection{Amplitude estimation}
 \label{sec:amplitude-estimation}
@@ -219,18 +219,18 @@ Given a state, or more generally the algorithm, $\mathcal{A}$ with which it is g
 \end{equation}
 where $\ket{\psi_1}$ is a state of interest and $\ket{\psi_0}$ its orthogonal complement, the goal is to estimate its amplitude $a = \lvert\bra{\psi_1}\ket{\psi_1}\rvert^2$.
 
-With its original formulation in \cite{brassard2002}, it was proven that the amplitude can be estimated with an additive error of
+With its original formulation in \autocite{brassard2002}, it was proven that the amplitude can be estimated with an additive error of
 \begin{equation}
     \epsilon \leq 2\pi \frac{\sqrt{a(1-a)}}{t} +\frac{\pi^2}{t^2}
 \end{equation}
 with probability at least $8/\pi^2(\approx 81.06\%)$ using $t$ calls to the algorithm $\mathcal{A}$.
-The probability can be increased to $1-\delta$, requiring $O(\log(1/\delta))$ calls to $\mathcal{A}$ \cite{montanaro2015}.
-Later variants have been proposed to reduce the qubits needed and circuit depths \cite{suzuki2020, nakaji2020, grinko2021}, making it more feasible for NISQ devices, while still achieving similar asymptotic error bounds.
+The probability can be increased to $1-\delta$, requiring $O(\log(1/\delta))$ calls to $\mathcal{A}$ \autocite{montanaro2015}.
+Later variants have been proposed to reduce the qubits needed and circuit depths \autocite{suzuki2020, nakaji2020, grinko2021}, making it more feasible for NISQ devices, while still achieving similar asymptotic error bounds.
 
 
 \subsection{Quantum Monte Carlo}
 \label{sec:qmc}
-Monte Carlo methods have been a powerful tool to analyse the behaviour of quantum mechanical systems, where probabilistic methods are natural to describe probabilistic physics \cite{ceperley1986, austin2012,gubernatis2016}.
+Monte Carlo methods have been a powerful tool to analyse the behaviour of quantum mechanical systems, where probabilistic methods are natural to describe probabilistic physics \autocite{ceperley1986, austin2012,gubernatis2016}.
 On the other hand, more in line with the scope of this report, recent advances in quantum computing have opened up a new avenue for the intersection of quantum mechanics and Monte Carlo methods.
 
 In the problem of estimating the mean of a random variable, the additive error can be bounded by Chebyshev's inequality as
@@ -239,13 +239,13 @@ In the problem of estimating the mean of a random variable, the additive error c
 \end{equation}
 where $\hat\mu$ is the sample mean, $\mu$ is the true mean, $\sigma$ is the standard deviation and $n$ is the number of samples.
 Consequently, there is a need of quadratically many samples to achieve a given error, which for example means that estimating the mean of a random variable with a standard deviation of $1$ with four decimals' accuracy and a certainty of $99.9\%$ would require $10^9$ samples.
-Moreover, this is provably optimal asymptotically \cite{dagum2000}.
+Moreover, this is provably optimal asymptotically \autocite{dagum2000}.
 
-Generalising amplitude estimation, in \cite{montanaro2015}, a near-quadratic speed-up of Monte Carlo methods was achieved by using amplitude estimation to estimate the mean of a random variable encoded by quantum algorithms.
+Generalising amplitude estimation, in \autocite{montanaro2015}, a near-quadratic speed-up of Monte Carlo methods was achieved by using amplitude estimation to estimate the mean of a random variable encoded by quantum algorithms.
 Given an algorithm $\mathcal{A}$ whose outputs are assigned real values such that $v(\mathcal{A})$ is a random variable with mean $\mu$ and variance $\sigma^2$, it is proved that approximating $\mu$ with an additive error of $\epsilon$ can be achieved with only $\tilde{O}(\sigma/\epsilon)$ calls to $\mathcal{A}$ and its inverse, which is a near-quadratic speed-up over the classical case\footnotemark{}.
 
 \footnotetext{
-    The $\tilde{O}$ ignores logarithmic factors.
+    The $\tilde{O}$ notation ignores logarithmic factors.
 }
 
 The simpler version on which the general builds, $v(\mathcal{A})$ is assumed to lie in the interval $[0,1]$.
@@ -255,4 +255,4 @@ Thus, the value can be encoded in a single qubit by through a unitary
 \end{equation}
 where $\phi(x)$ is the output of the algorithm were $x$ to be measured.
 Thence, the amplitude is simply estimated using amplitude estimation with an appropriate number of repeats and iterations, where the initial state is $\ket{\psi} = W(\mathcal{A} \otimes I)\ket{0}$.
-In particular, for these bounded random variables, $O(1/\epsilon)$ iterations suffices to achieve an additive error of $\epsilon$, repeating the whole procedure $O(1/\log(\delta))$ times to achieve a certainty $1-\delta$ \cite{montanaro2015}.
+In particular, for these bounded random variables, $O(1/\epsilon)$ iterations suffices to achieve an additive error of $\epsilon$, repeating the whole procedure $O(1/\log(\delta))$ times to achieve a certainty $1-\delta$ \autocite{montanaro2015}.

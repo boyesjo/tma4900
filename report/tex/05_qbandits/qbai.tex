@@ -1,5 +1,5 @@
 \section{Best arm identification}
-In \cite{casale2020}, an algorithm based on amplitude amplification is proposed and is shown to find the optimal arm with quadratically fewer queries than the best classical algorithm for classical bandits — albeit with a significant drawback: the probability of the correct arm being suggested can not be set arbitrarily high, but is instead given by the ratio of the best arm's mean to the sum of the means of all arms.
+In \autocite{casale2020}, an algorithm based on amplitude amplification is proposed and is shown to find the optimal arm with quadratically fewer queries than the best classical algorithm for classical bandits — albeit with a significant drawback: the probability of the correct arm being suggested can not be set arbitrarily high, but is instead given by the ratio of the best arm's mean to the sum of the means of all arms.
 This greatly limits the usefulness of the algorithm, but it may still serve as a useful baseline for comparison, with the more complicated algorithms discussed in the following sections seeable as extensions hereof.
 
 They assume access to an oracle $O_e$ that encodes the probabilities of the arms,
@@ -16,4 +16,4 @@ For such bandits, regret minimisation is no longer a valid objective, as all arm
 Instead, the problem is to find a strategy that maximises the probability of finding the optimal arm with as few applications of $\mathcal{O_e}$ as possible.
 
 \subsection{Proper best arm identification}
-The authors of \cite{wang2021} propose a more sophisticated algorithm, improving the results of \cite{casale2020} by allowing the probability of finding the optimal arm to be set arbitrarily high.
+The authors of \autocite{wang2021} propose a more sophisticated algorithm, improving the results of \autocite{casale2020} by allowing the probability of finding the optimal arm to be set arbitrarily high.

@@ -9,7 +9,7 @@ The agent then decides for each step in the bandit problem, which oracle to invo
 \begin{equation}
     \mu_i = \sum_\omega p_i(\omega) E(y_x(\omega)).
 \end{equation}
-In \cite{wan2022}, an algorithm for bounded-value arms achieving $O(n \log T)$ regret was proposed, $n$ being the number of arms.
+In \autocite{wan2022}, an algorithm for bounded-value arms achieving $O(n \log T)$ regret was proposed, $n$ being the number of arms.
 
 The algorithm proposed is essentially a UCB-like algorithm, where QMC (as described in \cref{sec:qmc}) is used to estimate the means more efficiently.
 Because QMC estimates are only produced after a set number of quantum queries, the algorithm must cleverly decide for how many steps to pull each arm in addition to which arm to pull.
@@ -19,7 +19,7 @@ A confidence parameter $\delta$ is used to determine the number of QMC samples t
 The constant $C_1>1$ is only described existentially to give an upper bound to the number of QMC queries needed.
 
 \begin{algorithm}
-    \caption{QUCB1 as proposed in \cite{wan2022}}
+    \caption{QUCB1 as proposed in \autocite{wan2022}}
     \label{alg:qucb1}
     \begin{algorithmic}[1]
         \Require $k$ arms, $\mathcal{O}_i$ as in \cref{eq:wan_oracle}, $T$ horizon, $0 < \delta \ll 1$
