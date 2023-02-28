@@ -1,4 +1,5 @@
 # %%
+import lai_robbins
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -25,7 +26,7 @@ df_thomp = df_thomp[df_thomp.index.get_level_values("turn") % FREQ == 0]
 def plot(df, color, label, error="std"):
     # df.regret.groupby("turn").median().plot(color=color)
     df.regret.groupby("turn").mean().plot(color=color, label=label)
-    plt.xscale("log")
+    # plt.xscale("log")
     # plt.yscale("log")
     if isinstance(error, float):
         plt.fill_between(
@@ -56,6 +57,11 @@ def plot(df, color, label, error="std"):
 plot(df_qucb, "blue", "QUCB")
 plot(df_ucb, "red", "UCB")
 plot(df_thomp, "green", "Thompson")
+plt.plot(
+    lai_robbins.bernoulli(P_LIST, HORIZON, step=FREQ),
+    "black",
+    label="Lai-Robbins",
+)
 
 plt.legend()
 # plt.savefig("regret.png", dpi=300)
