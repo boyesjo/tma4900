@@ -13,9 +13,11 @@ A useful assumption is that the algorithm is asymptotically consistent in some c
 \end{equation}
 for all instances $\nu \in \mathcal{E}$.
 
-For policies obeying this property, the Lai-Robbins bound \autocite{lai1985} holds, namely that
+For asymptotically consistent and bandit classes with reward distributions parametrised by only one parameter, the Lai-Robbins bound \autocite{lai1985} holds.
+It states that
 \begin{equation}
     \liminf_{T\to\infty} \frac{\mathbb{E}[T_a]}{\ln T} \geq \frac{1}{D(P_a \mathrel{\Vert} P^*)},
+    \label{eq:lai-robbins-times}
 \end{equation}
 where $P_a$ is the reward distribution of arm $a$, $P^*$ that of the optimal distribution and $D(\cdot \mathrel{\Vert} \cdot)$ the Kullback-Leibler divergence.
 The Kullback-Leibler divergence is a measure of the difference between two probability distributions over the same space $\mathcal{X}$, defined as
@@ -27,10 +29,24 @@ for discrete distributions and
     D(P \mathrel{\Vert} Q) = \int_{\mathcal{X}} P(x) \log \frac{P(x)}{Q(x)} \, dx
 \end{equation}
 in the continuous case.
+For more general bandit classes, given finite means, the Kullback-Leibler in the denominator of \cref{eq:lai-robbins} is instead taken to the distribution in that class which is closest to $P_a$ and with mean equal to the mean of $P^*$,
+\begin{equation}
+    \liminf_{T\to\infty} \frac{\mathbb{E}[T_a]}{\ln T} \geq \frac{1}{d(P_a, \mu^*, \mathcal{E})},
+    \label{eq:lai-robbins}
+\end{equation}
+where
+\begin{equation}
+    d(P_a, \mu^*, \mathcal{E}) =
+    \inf_{P \in \nu \in \mathcal{E} \text{ for some } \nu}
+    \left\{ D(P_a \mathrel{\Vert} P): \mathbb{E}[P_a] > \mu^* \right\}.
+\end{equation}
+
 
 From \cref{eq:regret2}, it follows that
 \begin{equation}
-    \liminf_{T\to\infty} \frac{R_T}{\ln T} \geq \sum_{a \in \mathcal{A}}\frac{\Delta_a}{D(P_a \mathrel{\Vert} P^*)}.
+    \liminf_{T\to\infty} \frac{R_T}{\ln T}
+    \geq
+    \sum_{a \in \mathcal{A}}\frac{\Delta_a}{d(P_a, \mu^*, \mathcal{E})}.
     \label{eq:lai-robbins-regret}
 \end{equation}
 Algorithms satisfying \cref{eq:lai-robbins-regret} with equality are said to be asymptotically optimal.
