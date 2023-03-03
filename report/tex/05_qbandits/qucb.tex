@@ -46,3 +46,137 @@ How it should be set for implementation of the algorithm is not described in the
         \EndWhile
     \end{algorithmic}
 \end{algorithm}
+
+\section{Proof of logarithmic regret}
+Recall that for variables in $Y \in [0, 1]$ producible by quantum algorithms, QMC can estimate $\mathbb{E}[Y]$ with error $\lvert\hat{\mu} - \mu\rvert \leq \epsilon$ with probability $1-\delta$ using $\frac{C_1}{\epsilon} \log \frac{1}{\delta}$ queries or less to the oracle or its adjoint, for some universal constant $C_1>1$.
+That means that for each $a$,
+\begin{equation}
+    \lvert\hat{\mu}_a - \mu_a\rvert \leq \text{UCB}_a
+    \quad \text{with probability} \quad
+    1 - \delta,
+    \label{eq:wan_qmc}
+\end{equation}
+for each QMC session in the algorithm.
+
+Let $S_a$ be the set of stages where arm $a$ is pulled in the while-block of the algorithm, and let its cardinality be $K_a = |S_a|$.
+Then, each arm is pulled $(2^{K_a + 1} - 1)C_1 \log \frac1\delta$ in the second phase.
+With the preliminary phase, the total number of queries is
+\begin{equation}
+    C_1 \log \frac{1}{\delta} \sum_{a \in \mathcal{A}} 2^{K_a + 1} = T.
+\end{equation}
+
+Further, using Jensen's inequality,
+\begin{equation}
+    \sum_{a \in \mathcal{A}} 2^{K_a + 1} \geq k 2^{1/k \sum_{a \in \mathcal{A}} (K_a + 1)},
+\end{equation}
+it follows that
+\begin{equation}
+    \sum_{a \in \mathcal{A}} K_a
+    \leq
+    k \log_2 \left(\frac{T}{k C_1 \log \frac{1}{\delta}}\right) -k,
+\end{equation}
+which considering the first $k$ rounds, gives that the total number of QMC sessions is
+\begin{equation}
+    N_{\text{QMC}} \leq k \log_2 \left(\frac{T}{k C_1 \log \frac{1}{\delta}}\right).
+\end{equation}
+
+The probability of all QMC queries satisfying the error bound of \cref{eq:wan_qmc} is
+\begin{equation}
+    \begin{aligned}
+        1 - \left(\bigcup_{i = 1}^{N_{\text{QMC}}} P(\text{Query } i \text{ fail}) \right)
+         & \leq
+        1 - \sum_{i = 1}^{N_{\text{QMC}}} P(\text{Query } i \text{ fail})             \\
+         & =
+        1 - \sum_{i = 1}^{N_{\text{QMC}}} \delta                                      \\
+         & =
+        1 - N_{\text{QMC}} \ P(\text{Query } i \text{ fail})                          \\
+         & \leq k \log_2 \left(\frac{T}{k C_1 \log \frac{1}{\delta}}\right) \ \delta.
+    \end{aligned}
+\end{equation}
+Denote this event by $E$.
+For the $a$ that is chosen in the argmax in line 6 of the algorithm,
+\begin{equation}
+    \hat\mu_a + \text{UCB}_a \geq \hat\mu^* + \text{UCB}^*,
+\end{equation}
+and given $E$, it generally holds that
+\begin{equation}
+    \hat\mu \leq \mu + \text{UCB}
+    \quad \text{and} \quad
+    \mu \leq \hat\mu + \text{UCB}.
+\end{equation}
+Hence, the suboptimality gap of arm $a$ is bounded by
+\begin{equation}
+    \begin{aligned}
+        \Delta_a & := \mu^* - \mu_a                                             \\
+                 & \leq (\hat\mu^* + \text{UCB}^*) - (\hat\mu_a - \text{UCB}_a) \\
+                 & \leq (\hat\mu_a + \text{UCB}_a) - (\hat\mu_a - \text{UCB}_a) \\
+                 & = 2 \text{UCB}_a.
+    \end{aligned}
+\end{equation}
+Notably, this holds regardless of what stage of the algorithm the arm is pulled in, so the last, most precise estimate of $\mu_a$ is used, wherein $\text{UCB}_a = 2^{1 - K_a}$.
+Consequently, the regret contribution of arm $a$ is bounded by
+\begin{equation}
+    \begin{aligned}
+        T_a \Delta_a & \leq 2 T_a \text{UCB}_a.                            \\
+                     & = 2 (2^{K_a + 1} C_1 \log \frac1\delta) 2^{1 - K_a} \\
+                     & = 2^3 C_1 \log \frac1\delta.
+    \end{aligned}
+\end{equation}
+Given $E$, it is hence clear that
+\begin{equation}
+    \begin{aligned}
+        \sum_{a \in \mathcal{A}} T_a \Delta_a  \leq 8 (k-1) C_1 \log \frac1\delta.
+    \end{aligned}
+\end{equation}
+
+In the case where $E$ does not occur, the regret contribution can be bounded by
+\begin{equation}
+    \begin{aligned}
+        \sum_{a \in \mathcal{A}} T_a \Delta_a \leq T \max_{a\in \mathcal{A}} \Delta_a \leq T.
+    \end{aligned}
+\end{equation}
+
+The regret can hence be bounded by
+\begin{equation}
+    \begin{aligned}
+        R_T
+         & =
+        \mathbb{E}\left[ \sum_{a \in \mathcal{A}} T_a \Delta_a \right]
+        \\
+         & =
+        \mathbb{E}\left[ \mathbb{E}\left[ \sum_{a \in \mathcal{A}} T_a \Delta_a \ \middle| \ E \right] \right]
+        \\
+         & = P(E) \mathbb{E}\left[ \sum_{a \in \mathcal{A}} T_a \Delta_a \ \middle| \ E \right] + P(\neg E) \mathbb{E}\left[ \sum_{a \in \mathcal{A}} T_a \Delta_a \ \middle| \ \neg E \right]
+        \\
+         & \leq
+        (1 - P(\neg E)) \left( 8(k-1)C_1 \log \frac1\delta \right)
+        + P(\neg E) T
+        \\
+         & \leq
+        8(k-1)C_1 \log \frac1\delta + P(\neg E) T.
+        \\
+         & \leq
+        8(k-1)C_1 \log \frac1\delta + k\delta \log_2 \left(\frac{T}{kC_1 \log \frac1\delta}\right) T.
+    \end{aligned}
+\end{equation}
+Setting $\delta = 1/T$,
+\begin{equation}
+    \begin{aligned}
+        R_T
+         & \leq
+        8(k-1)C_1 \log \frac1\delta + k \log_2 \left(\frac{T}{kC_1 \log \frac1\delta}\right)
+        \\
+         & \leq
+        8(k-1)C_1 \log T + k \log_2 \left(\frac{T}{kC_1 \log T}\right)
+        \\
+         & \leq
+        8(k-1)C_1 \log_2 T + k \log_2 T
+        \\
+         & =
+        (8(k-1)C_1 + k) \log_2 T
+        \\
+         & =
+        O(k \log T)
+    \end{aligned}
+\end{equation}
+as desired.
