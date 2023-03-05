@@ -6,12 +6,16 @@ For each arm $a \in \mathcal{A}$, a bandit oracle can be defined as
     \label{eq:wan_oracle}
 \end{equation}
 where $\omega$ is some sample space on which $X_a$ is a random variable with probability measure $P_a$.
-Applying the oracle to the state $\ket{0}$ produces a superposition of all possible outcomes of the random variable $X_a$, such that measuring the register $\ket{X_a}$ will produce a sample from $X_a$.
+Applying the oracle to the state $\ket{0}$ produces a superposition of all possible outcomes of the random variable $X_a$, such that measuring the second register will produce a sample from $X_a$.
 In this way, this quantum version of the bandit problem can be reduced to the classical case, but by maintaining the superposition, quantum advantages can be gained.
 
 As with classical arms, the agent decides for each step in the bandit problem which oracle to invoke, trying to minimise the cumulative regret, where the means here are defined as
 \begin{equation}
-    \mu_i = \sum_{\omega \in \Omega} P_a(\omega) X_a(\omega)
+    \begin{aligned}
+        \mu_a
+         & = \sum_{\omega \in \Omega} P_a(\omega) X_a(\omega)                     \\
+         & = \bra{00} \mathcal{O}_a^\dagger (I \otimes Z) \mathcal{O}_a) \ket{00} \\
+    \end{aligned}
 \end{equation}
 In \autocite{wan2022}, an algorithm for bounded-value arms achieving $O(n \log T)$ regret was proposed, $n$ being the number of arms.
 For bounded variances, the regret is $O(n \ \text{poly}(\log T))$, which is still substantially better than $\Omega(\sqrt{nT})$ minimax regret for classical bandits.
