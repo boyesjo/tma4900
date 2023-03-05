@@ -46,7 +46,7 @@ def run_all(
     np.random.seed((os.getpid() * int(time.time())) % 123456789)
     logger.debug(f"{sim=}, seed: {np.random.get_state()[1][0]}")
 
-    # run_qucb1(f"qucb_{sim}", folder, p_list, horizon, delta)
+    run_qucb1(f"qucb_{sim}", folder, p_list, horizon, delta)
     run_thompson(f"thompson_{sim}", folder, p_list, horizon)
     run_ucb(f"ucb_{sim}", folder, p_list, horizon)
 
