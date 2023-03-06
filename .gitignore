@@ -635,5 +635,5 @@ kladd.py
 .python-version
 
 # files tracked by dvc
-.parquet
-.csv
+*.parquet
+*.csv
