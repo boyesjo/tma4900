@@ -13,9 +13,11 @@ A useful assumption is that the algorithm is asymptotically consistent in some c
 \end{equation}
 for all instances $\nu \in \mathcal{E}$.
 
-For policies obeying this property, the Lai-Robbins bound \autocite{lai1985} holds, namely that
+For asymptotically consistent and bandit classes with reward distributions parametrised by only one parameter, the Lai-Robbins bound \autocite{lai1985} holds.
+It states that
 \begin{equation}
     \liminf_{T\to\infty} \frac{\mathbb{E}[T_a]}{\ln T} \geq \frac{1}{D(P_a \mathrel{\Vert} P^*)},
+    \label{eq:lai-robbins-times}
 \end{equation}
 where $P_a$ is the reward distribution of arm $a$, $P^*$ that of the optimal distribution and $D(\cdot \mathrel{\Vert} \cdot)$ the Kullback-Leibler divergence.
 The Kullback-Leibler divergence is a measure of the difference between two probability distributions over the same space $\mathcal{X}$, defined as
@@ -27,10 +29,24 @@ for discrete distributions and
     D(P \mathrel{\Vert} Q) = \int_{\mathcal{X}} P(x) \log \frac{P(x)}{Q(x)} \, dx
 \end{equation}
 in the continuous case.
+For more general bandit classes, given finite means, the Kullback-Leibler in the denominator of \cref{eq:lai-robbins} is instead taken to the distribution in that class which is closest to $P_a$ and with mean equal to the mean of $P^*$,
+\begin{equation}
+    \liminf_{T\to\infty} \frac{\mathbb{E}[T_a]}{\ln T} \geq \frac{1}{d(P_a, \mu^*, \mathcal{E})},
+    \label{eq:lai-robbins}
+\end{equation}
+where
+\begin{equation}
+    d(P_a, \mu^*, \mathcal{E}) =
+    \inf_{P \in \nu \in \mathcal{E} \text{ for some } \nu}
+    \left\{ D(P_a \mathrel{\Vert} P): \mathbb{E}[P_a] > \mu^* \right\}.
+\end{equation}
+
 
 From \cref{eq:regret2}, it follows that
 \begin{equation}
-    \liminf_{T\to\infty} \frac{R_T}{\ln T} \geq \sum_{a \in \mathcal{A}}\frac{\Delta_a}{D(P_a \mathrel{\Vert} P^*)}.
+    \liminf_{T\to\infty} \frac{R_T}{\ln T}
+    \geq
+    \sum_{a \in \mathcal{A}}\frac{\Delta_a}{d(P_a, \mu^*, \mathcal{E})}.
     \label{eq:lai-robbins-regret}
 \end{equation}
 Algorithms satisfying \cref{eq:lai-robbins-regret} with equality are said to be asymptotically optimal.
@@ -57,3 +73,21 @@ Such a bound is independent of the reward distributions, and as such, it is appl
 It can be preferable to sacrifice performance on some instances to gain performance on others.
 Minimax regret optimality implies a flat risk profile, while in practice, performance may be desired to correlate with instance difficulty.
 Surprisingly, minimax optimality does not negate instance optimality, and recent algorithms have been shown to achieve both \autocite{menard2017, jin2020}.
+
+
+\subsection{Bayesian optimality}
+If a prior distribution were to be placed on the reward distributions, a notion of average or Bayesian regret can be defined.
+For some bandit class $\mathcal{E}$, one simply includes the distribution of the reward distributions in the expectation taken to define the regret,
+\begin{equation}
+    \text{BR}_T(Q, \pi)
+    = \mathbb{E}_{\pi, \nu, Q} \left[ \sum_{a \in \mathcal{A}} \Delta_a T_a \right]
+    = \mathbb{E}_{\nu \sim Q} \left[R_T(\nu, \pi) \right],
+\end{equation}
+where $Q$ is the prior distribution.
+Is it trivially observed that the Bayesian regret bounded above by the minimax regret.
+However, it can be proven that there exists priors such that the Bayesian regret is bounded below by some $\Omega(\sqrt{KT})$ \cite{lattimore2020}, such that $\sup_{Q} \inf_{\pi} \text{BR}_T(Q, \pi) = \Theta(\sqrt{KT})$.
+
+The Bayesian regret can be a useful tool for designing algorithms, as knowledge inlaid in the prior can be used to guide the algorithm, but it may lead to less robust designs than policies devised by the above discussed methods.
+Furthermore, calculating the optimal policy is generally intractable for any horizon of size and reward distributions more complicated than Bernoulli \cite{lattimore2020}.
+In simpler cases, dynamic programming can be fruitful.
+For longer horizons, discounting, namely reducing the weight of future rewards, can be used to make the problem tractable.
