@@ -1,0 +1,1 @@
+{'folder': 'big1', 'p_list': array([0.5 , 0.51]), 'horizon': 100000, 'delta': 0.1, 'n_simulations': 100}

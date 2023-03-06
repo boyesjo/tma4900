@@ -1,0 +1,1 @@
+{'folder': 'high_prob', 'p_list': array([0.99  , 0.9905]), 'horizon': 250000, 'delta': 0.01, 'n_simulations': 100}

@@ -1,0 +1,1 @@
+{'folder': 'four_arms', 'p_list': array([0.5 , 0.51, 0.52, 0.53]), 'horizon': 250000, 'delta': 0.01, 'n_simulations': 100}

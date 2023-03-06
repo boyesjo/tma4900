@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-FOLDER = "big1"
+FOLDER = "low_prob"
 
 # %%
 df_qucb = pd.read_parquet(FOLDER + "/qucb.parquet")
@@ -46,3 +46,5 @@ plot(df_qucb, "red", "QUCB1", ERR)
 plot(df_thomp, "blue", "Thompson", ERR)
 plot(df_ucb, "green", "UCB", ERR)
 plt.legend()
+
+# %%

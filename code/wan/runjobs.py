@@ -1,5 +1,6 @@
 import multiprocessing
 import os
+import pickle
 import time
 from pathlib import Path
 
@@ -9,11 +10,13 @@ from classical import run_thompson, run_ucb
 from loguru import logger
 from qucb1 import QUCB1
 
-FOLDER = "easy"
-P_LIST = np.array([0.5, 0.51])
-HORIZON = 100_000
-DELTA = 0.01
-N_SIMULATIONS = 100
+settings = {
+    "folder": "low_prob",
+    "p_list": np.array([0.05, 0.01]),
+    "horizon": 250_000,
+    "delta": 0.01,
+    "n_simulations": 100,
+}
 
 
 def run_qucb1(
@@ -45,25 +48,32 @@ def run_all(
     logger.debug(f"{sim=}, seed: {np.random.get_state()[1][0]}")
 
     # run_qucb1(f"qucb_{sim}", folder, p_list, horizon, delta)
-    run_thompson(f"thompson_{sim}", folder, p_list, horizon)
-    run_ucb(f"ucb_{sim}", folder, p_list, horizon)
+    # run_thompson(f"thompson_{sim}", folder, p_list, horizon)
+    # run_ucb(f"ucb_{sim}", folder, p_list, horizon)
 
 
 if __name__ == "__main__":
 
-    (Path("results") / FOLDER).mkdir(parents=True, exist_ok=True)
+    folder = Path("results") / settings["folder"]
+    folder.mkdir(parents=True, exist_ok=True)
 
-    tasks = np.arange(N_SIMULATIONS)
+    # save settings
+    with open(folder / "settings.pickle", "wb") as f:
+        pickle.dump(settings, f)
+    with open(folder / "settings.txt", "w") as f:
+        f.write(str(settings))
+
+    tasks = np.arange(settings["n_simulations"])
     with multiprocessing.Pool() as pool:
         pool.starmap(
             run_all,
             [
                 (
                     sim,
-                    FOLDER,
-                    P_LIST,
-                    HORIZON,
-                    DELTA,
+                    settings["folder"],
+                    settings["p_list"],
+                    settings["horizon"],
+                    settings["delta"],
                 )
                 for sim in tasks
             ],
