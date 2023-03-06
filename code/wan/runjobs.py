@@ -11,8 +11,8 @@ from loguru import logger
 from qucb1 import QUCB1
 
 settings = {
-    "folder": "low_prob",
-    "p_list": np.array([0.05, 0.01]),
+    "folder": "low_prob_fix",
+    "p_list": np.array([0.005, 0.01]),
     "horizon": 250_000,
     "delta": 0.01,
     "n_simulations": 100,
