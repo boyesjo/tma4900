@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 P_LIST = np.array([0.5, 0.51])
-HORIZON = 100000
+HORIZON = 100_000
 DELTA = 0.01
 N_SIMULATIONS = 100
 C2 = 2

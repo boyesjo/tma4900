@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 
-folder = "big1"
+folder = "easy"
 prefix = "thompson"
 
 # %%

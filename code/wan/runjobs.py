@@ -9,11 +9,11 @@ from classical import run_thompson, run_ucb
 from loguru import logger
 from qucb1 import QUCB1
 
-FOLDER = "big1"
+FOLDER = "easy"
+P_LIST = np.array([0.5, 0.51])
 HORIZON = 100_000
+DELTA = 0.01
 N_SIMULATIONS = 100
-P_LIST = np.array([0.5, 0.501])
-DELTA = 0.1
 
 
 def run_qucb1(

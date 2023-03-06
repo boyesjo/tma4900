@@ -1,0 +1,4 @@
+outs:
+- md5: db59d208045eacf09de333376f24e520
+  size: 9076167
+  path: thompson.parquet
