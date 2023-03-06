@@ -1,13 +1,19 @@
 # %%
+import pickle
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import pandas as pd
+from classical import lai_robbins_bound, ucb_bound
 
-FOLDER = "low_prob"
+FOLDER = Path("results") / "four_arms"
 
 # %%
-df_qucb = pd.read_parquet(FOLDER + "/qucb.parquet")
-df_ucb = pd.read_parquet(FOLDER + "/ucb.parquet")
-df_thomp = pd.read_parquet(FOLDER + "/thompson.parquet")
+df_qucb = pd.read_parquet(FOLDER / "qucb.parquet")
+df_ucb = pd.read_parquet(FOLDER / "ucb.parquet")
+df_thomp = pd.read_parquet(FOLDER / "thompson.parquet")
+with open(FOLDER / "settings.pickle", "rb") as f:
+    settings = pickle.load(f)
 
 
 # %%
@@ -44,7 +50,19 @@ def plot(df, color, name, err):
 ERR = "std"
 plot(df_qucb, "red", "QUCB1", ERR)
 plot(df_thomp, "blue", "Thompson", ERR)
-plot(df_ucb, "green", "UCB", ERR)
+plot(df_ucb, "green", "UCB1", ERR)
 plt.legend()
+
+# plt.plot(
+#     lai_robbins_bound(settings["p_list"], settings["horizon"]),
+#     "k--",
+#     label="Lai-Robins",
+# )
+
+plt.plot(
+    ucb_bound(settings["p_list"], settings["horizon"]),
+    "k--",
+    label="UCB1 bound",
+)
 
 # %%
