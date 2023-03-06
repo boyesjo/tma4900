@@ -9,11 +9,11 @@ from classical import run_thompson, run_ucb
 from loguru import logger
 from qucb1 import QUCB1
 
-FOLDER = "idk"
-HORIZON = 250_000
+FOLDER = "big1"
+HORIZON = 100_000
 N_SIMULATIONS = 100
-P_LIST = np.array([0.05, 0.01])
-DELTA = 0.01
+P_LIST = np.array([0.5, 0.501])
+DELTA = 0.1
 
 
 def run_qucb1(
@@ -44,7 +44,7 @@ def run_all(
     np.random.seed((os.getpid() * int(time.time())) % 123456789)
     logger.debug(f"{sim=}, seed: {np.random.get_state()[1][0]}")
 
-    run_qucb1(f"qucb_{sim}", folder, p_list, horizon, delta)
+    # run_qucb1(f"qucb_{sim}", folder, p_list, horizon, delta)
     run_thompson(f"thompson_{sim}", folder, p_list, horizon)
     run_ucb(f"ucb_{sim}", folder, p_list, horizon)
 

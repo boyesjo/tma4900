@@ -24,5 +24,7 @@
         "**/*.out": true,
         "**/*.fdb_latexmk": true,
         "**/__pycache__": true,
-    }
+    },
+    // run python files in dir
+    "python.terminal.executeInFileDir": true,
 }

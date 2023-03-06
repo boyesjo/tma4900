@@ -1,4 +1,5 @@
 [core]
     remote = gogdrive
+    autostage = true
 ['remote "gogdrive"']
     url = gdrive://1jIvw4nKRWXfUN4p5UyOIeEhJ3BOIF2Qq
