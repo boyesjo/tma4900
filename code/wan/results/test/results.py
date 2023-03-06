@@ -6,7 +6,7 @@ import pandas as pd
 HORIZON = 250_000
 N_SIMULATIONS = 100
 P_LIST = np.array([0.99, 0.9905])
-DELTA = 0.03
+DELTA = 0.01
 
 # # %%
 # df_list = []

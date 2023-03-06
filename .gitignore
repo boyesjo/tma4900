@@ -633,3 +633,7 @@ kladd.py
 
 # pyenv
 .python-version
+
+# files tracked by dvc
+*.parquet
+*.csv

@@ -1,0 +1,4 @@
+outs:
+- md5: 7b54f7af522610c70c18307b9e6b0701
+  size: 48624406
+  path: ucb.parquet
