@@ -83,11 +83,11 @@ For some bandit class $\mathcal{E}$, one simply includes the distribution of the
     = \mathbb{E}_{\pi, \nu, Q} \left[ \sum_{a \in \mathcal{A}} \Delta_a T_a \right]
     = \mathbb{E}_{\nu \sim Q} \left[R_T(\nu, \pi) \right],
 \end{equation}
-where $Q$ is the prior distribution.
+where $Q$ is the prior distribution over $\mathcal{E}$.
 Is it trivially observed that the Bayesian regret bounded above by the minimax regret.
-However, it can be proven that there exists priors such that the Bayesian regret is bounded below by some $\Omega(\sqrt{KT})$ \cite{lattimore2020}, such that $\sup_{Q} \inf_{\pi} \text{BR}_T(Q, \pi) = \Theta(\sqrt{KT})$.
+However, it can be proven that there exists priors such that the Bayesian regret is bounded below by some $\Omega(\sqrt{KT})$, such that $\sup_{Q} \inf_{\pi} \text{BR}_T(Q, \pi) = \Theta(\sqrt{KT})$ \autocite{lattimore2020}
 
 The Bayesian regret can be a useful tool for designing algorithms, as knowledge inlaid in the prior can be used to guide the algorithm, but it may lead to less robust designs than policies devised by the above discussed methods.
-Furthermore, calculating the optimal policy is generally intractable for any horizon of size and reward distributions more complicated than Bernoulli \cite{lattimore2020}.
+Furthermore, calculating the optimal policy is generally intractable for any horizon of size and reward distributions more complicated than Bernoulli \autocite{lattimore2020}.
 In simpler cases, dynamic programming can be fruitful.
 For longer horizons, discounting, namely reducing the weight of future rewards, can be used to make the problem tractable.
