@@ -1,0 +1,4 @@
+outs:
+- md5: 388389be551b40897d373befba23a1f6
+  size: 29849493
+  path: qucb.parquet
