@@ -70,3 +70,30 @@ def run_ucb(
         index=False,
     )
     logger.success(f"{filename} finished")
+
+
+def lai_robbins_bound(p_list: np.ndarray, horizon: int) -> pd.DataFrame:
+    p_max = np.max(p_list)
+    subopt = p_max - p_list
+    kl = p_list * np.log(p_list / p_max) + (1 - p_list) * np.log(
+        (1 - p_list) / (1 - p_max)
+    )
+    coeff = sum(subopt / kl for subopt, kl in zip(subopt, kl) if kl != 0)
+    regret = coeff * np.log(np.arange(1, horizon + 1))
+    df = pd.DataFrame({"regret": regret})
+    df.index.name = "turn"
+    return df
+
+
+def thompson_bound(p_list: np.ndarray, horizon: int) -> pd.DataFrame:
+    pass
+
+
+def ucb_bound(p_list: np.ndarray, horizon: int) -> pd.DataFrame:
+    p_max = np.max(p_list)
+    subopt = p_max - p_list
+    coeff = 8 * sum(1 / subopt for subopt in subopt if subopt != 0)
+    regret = coeff * np.log(np.arange(1, horizon + 1))
+    df = pd.DataFrame({"regret": regret})
+    df.index.name = "turn"
+    return df
