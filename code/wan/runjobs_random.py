@@ -11,11 +11,10 @@ from loguru import logger
 from qucb1 import QUCB1
 
 settings = {
-    "folder": "low_prob_fix2",
-    "p_list": 1 - np.array([0.99, 0.9905]),
+    "folder": "random",
     "horizon": 250_000,
     "delta": 0.01,
-    "n_simulations": 100,
+    "n_simulations": 1000,
 }
 
 
@@ -39,13 +38,15 @@ def run_qucb1(
 def run_all(
     sim: int,
     folder: str,
-    p_list: np.ndarray,
     horizon: int,
     delta: float = 0.01,
 ) -> None:
     # kys unix
     np.random.seed((os.getpid() * int(time.time())) % 123456789)
-    logger.debug(f"{sim=}, seed: {np.random.get_state()[1][0]}")
+    p_list = np.random.uniform(size=2)
+    logger.info(f"{sim=}, {p_list=}")
+
+    p_list.tofile(Path("results") / folder / f"p_list_{sim}.csv", sep=",")
 
     run_qucb1(f"qucb_{sim}", folder, p_list, horizon, delta)
     run_thompson(f"thompson_{sim}", folder, p_list, horizon)
@@ -71,7 +72,6 @@ if __name__ == "__main__":
                 (
                     sim,
                     settings["folder"],
-                    settings["p_list"],
                     settings["horizon"],
                     settings["delta"],
                 )

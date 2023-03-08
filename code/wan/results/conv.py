@@ -4,7 +4,7 @@ from pathlib import Path
 import pandas as pd
 from loguru import logger
 
-folder = "low_prob_fix"
+folder = "low_prob_fix2"
 prefixes = [
     "thompson",
     "ucb",
