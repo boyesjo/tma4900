@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from classical import lai_robbins_bound, ucb_bound
 
-FOLDER = Path("results") / "big2"
+FOLDER = Path("results") / "low_prob_fix2"
 
 # %%
 df_qucb = pd.read_parquet(FOLDER / "qucb.parquet")
