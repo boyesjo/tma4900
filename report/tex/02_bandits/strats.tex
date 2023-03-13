@@ -95,8 +95,8 @@ Choosing $\epsilon$ is a trade-off between exploration and exploitation and can 
 To remedy the linear term in the regret, modifications to the epsilon-greedy algorithm have been proposed wherein $\epsilon$ is a function of the current time step $t$.
 Specifically, in order to achieve sublinear regret, it is necessary to decay $\epsilon$ towards zero.
 Decreasing $\epsilon$ over time makes intuitive sense; exploration is more crucial in the beginning stages of the algorithm, whereas exploitation is more important when the agent has more reliable estimates of the reward means.
-For example, one successful strategy is to set $\epsilon \sim 1/t$, which has been shown to achieve logarithmic regret \autocite{auer2002}.
-It is worth noting, however, that the optimal decay rate depends on the specific problem instance, and achieving logarithmic regret can be challenging in practice \autocite{bubeck2012}.
+For example, one successful strategy is to set $\epsilon \sim 1/t$, which has been shown to achieve logarithmic instance-dependent regret \autocite{auer2002}.
+It is worth noting, however, that the optimal decay rate depends on the specific instance, and achieving logarithmic regret can be challenging in practice \autocite{bubeck2012}.
 
 
 \subsection{Upper confidence bounds}
@@ -109,8 +109,8 @@ In addition, by increasing the confidence bounds as the number of pulls increase
 Assuming rewards in $[0,1]$ and using Hoeffding's inequality, one has
 \begin{equation}
     p
-    = P \left(\mu_a > \hat{\mu_a} + \text{UCB}_a \right)
-    \leq \exp \left(-2T_a \text{UCB}_a^2 \right),
+    = P(\mu_a > \hat{\mu_a} + \text{UCB}_a)
+    \leq \exp(-2T_a \text{UCB}_a^2),
 \end{equation}
 where $\text{UCB}_a$ is the upper confidence bound for arm $a$ and $T_a$ is the number of times arm $a$ has been pulled.
 Solving for $\text{UCB}_a$ gives
@@ -122,13 +122,23 @@ Letting $p(t) = t^{-4}$ gives
     \text{UCB}_a = \sqrt{\frac{2 \ln t}{T_a}},
 \end{equation}
 which is a common choice for the upper confidence bound, leading to the UCB1-algorithm.
-In \autocite{auer2002}, it is shown that this algorithm achieves $O(\ln T)$ regret in $\mathcal{E}_{[0,1]}^k$.
+In \autocite{auer2002}, it is shown that UCB1 achieves
+\begin{equation}
+    R_T
+    \leq
+    \left( 8 \sum_{a \in \mathcal{A} \setminus a^*} \frac{\log T}{\Delta_a} \right)
+    + \left(1 + \frac{\pi^2}{3}\right) \sum_{a \in \mathcal{A}} \Delta_a,
+\end{equation}
+which only misses instance-dependent optimality by some constant factor.
+Nor is UCB1 truly minimax-optimal, is its instance-independent upper bound is $O(kT \log T)$ \autocite{bubeck2012}.
+
+
 Regardless of the assumptions made and the bandit class, the procedure follows as in \cref{alg:ucb}.
 
 Many variants of the algorithm exist; different assumptions about the distributions change the confidence bounds.
 While the choice of $p$ is arbitrary, it is less of nuisance than the choice of $\epsilon$ in the epsilon-greedy algorithm, with specific choices of $p$, such as the UCB1-algorithm, being well-studied and known to perform well.
 For example, MOSS, a modification of UCB1, has be shown to minimax-optimal for $\mathcal{E}_{[0,1]}^k$ \autocite{audibert2009}.
-Further, incorporating estimates of second moments improve performance in some cases \autocite{audibert2009a}, while incorporating the whole empirical distributions of observed rewards appear to be the most effective approach \autocite{maillard2011}.
+Further, incorporating estimates of second moments improve performance in some cases \autocite{audibert2009a}, while incorporating the whole empirical distributions of observed rewards appears be the most effective approach \autocite{maillard2011}.
 
 \begin{algorithm}
     \caption{UCB arm selection}
@@ -149,6 +159,18 @@ This method is noteworthy for its ability to incorporate Bayesian modelling conc
 The idea is to sample from the posterior distribution of the means of the arms and pull the arm with the highest sample.
 
 It was first in 2012 that Thompson sampling was proven asymptotically optimal for Bernoulli rewards with uniform priors \autocite{kaufmann2012}.
+Namely, for every $\epsilon > 0$, there exists a constant $C_\epsilon$ such that
+\begin{equation}
+    R_T
+    \leq
+    (1 + \epsilon)
+    \sum_{a \in \mathcal{A} \setminus a^*}
+    \Delta_a \frac{\log T - \log \log T}{D(P_a \mathrel{\Vert} P^*)}
+    + C_\epsilon,
+\end{equation}
+where $P_a$ is the reward distribution of arm $a$ and $P^*$ is the reward distribution of the best arm.
+Meanwhile, the minimax regret is can be bounded by either $O(\sqrt{kT \log T})$ \autocite{agrawal2013} or $O(\sqrt{kT \log k})$ \autocite{agrawal2017}, neither of which is quite minimax-optimal.
+
 Also for Gaussian rewards, it was proven asymptotically optimal with uniform priors \autocite{honda2014}.
 Notably, the Jeffreys prior was shown to be inadequate in achieving optimal regret, highlighting the importance of the prior selection for the algorithm's performance.
 
