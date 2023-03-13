@@ -27,11 +27,11 @@ def rotation_matrix(n_qubits: int, state: int):
     zero_refl[0] = -1
     zero_refl = np.diag(zero_refl)
 
+    # one grover iteration
     return h @ zero_refl @ h @ oracle
 
 
 def sample(state_vector: np.ndarray, n_samples: int = 1):
-
     return np.random.choice(
         len(state_vector),
         size=n_samples,
@@ -42,9 +42,10 @@ def sample(state_vector: np.ndarray, n_samples: int = 1):
 # %%
 N_QUBITS = 5
 P_LIST = np.linspace(0.0, 1.0, 2**N_QUBITS)
+# P_LIST = np.array([i == 0 for i in range(2**N_QUBITS)], dtype=float)
 HORIZON = 100_000
 
-SUCC_ANGLE = 0.0
+SUCC_ANGLE = 1.0
 FAIL_ANGLE = -1.0
 
 regrets = np.zeros(HORIZON)
@@ -91,6 +92,8 @@ plt.show()
 
 plt.title("Cum mean success")
 plt.plot(df["succ"].cumsum() / np.arange(1, HORIZON + 1))
-plt.axhline(0.5, color="black", linestyle="--")
+plt.axhline(np.mean(P_LIST), color="black", linestyle="--")
+plt.axhline(np.max(P_LIST), color="black", linestyle="--")
 plt.xscale("log")
+plt.show()
 # %%
