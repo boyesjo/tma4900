@@ -20,6 +20,7 @@ def rotation_matrix(n_qubits: int, state: int):
     # matrix equivalent hadamarding all qubits
     h_gate = np.asarray([[1, 1], [1, -1]]) / np.sqrt(2)
     h = np.eye(1, dtype=complex)
+    # h = h_gate.copy()
     for _ in range(n_qubits):
         h = kron(h, h_gate)
 
@@ -29,6 +30,9 @@ def rotation_matrix(n_qubits: int, state: int):
 
     # one grover iteration
     return h @ zero_refl @ h @ oracle
+
+
+rotation_matrix(2, 0)
 
 
 def sample(state_vector: np.ndarray, n_samples: int = 1):
@@ -41,9 +45,9 @@ def sample(state_vector: np.ndarray, n_samples: int = 1):
 
 # %%
 N_QUBITS = 5
-P_LIST = np.linspace(0.0, 1.0, 2**N_QUBITS)
-# P_LIST = np.array([i == 0 for i in range(2**N_QUBITS)], dtype=float)
-HORIZON = 100_000
+# P_LIST = np.linspace(0.0, 1.0, 2**N_QUBITS)
+P_LIST = np.array([i == 0 for i in range(2**N_QUBITS)], dtype=float)
+HORIZON = 1000
 
 SUCC_ANGLE = 1.0
 FAIL_ANGLE = -1.0
@@ -78,7 +82,8 @@ for t in range(HORIZON):
     regrets[t] = np.max(P_LIST) - P_LIST[arm]
     arms[t] = arm
     succs[t] = succ
-    print(f"t={t}, arm={arm}, succ={succ}, regret={regrets[t]}")
+    # print(f"t={t}, arm={arm}, succ={succ}, regret={regrets[t]}")
+    # print(state)
 
 df = pd.DataFrame({"arm": arms, "succ": succs, "regret": regrets})
 
@@ -94,6 +99,6 @@ plt.title("Cum mean success")
 plt.plot(df["succ"].cumsum() / np.arange(1, HORIZON + 1))
 plt.axhline(np.mean(P_LIST), color="black", linestyle="--")
 plt.axhline(np.max(P_LIST), color="black", linestyle="--")
-plt.xscale("log")
+# plt.xscale("log")
 plt.show()
 # %%

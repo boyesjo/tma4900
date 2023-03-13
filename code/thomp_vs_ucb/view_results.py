@@ -24,7 +24,7 @@ df["regret_ratio"] = df["thomp_regret"] / df["ucb_regret"]
 def plot(y):
     x = "p_delta"
     mean = df.groupby(x)[y].mean()
-    mean.plot()
+    mean.plot(label=y)
     plt.fill_between(
         mean.index,
         mean - df.groupby(x)[y].std(),
@@ -36,9 +36,11 @@ def plot(y):
 plot("ucb_regret")
 plot("thomp_regret")
 plt.xscale("log")
+plt.legend()
 plt.show()
 
 plot("regret_ratio")
+plt.ylabel("Thompson / UCB")
 plt.xscale("log")
 plt.show()
 
