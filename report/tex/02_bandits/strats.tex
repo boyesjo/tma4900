@@ -153,6 +153,53 @@ Further, incorporating estimates of second moments improve performance in some c
 \end{algorithm}
 
 
+\begin{figure}
+    \centering
+    \foreach \turn in {10, 100, 1000, 10000} {
+            \begin{subfigure}{0.4\textwidth}
+                \centering
+                % \caption{
+                %     Turn $\turn$.
+                % }
+                \begin{tikzpicture}
+                    \begin{axis}[
+                            width=\textwidth,
+                            height=\textwidth,
+                            xlabel=Arm,
+                            ylabel=Estimate,
+                            grid=major,
+                            xtick=data,
+                            title={Turn $\turn$},
+                        ]
+                        \pgfplotstableread[col sep=comma]{../code/bandit_figs/ucb/ucb_\turn.csv}\datatable
+                        \addplot+[
+                            only marks,
+                            error bars/.cd,
+                            y dir=plus,
+                            y explicit
+                        ] table[
+                                x=arm,
+                                y=estimate,
+                                y error=ucb,
+                                col sep=comma,
+                            ] {\datatable};
+                        \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.8, 0.2) (1.2, 0.2)};
+                        \addplot+[dashed, mark=none, black, forget plot] coordinates {(1.8, 0.4) (2.2, 0.4)};
+                        \addplot+[dashed, mark=none, black, forget plot] coordinates {(2.8, 0.7) (3.2, 0.7)};
+                    \end{axis}
+                \end{tikzpicture}
+            \end{subfigure}
+        }
+    \caption{
+        Estimates and error bars for each arm at different turns.
+        The dots represent the estimates of the means of the arms, while the error bars represent the upper confidence bounds and the dashed lines represent the true means.
+        As the number of turns increases, the estimate of the highest mean converge quickly to the true mean, while the estimates of the suboptimal arms remain bad.
+    }
+\end{figure}
+
+
+
+
 \subsection{Thompson sampling}
 Thompson sampling is a Bayesian approach to the multi-armed bandit problem, being the original approach to the problem \autocite{thompson1933} in 1933, though only in the case of two arms and Bernoulli rewards and without any theoretical guarantees.
 This method is noteworthy for its ability to incorporate Bayesian modelling concepts into the fundamentally frequentist problem of multi-armed banditry.
