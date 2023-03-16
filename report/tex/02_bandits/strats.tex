@@ -191,6 +191,7 @@ Further, incorporating estimates of second moments improve performance in some c
                     \end{axis}
                 \end{tikzpicture}
             \end{subfigure}
+            \vspace{0.5cm}
         }
     \label{fig:ucb}
     \caption{
@@ -241,6 +242,146 @@ Furthermore, empirical results generally indicate better performance than UCB va
 Still, Thompson sampling is not without its drawbacks.
 The algorithm can be computationally expensive, as it requires sampling from the posterior distribution for each arm at each time step.
 Even with conjugate priors, the computational costs of sampling will be higher than the simple computations required by UCB and epsilon-greedy algorithms.
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{groupplot}[
+                group style={
+                        group size=3 by 4,
+                    },
+                width=0.35\textwidth,
+                height=0.35\textwidth,
+                no markers,
+                grid=major,
+            ]
+            \nextgroupplot[
+                ylabel=Priors,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y1,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_0.csv};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 2)};
+
+            \nextgroupplot
+            \addplot table[
+                    x=x,
+                    y=y2,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_0.csv};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 2)};
+
+            \nextgroupplot
+            \addplot table[
+                    x=x,
+                    y=y3,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_0.csv};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 2)};
+
+
+            % row 2
+            \nextgroupplot[
+                ylabel = Turn 10,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y1,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_10.csv};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 2.5)};
+
+            \nextgroupplot
+            \addplot table[
+                    x=x,
+                    y=y2,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_10.csv};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 2.5)};
+
+            \nextgroupplot
+            \addplot table[
+                    x=x,
+                    y=y3,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_10.csv};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 4)};
+
+            % row 3
+            \nextgroupplot[
+                ylabel = Turn 100,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y1,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_100.csv};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 3)};
+
+            \nextgroupplot[
+            ]
+            \addplot table[
+                    x=x,
+                    y=y2,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_100.csv};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 4)};
+
+            \nextgroupplot[
+            ]
+            \addplot table[
+                    x=x,
+                    y=y3,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_100.csv};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 11)};
+
+            % row 4
+            \nextgroupplot[
+                xlabel=Arm 1,
+                ylabel = Turn 1000,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y1,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_1000.csv};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 4)};
+
+            \nextgroupplot[
+                xlabel=Arm 2,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y2,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_1000.csv};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 4)};
+
+            \nextgroupplot[
+                xlabel=Arm 3,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y3,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_1000.csv};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 30)};
+
+
+        \end{groupplot}
+    \end{tikzpicture}
+    \caption{
+        Thompson sampling with Bernoulli rewards.
+        In the top row, the uniform priors for the reward distribution means are on display.
+        Thereunder, the posteriors are shown at turns 10, 100 and 1000.
+        The dashed vertical lines indicate the true means.
+        As the algorithm progresses, the posterior of the optimal arm quickly spikes and approaches the true mean, while the other remain rather wide, but importantly with almost all their mass less than the optimal arm posterior.
+    }
+\end{figure}
+
 
 \subsection{The doubling trick}
 Given an algorithm reliant on knowing the horizon $T$, it is possible to use the doubling trick to achieve similar regret regardless of the horizon, creating an anytime algorithm.
