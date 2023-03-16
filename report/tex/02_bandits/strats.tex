@@ -134,6 +134,8 @@ Nor is UCB1 truly minimax-optimal, is its instance-independent upper bound is $O
 
 
 Regardless of the assumptions made and the bandit class, the procedure follows as in \cref{alg:ucb}.
+For few arms, the process is easily visualised, as is done in \cref{fig:ucb}.
+There it is made clear how the confidence bound based strategy naturally exploits the best arm and how the poorer arms are not explored more than needed.
 
 Many variants of the algorithm exist; different assumptions about the distributions change the confidence bounds.
 While the choice of $p$ is arbitrary, it is less of nuisance than the choice of $\epsilon$ in the epsilon-greedy algorithm, with specific choices of $p$, such as the UCB1-algorithm, being well-studied and known to perform well.
@@ -190,6 +192,7 @@ Further, incorporating estimates of second moments improve performance in some c
                 \end{tikzpicture}
             \end{subfigure}
         }
+    \label{fig:ucb}
     \caption{
         Estimates and error bars for each arm at different turns.
         The dots represent the estimates of the means of the arms, while the error bars represent the upper confidence bounds and the dashed lines represent the true means.
