@@ -207,7 +207,10 @@ Further, incorporating estimates of second moments improve performance in some c
 \subsection{Thompson sampling}
 Thompson sampling is a Bayesian approach to the multi-armed bandit problem, being the original approach to the problem \autocite{thompson1933} in 1933, though only in the case of two arms and Bernoulli rewards and without any theoretical guarantees.
 This method is noteworthy for its ability to incorporate Bayesian modelling concepts into the fundamentally frequentist problem of multi-armed banditry.
-The idea is to sample from the posterior distribution of the means of the arms and pull the arm with the highest sample.
+
+The idea is to sample from the posterior distribution of the means of the arms and pull the arm with the highest sample, as described \cref{alg:thompson}.
+The posterior distribution is updated after each pull, using the observed reward as evidence.
+By graphing the posterior distribution, such as is done in \cref{fig:thompson}, it is possible to see how the algorithm efficiently exploits the best arm while giving enough explorative efforts.
 
 It was first in 2012 that Thompson sampling was proven asymptotically optimal for Bernoulli rewards with uniform priors \autocite{kaufmann2012}.
 Namely, for every $\epsilon > 0$, there exists a constant $C_\epsilon$ such that
@@ -373,6 +376,7 @@ Even with conjugate priors, the computational costs of sampling will be higher t
 
         \end{groupplot}
     \end{tikzpicture}
+    \label{fig:thompson}
     \caption{
         Thompson sampling with Bernoulli rewards.
         In the top row, the uniform priors for the reward distribution means are on display.

@@ -1,0 +1,22 @@
+\section{Relation to machine learning}
+\subsection{Reinforcement learning}
+Multi-armed bandits can be seen as the simplest case of Markov decision processes (MDPs), the theoretical framework for modern reinforcement learning.
+MDPs are a generalisation of Markov chains wherein an agent observes a state from a known space of states, after which it chooses an action from a known set of actions.
+For each state-action pair, there are associated transition probabilities to other states with corresponding rewards.
+Like in the multi-armed bandit problem, the goal is to maximise the received rewards, and as is the case with bandits, the agent does not know the transition probabilities or the rewards, having instead to learn these through iterated interactions with the environment.
+
+While bandit problems can be considered analytically and solved somewhat optimally, MDPs are generally intractable and far too complex to be solved optimally.
+Exempli gratia, the game of go has approximately $10^{170}$ possible states, far too complicated to be solved exactly optimally.
+However, with modern machine learning techniques, namely neural networks, it is possible to learn good policies and beat the best human players \autocite{silver2016}.
+
+Unlike bandits whose performance is important from the start, reinforcement learning is generally tackled by first training the model on a set of data or a simulated environment before deploying it to the real problem at hand.
+Consequently, the exploration-exploitation dilemma is not as pressing in reinforcement learning as it is in bandits, but it is still present.
+While learning strategies, there is indeed a trade-off between optimising the more promising strategies contra attempting radically different strategies.
+Theory and strategies from bandits are therefore used in reinforcement learning, such as epsilon-greedy strategies CITATION NEEDED or something CITATION NEEDED.
+
+
+\subsection{Meta-learning}
+While machine learning continues to show great promise in solving complex problems, it remains difficult to choose what models to use, what data to use and how to tune the models.
+To this end, bandits have shown success.
+For example, the selection of algorithms to use can be rephrased as a multi-armed bandit problem, where the arms are the algorithms and the rewards are the performance of the algorithms \autocite{gagliolo2010}.
+Similarly, the feature selection using epsilon-greedy strategies \autocite{wang2014} or Thompson sampling shows promise \autocite{bouneffouf2017}.
