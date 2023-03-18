@@ -17,7 +17,7 @@ As with classical arms, the agent decides for each step in the bandit problem wh
          & = \bra{00} \mathcal{O}_a^\dagger (I \otimes Z) \mathcal{O}_a) \ket{00} \\
     \end{aligned}
 \end{equation}
-In \autocite{wan2022}, an algorithm for bounded-value arms achieving $O(n \log T)$ regret was proposed, $n$ being the number of arms.
+In~\autocite{wan2022}, an algorithm for bounded-value arms achieving $O(n \log T)$ regret was proposed, $n$ being the number of arms.
 For bounded variances, the regret is $O(n \ \text{poly}(\log T))$, which is still substantially better than $\Omega(\sqrt{nT})$ minimax regret for classical bandits.
 
 The algorithm proposed is essentially a UCB-like algorithm, where QMC (as described in \cref{sec:qmc}) is used to estimate means more efficiently.
@@ -29,7 +29,7 @@ The constant $C_1>1$ is only described existentially to give an upper bound to t
 How it should be set for implementation of the algorithm is not described in the paper.
 
 \begin{algorithm}
-    \caption{QUCB1 as proposed in \autocite{wan2022}}
+    \caption{QUCB1 as proposed in~\autocite{wan2022}}
     \label{alg:qucb1}
     \begin{algorithmic}[1]
         \Require Set of arms $\mathcal{A}$, $\mathcal{O}_i$ as in \cref{eq:wan_oracle}, $T$ horizon, $0 < \delta \ll 1$

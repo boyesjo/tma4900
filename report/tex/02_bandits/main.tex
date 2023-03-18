@@ -5,15 +5,15 @@ The multi-armed bandit (MAB) problem is a classic problem in reinforcement learn
 It poses a simple yet challenging problem, where the agent must sequentially choose between a number of arms (distributions) of which the mean reward is unknown, trying to maximise the cumulative reward.
 This poses a constant struggle between exploration and exploitation, where exploration is the process of trying out new arms, and exploitation is the process of sampling from the distribution with the highest average thus far.
 
-Although the bandit term was not coined before 1952 \autocite{robbins1952}, its study dates back to 1933 \autocite{thompson1933}.
+Although the bandit term was not coined before 1952~\autocite{robbins1952}, its study dates back to 1933~\autocite{thompson1933}.
 The problem of choosing between two treatments for patients was considered: to what degree should the most successful treatment be used versus testing the other to ensure that the truly best is indeed used?
 
 Some of the many real-world setting where the multi-armed bandit problem is applicable are listed in \cref{tab:mab_applications}.
 Despite being a simple problem, its countless variants and applications make it not only a useful tool for real-world problems.
-Netflix uses MAB theory to recommend movies \autocite{kawale2018}, Amazon for its website layout \autocite{hill2017}, Facebook for video compression \autocite{daulton2019} and Doordash to identify responsive deliverymen \autocite{sharma2022}.
+Netflix uses MAB theory to recommend movies~\autocite{kawale2018}, Amazon for its website layout~\autocite{hill2017}, Facebook for video compression~\autocite{daulton2019} and Doordash to identify responsive deliverymen~\autocite{sharma2022}.
 The problem and its variations are still being studied with several results in what follows being recent.
 
-This chapter and its notation will mostly follow the work textbook \autocite{lattimore2020}, to which the interested reader is referred for more details on the bandit problem and its variants.
+This chapter and its notation will mostly follow the work textbook~\autocite{lattimore2020}, to which the interested reader is referred for more details on the bandit problem and its variants.
 
 \begin{table}
     \centering

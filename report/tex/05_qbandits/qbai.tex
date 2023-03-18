@@ -1,5 +1,5 @@
 \section{Best arm identification}
-In \autocite{casale2020}, an algorithm based on amplitude amplification is proposed and is shown to find the optimal arm with quadratically fewer queries than the best classical algorithm for classical bandits in the case of Bernoulli rewards.
+In~\autocite{casale2020}, an algorithm based on amplitude amplification is proposed and is shown to find the optimal arm with quadratically fewer queries than the best classical algorithm for classical bandits in the case of Bernoulli rewards.
 There is albeit a significant drawback: the probability of the correct arm being suggested can not be set arbitrarily high, but is instead given by the ratio of the best arm's mean to the sum of the means of all arms.
 This greatly limits the usefulness of the algorithm, but it may still serve as a useful baseline for comparison, with the more complicated algorithms discussed in the following sections seeable as extensions hereof.
 
@@ -16,5 +16,5 @@ For a given arm $a$ and the internal state $\ket{y}$, the reward is determined b
 For such bandits, regret minimisation is no longer a valid objective, as all arms are in a sense pulled simultaneously.
 Instead, the problem is to find a strategy that maximises the probability of finding the optimal arm with as few applications of $\mathcal{O}_e$ as possible.
 
-The authors of \autocite{wang2021} propose a more sophisticated algorithm, improving the results of \autocite{casale2020} by allowing the probability of finding the optimal arm to be set arbitrarily high.
+The authors of~\autocite{wang2021} propose a more sophisticated algorithm, improving the results of~\autocite{casale2020} by allowing the probability of finding the optimal arm to be set arbitrarily high.
 Theirs is also quadratic speed-up over the best classical algorithm, but is more complicated and requires a quantum computer with more qubits.

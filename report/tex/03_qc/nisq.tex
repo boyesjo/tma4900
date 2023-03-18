@@ -1,6 +1,6 @@
 \section{Limitations of NISQ hardware}
 \label{sec:nisq}
-Quantum hardware have been physically realised and even demonstrated to outperform classical computers in very contrived situations \autocite{arute2019, zhong2020, madsen2022}, but the hardware is still limited.
+Quantum hardware have been physically realised and even demonstrated to outperform classical computers in very contrived situations~\autocite{arute2019, zhong2020, madsen2022}, but the hardware is still limited.
 The hardware is limited in the number of qubits, the connectivity between the qubits, and the noise and decoherence of the qubits.
 It is believed that quantum hardware will continue to improve and eventually perform demanding algorithms like Shor's algorithm on numbers too great for classical computers to factorise.
 Once enough qubits are available and error rates low enough, error correction schemes can be implemented.
@@ -187,7 +187,7 @@ There are more sources of noise than the two included in the figure, and having 
     \centering
     \includegraphics[width=0.65\textwidth]{connectivity.pdf}
     \caption{
-        Qubit connectivity and error rates in IBM's Montreal 27-qubit Falcon r4 chip \autocite{connectivity}.
+        Qubit connectivity and error rates in IBM's Montreal 27-qubit Falcon r4 chip~\autocite{connectivity}.
         Brighter coloured nodes indicate higher $X$-error rates, while brighter edges indicate higher CNOT-error rates.
     }
     \label{fig:connectivity}
@@ -195,7 +195,7 @@ There are more sources of noise than the two included in the figure, and having 
 
 Another limiting factor is the amount of qubits.
 Current hardware has around 10 to 100, which though still may be enough to express states too large for classical computers, is not enough to perform the most demanding algorithms.
-Recent estimates find that millions of noisy qubits would be needed to break RSA encryption \autocite{gidney2021}.
+Recent estimates find that millions of noisy qubits would be needed to break RSA encryption~\autocite{gidney2021}.
 
 The transpiling of the circuit to what the hardware can actually do is also an important factor.
 Consider for example IBM's Falcon r4 chip, which has 27 qubits and a connectivity graph as shown in \cref{fig:connectivity}.
