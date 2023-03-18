@@ -1,0 +1,311 @@
+\chapter{Simulations}
+\label{sec:simulations}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.8\textwidth,
+                height=0.6\textwidth,
+                xlabel={Turn},
+                ylabel={Regret},
+                grid=major,
+                legend pos=north west,
+                legend cell align=left,
+                x tick label style={
+                        /pgf/number format/.cd,
+                        fixed,
+                        fixed zerofill,
+                        precision=1,
+                        sci,
+                        /tikz/.cd
+                    },
+                scaled x ticks=false,
+            ]
+            \pgfplotstableread[col sep=comma]{../code/wan/results/big2/plot_data.csv}\datatable
+            \addplot+[
+                mark = none,
+                color = red,
+            ]
+            table[
+                    x=turn,
+                    y=ucb_mean,
+                ]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = blue,
+            ]
+            table[x=turn, y=qucb_mean]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = green,
+            ]
+            table[x=turn, y=thomp_mean]{\datatable};
+
+            \legend{UCB, QUCB, Thompson}
+
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Regret for two arms, with mean 0.5 and 0.505.}
+    \label{fig:big2}
+\end{figure}
+
+
+
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.8\textwidth,
+                height=0.6\textwidth,
+                xlabel={Turn},
+                ylabel={Regret},
+                grid=major,
+                legend pos=north west,
+                legend cell align=left,
+                x tick label style={
+                        /pgf/number format/.cd,
+                        fixed,
+                        fixed zerofill,
+                        precision=1,
+                        sci,
+                        /tikz/.cd
+                    },
+                scaled x ticks=false,
+            ]
+            \pgfplotstableread[col sep=comma]{../code/wan/results/low_prob/plot_data.csv}\datatable
+            \addplot+[
+                mark = none,
+                color = red,
+            ]
+            table[
+                    x=turn,
+                    y=ucb_mean,
+                ]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = blue,
+            ]
+            table[x=turn, y=qucb_mean]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = green,
+            ]
+            table[x=turn, y=thomp_mean]{\datatable};
+
+            \legend{UCB, QUCB, Thompson}
+
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Two arms, means 0.05, 0.01.}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.8\textwidth,
+                height=0.6\textwidth,
+                xlabel={Turn},
+                ylabel={Regret},
+                grid=major,
+                legend pos=north west,
+                legend cell align=left,
+                x tick label style={
+                        /pgf/number format/.cd,
+                        fixed,
+                        fixed zerofill,
+                        precision=1,
+                        sci,
+                        /tikz/.cd
+                    },
+                scaled x ticks=false,
+            ]
+            \pgfplotstableread[col sep=comma]{../code/wan/results/low_prob_fix/plot_data.csv}\datatable
+            \addplot+[
+                mark = none,
+                color = red,
+            ]
+            table[
+                    x=turn,
+                    y=ucb_mean,
+                ]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = blue,
+            ]
+            table[x=turn, y=qucb_mean]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = green,
+            ]
+            table[x=turn, y=thomp_mean]{\datatable};
+
+            \legend{UCB, QUCB, Thompson}
+
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Two arms, means 0.01, 0.005.}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.8\textwidth,
+                height=0.6\textwidth,
+                xlabel={Turn},
+                ylabel={Regret},
+                grid=major,
+                legend pos=north west,
+                legend cell align=left,
+                x tick label style={
+                        /pgf/number format/.cd,
+                        fixed,
+                        fixed zerofill,
+                        precision=1,
+                        sci,
+                        /tikz/.cd
+                    },
+                scaled x ticks=false,
+            ]
+            \pgfplotstableread[col sep=comma]{../code/wan/results/low_prob_fix2/plot_data.csv}\datatable
+            \addplot+[
+                mark = none,
+                color = red,
+            ]
+            table[
+                    x=turn,
+                    y=ucb_mean,
+                ]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = blue,
+            ]
+            table[x=turn, y=qucb_mean]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = green,
+            ]
+            table[x=turn, y=thomp_mean]{\datatable};
+
+            \legend{UCB, QUCB, Thompson}
+
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Two arms, means 0.01, 0.0095.}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.8\textwidth,
+                height=0.6\textwidth,
+                xlabel={Turn},
+                ylabel={Regret},
+                grid=major,
+                legend pos=north west,
+                legend cell align=left,
+                x tick label style={
+                        /pgf/number format/.cd,
+                        fixed,
+                        fixed zerofill,
+                        precision=1,
+                        sci,
+                        /tikz/.cd
+                    },
+                scaled x ticks=false,
+            ]
+            \pgfplotstableread[col sep=comma]{../code/wan/results/high_prob/plot_data.csv}\datatable
+            \addplot+[
+                mark = none,
+                color = red,
+            ]
+            table[
+                    x=turn,
+                    y=ucb_mean,
+                ]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = blue,
+            ]
+            table[x=turn, y=qucb_mean]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = green,
+            ]
+            table[x=turn, y=thomp_mean]{\datatable};
+
+            \legend{UCB, QUCB, Thompson}
+
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Regret for two arms, means 0.99, 0.9905.}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.8\textwidth,
+                height=0.6\textwidth,
+                xlabel={Turn},
+                ylabel={Regret},
+                grid=major,
+                legend pos=north west,
+                legend cell align=left,
+                x tick label style={
+                        /pgf/number format/.cd,
+                        fixed,
+                        fixed zerofill,
+                        precision=1,
+                        sci,
+                        /tikz/.cd
+                    },
+                scaled x ticks=false,
+            ]
+            \pgfplotstableread[col sep=comma]{../code/wan/results/four_arms/plot_data.csv}\datatable
+            \addplot+[
+                mark = none,
+                color = red,
+            ]
+            table[
+                    x=turn,
+                    y=ucb_mean,
+                ]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = blue,
+            ]
+            table[x=turn, y=qucb_mean]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = green,
+            ]
+            table[x=turn, y=thomp_mean]{\datatable};
+
+            \legend{UCB, QUCB, Thompson}
+
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Regret for four arms, with mean 0.5, 0.51, 0.52 and 0.53.}
+    \label{fig:four_arms}
+\end{figure}
+
+
