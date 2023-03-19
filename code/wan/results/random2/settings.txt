@@ -1,0 +1,1 @@
+{'folder': 'random2', 'horizon': 250000, 'delta': 0.01, 'n_simulations': 1000}
