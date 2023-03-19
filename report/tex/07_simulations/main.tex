@@ -309,3 +309,107 @@
 \end{figure}
 
 
+\section{Bayesian regret}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.8\textwidth,
+                height=0.6\textwidth,
+                xlabel={Turn},
+                ylabel={Regret},
+                grid=major,
+                legend pos=north west,
+                legend cell align=left,
+                x tick label style={
+                        /pgf/number format/.cd,
+                        fixed,
+                        fixed zerofill,
+                        precision=1,
+                        sci,
+                        /tikz/.cd
+                    },
+                scaled x ticks=false,
+            ]
+            \pgfplotstableread[col sep=comma]{../code/wan/results/random/plot_data.csv}\datatable
+            \addplot+[
+                mark = none,
+                color = red,
+            ]
+            table[
+                    x=turn,
+                    y=ucb_mean,
+                ]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = blue,
+            ]
+            table[x=turn, y=qucb_mean]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = green,
+            ]
+            table[x=turn, y=thomp_mean]{\datatable};
+
+            \legend{UCB, QUCB, Thompson}
+
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Bayesian regret for two arms, independent and uniform priors.}
+\end{figure}
+
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.8\textwidth,
+                height=0.6\textwidth,
+                xlabel={Turn},
+                ylabel={Regret},
+                grid=major,
+                legend pos=north west,
+                legend cell align=left,
+                x tick label style={
+                        /pgf/number format/.cd,
+                        fixed,
+                        fixed zerofill,
+                        precision=1,
+                        sci,
+                        /tikz/.cd
+                    },
+                scaled x ticks=false,
+                % loglog
+                xmode=log,
+                ymode=log,
+            ]
+            \pgfplotstableread[col sep=comma]{../code/wan/results/random/plot_data_log.csv}\datatable
+            \addplot+[
+                mark = none,
+                color = red,
+            ]
+            table[
+                    x=turn,
+                    y=ucb_mean,
+                ]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = blue,
+            ]
+            table[x=turn, y=qucb_mean]{\datatable};
+
+            \addplot[
+                mark = none,
+                color = green,
+            ]
+            table[x=turn, y=thomp_mean]{\datatable};
+
+            \legend{UCB, QUCB, Thompson}
+
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Bayesian regret for two arms, independent and uniform priors.}
+\end{figure}
