@@ -45,12 +45,12 @@ def sample(state_vector: np.ndarray, n_samples: int = 1):
 
 # %%
 N_QUBITS = 5
-# P_LIST = np.linspace(0.0, 1.0, 2**N_QUBITS)
-P_LIST = np.array([i == 0 for i in range(2**N_QUBITS)], dtype=float)
+P_LIST = np.linspace(0.0, 1.0, 2**N_QUBITS)
+# P_LIST = np.array([i == 0 for i in range(2**N_QUBITS)], dtype=float)
 HORIZON = 1000
 
-SUCC_ANGLE = 1.0
-FAIL_ANGLE = -1.0
+SUCC_ANGLE = 0.5
+FAIL_ANGLE = -0.1
 
 regrets = np.zeros(HORIZON)
 arms = np.zeros(HORIZON, dtype=int)
@@ -83,7 +83,7 @@ for t in range(HORIZON):
     arms[t] = arm
     succs[t] = succ
     # print(f"t={t}, arm={arm}, succ={succ}, regret={regrets[t]}")
-    # print(state)
+    print(state.real)
 
 df = pd.DataFrame({"arm": arms, "succ": succs, "regret": regrets})
 
@@ -95,10 +95,10 @@ plt.plot(
 plt.legend()
 plt.show()
 
+
 plt.title("Cum mean success")
 plt.plot(df["succ"].cumsum() / np.arange(1, HORIZON + 1))
 plt.axhline(np.mean(P_LIST), color="black", linestyle="--")
 plt.axhline(np.max(P_LIST), color="black", linestyle="--")
 # plt.xscale("log")
 plt.show()
-# %%

@@ -173,7 +173,7 @@ Further, incorporating estimates of second moments improve performance in some c
                             xtick=data,
                             title={Turn $\turn$},
                         ]
-                        \pgfplotstableread[col sep=comma]{../code/bandit_figs/ucb/ucb_\turn.csv}\datatable
+                        \pgfplotstableread[col sep=comma]{../code/bandit_figs/ucb/ucb_\turn.dat}\datatable
                         \addplot+[
                             only marks,
                             error bars/.cd,
@@ -265,7 +265,7 @@ Even with conjugate priors, the computational costs of sampling will be higher t
                     x=x,
                     y=y1,
                     col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_0.csv};
+                ] {../code/bandit_figs/thompson/thompson_0.dat};
             \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 2)};
 
             \nextgroupplot
@@ -273,7 +273,7 @@ Even with conjugate priors, the computational costs of sampling will be higher t
                     x=x,
                     y=y2,
                     col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_0.csv};
+                ] {../code/bandit_figs/thompson/thompson_0.dat};
             \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 2)};
 
             \nextgroupplot
@@ -281,7 +281,7 @@ Even with conjugate priors, the computational costs of sampling will be higher t
                     x=x,
                     y=y3,
                     col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_0.csv};
+                ] {../code/bandit_figs/thompson/thompson_0.dat};
             \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 2)};
 
 
@@ -293,7 +293,7 @@ Even with conjugate priors, the computational costs of sampling will be higher t
                     x=x,
                     y=y1,
                     col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_10.csv};
+                ] {../code/bandit_figs/thompson/thompson_10.dat};
             \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 2.5)};
 
             \nextgroupplot
@@ -301,7 +301,7 @@ Even with conjugate priors, the computational costs of sampling will be higher t
                     x=x,
                     y=y2,
                     col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_10.csv};
+                ] {../code/bandit_figs/thompson/thompson_10.dat};
             \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 2.5)};
 
             \nextgroupplot
@@ -309,7 +309,7 @@ Even with conjugate priors, the computational costs of sampling will be higher t
                     x=x,
                     y=y3,
                     col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_10.csv};
+                ] {../code/bandit_figs/thompson/thompson_10.dat};
             \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 4)};
 
             % row 3
@@ -320,7 +320,7 @@ Even with conjugate priors, the computational costs of sampling will be higher t
                     x=x,
                     y=y1,
                     col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_100.csv};
+                ] {../code/bandit_figs/thompson/thompson_100.dat};
             \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 3)};
 
             \nextgroupplot[
@@ -329,7 +329,7 @@ Even with conjugate priors, the computational costs of sampling will be higher t
                     x=x,
                     y=y2,
                     col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_100.csv};
+                ] {../code/bandit_figs/thompson/thompson_100.dat};
             \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 4)};
 
             \nextgroupplot[
@@ -338,7 +338,7 @@ Even with conjugate priors, the computational costs of sampling will be higher t
                     x=x,
                     y=y3,
                     col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_100.csv};
+                ] {../code/bandit_figs/thompson/thompson_100.dat};
             \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 11)};
 
             % row 4
@@ -350,7 +350,7 @@ Even with conjugate priors, the computational costs of sampling will be higher t
                     x=x,
                     y=y1,
                     col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_1000.csv};
+                ] {../code/bandit_figs/thompson/thompson_1000.dat};
             \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 4)};
 
             \nextgroupplot[
@@ -360,7 +360,7 @@ Even with conjugate priors, the computational costs of sampling will be higher t
                     x=x,
                     y=y2,
                     col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_1000.csv};
+                ] {../code/bandit_figs/thompson/thompson_1000.dat};
             \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 4)};
 
             \nextgroupplot[
@@ -370,7 +370,7 @@ Even with conjugate priors, the computational costs of sampling will be higher t
                     x=x,
                     y=y3,
                     col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_1000.csv};
+                ] {../code/bandit_figs/thompson/thompson_1000.dat};
             \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 30)};
 
 
