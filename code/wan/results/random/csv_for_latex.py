@@ -28,7 +28,7 @@ df_all.to_csv(FOLDER / "plot_data.csv")
 
 # %%
 # same but turns spaced on log scale
-turns = np.geomspace(1, HORIZON - 1, 200).astype(int)
+turns = np.geomspace(1, HORIZON - 1, 20000).astype(int)
 
 # if duplicate turns, set to higest not in list
 for i in range(1, len(turns)):
@@ -45,6 +45,38 @@ for df, name in [
     df = df.loc[turns]
     df_all[f"{name}_mean"] = df.groupby("turn").regret.mean()
 
-df_all.to_csv(FOLDER / "plot_data_log.csv")
+# df_all.to_csv(FOLDER / "plot_data_log.csv")
+
+# %%
+df_all.plot(loglog=True)
+
+
+# %%
+def curve_fit():
+    # fit curves to extrapolate
+    from scipy.optimize import curve_fit
+
+    def f_sqrt(x, a, b):
+        return a * np.sqrt(x) + b
+
+    def f_log(x, a, b):
+        return a * np.log(x) + b
+
+    new_idx = np.geomspace(1, 1e10, 1000).astype(int)
+    df_extrap = pd.DataFrame(index=new_idx)
+
+    for name in ["qucb", "ucb", "thomp"]:
+        df = df_all[f"{name}_mean"]
+        # fit curve on loglog scale
+        popt, pcov = curve_fit(f_log, np.log(df.index), np.log(df))
+        # plot fitted curve
+        df_extrap[f"{name}_sqrt"] = np.exp(
+            f_sqrt(np.log(df_extrap.index), *popt)
+        )
+
+    # plot extrapolated curves on top of data
+    df_extrap.plot(loglog=True)
+    df_all.plot(loglog=True)
+
 
 # %%
