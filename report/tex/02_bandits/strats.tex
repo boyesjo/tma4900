@@ -3,21 +3,23 @@
     \centering
     \caption{
         Comparison of strategies.
+        Note that different UCB variants with different regret bounds exist, with UCB1 only achieving the listed bounds for rewards in $[0, 1]$.
+        Also note that the Thompson sampling properties listed assumes Bernoulli rewards and a uniform prior.
     }
     \label{tab:strategies}
     \begin{tblr}{
             width=\linewidth,
-            colspec={X[l] X[r] X[r]}
+            colspec={X[l] X[r] X[r] X[r]}
         }
         \toprule
-        Strategy       & Regret      & Tuning    \\
+        Strategy       & Minimax regret       & Regret      & Tuning    \\
         \midrule
-        Random         & Linear      & NA        \\
-        Greedy         & Linear      & NA        \\
-        Epsilon-greedy & Linear      & Difficult \\
-        Epsilon-decay  & Logarithmic & Difficult \\
-        UCB            & Logarithmic & Barely    \\
-        Thompson       & Logarithmic & Priors    \\
+        Random         & $O(T)$               & $O(T)$      & NA        \\
+        Greedy         & $O(T)$               & $O(T)$      & NA        \\
+        Epsilon-greedy & $O(T)$               & $O(T)$      & Difficult \\
+        Epsilon-decay  & $O(T)$               & $O(\log T)$ & Difficult \\
+        UCB1           & $O(\sqrt{T \log T})$ & $O(\log T)$ & Barely    \\
+        Thompson       & $O(\sqrt{T})$        & $O(\log T)$ & Priors    \\
         \bottomrule
     \end{tblr}
 \end{table}
@@ -130,7 +132,7 @@ In~\autocite{auer2002}, it is shown that UCB1 achieves
     + \left(1 + \frac{\pi^2}{3}\right) \sum_{a \in \mathcal{A}} \Delta_a,
 \end{equation}
 which only misses instance-dependent optimality by some constant factor.
-Nor is UCB1 truly minimax-optimal, is its instance-independent upper bound is $O(kT \log T)$~\autocite{bubeck2012}.
+Nor is UCB1 truly minimax-optimal, as its instance-independent upper bound is $O(\sqrt{kT \log T})$~\autocite{bubeck2012}.
 
 
 Regardless of the assumptions made and the bandit class, the procedure follows as in \cref{alg:ucb}.
