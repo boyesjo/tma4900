@@ -14,6 +14,16 @@ df_thomp = pd.read_parquet(FOLDER / "thomp.parquet").set_index("turn")
 HORIZON = df_qucb.index.max() + 1
 
 # %%
+# print number of simulations for each df
+for df, name in [
+    (df_qucb, "qucb"),
+    (df_ucb, "ucb"),
+    (df_thomp, "thomp"),
+]:
+    n_sims = df["sim"].nunique()
+    print(f"{name}: {n_sims}")
+
+# %%
 df_all = pd.DataFrame()
 for df, name in [
     (df_qucb, "qucb"),

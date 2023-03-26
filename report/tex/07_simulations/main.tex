@@ -1,6 +1,23 @@
 \chapter{Simulations}
 \label{sec:simulations}
 
+While the upper bound shown in \cref{sec:wan2022} implies QUCB1 advantage, it does not necessarily mean it is supreme in all cases or even on average.
+It is therefore of much interest to test it on a variety of problems and compare its average performance to other algorithms — not only the classical UCB1 to which it is compared in the original paper, but also the more performant Thompson sampling algorithm.
+
+All algorithms were implemented in Python 3 \autocite{python} with quantum computing support provided by IBM's Qiskit library \autocite{qiskit}.
+The experiments were run on an external computation server with an Intel Xeon E5-2690 v4 CPU and 768 GB of RAM, permitting 28 concurrent simulations.
+For fixed bandit instances, 100 simulations were run for each algorithm.
+
+As noted in \autocite{wan2022}, setting the confidence parameter to a higher value than the theoretically desirable $1/T$ leads to better performance.
+It was thus set to $0.01$ for all experiments.
+Moreover, the constant $C_1$ which was only defined existentially was arbitrarily set to $2$ across all experiments, as it was not clear how to choose it in a principled manner, and this value seemed able to reproduce the results of \autocite{wan2022}.
+
+\section{Fixed arms}
+First, the algorithms are tested on fixed bandit instances with two arms.
+The mean of the first arm is set to $0.5$ and the mean of the second arm is set to $0.505$, an instance also tested in \autocite{wan2022}.
+The results are shown in \cref{fig:big2}, agreeing with the original paper'; QUCB greatly outperforms UCB.
+However, Thompson sampling which was not considered in \autocite{wan2022}, is not that far behind.
+
 \begin{figure}
     \centering
     \begin{tikzpicture}
@@ -52,58 +69,11 @@
     \label{fig:big2}
 \end{figure}
 
-
-
-
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-                width=0.8\textwidth,
-                height=0.6\textwidth,
-                xlabel={Turn},
-                ylabel={Regret},
-                grid=major,
-                legend pos=north west,
-                legend cell align=left,
-                x tick label style={
-                        /pgf/number format/.cd,
-                        fixed,
-                        fixed zerofill,
-                        precision=1,
-                        sci,
-                        /tikz/.cd
-                    },
-                scaled x ticks=false,
-            ]
-            \pgfplotstableread[col sep=comma]{../code/wan/results/low_prob/plot_data.dat}\datatable
-            \addplot+[
-                mark = none,
-                color = red,
-            ]
-            table[
-                    x=turn,
-                    y=ucb_mean,
-                ]{\datatable};
-
-            \addplot[
-                mark = none,
-                color = blue,
-            ]
-            table[x=turn, y=qucb_mean]{\datatable};
-
-            \addplot[
-                mark = none,
-                color = green,
-            ]
-            table[x=turn, y=thomp_mean]{\datatable};
-
-            \legend{UCB, QUCB, Thompson}
-
-        \end{axis}
-    \end{tikzpicture}
-    \caption{Two arms, means 0.05, 0.01.}
-\end{figure}
+\subsection{Low and high probabilities}
+Next, mean more extreme mean values of $0.01$ and $0.005$
+with a reward gap of $0.005$ equal to the above, are tested.
+\Cref{fig:low_prob_fix} contains the results.
+Here, QUCB beats UCB thoroughly still, both algorithms achieving similar regrets as in \cref{fig:big2}, but now Thompson sampling is clearly superior.
 
 
 \begin{figure}
@@ -154,57 +124,12 @@
         \end{axis}
     \end{tikzpicture}
     \caption{Two arms, means 0.01, 0.005.}
+    \label{fig:low_prob_fix}
 \end{figure}
 
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-                width=0.8\textwidth,
-                height=0.6\textwidth,
-                xlabel={Turn},
-                ylabel={Regret},
-                grid=major,
-                legend pos=north west,
-                legend cell align=left,
-                x tick label style={
-                        /pgf/number format/.cd,
-                        fixed,
-                        fixed zerofill,
-                        precision=1,
-                        sci,
-                        /tikz/.cd
-                    },
-                scaled x ticks=false,
-            ]
-            \pgfplotstableread[col sep=comma]{../code/wan/results/low_prob_fix2/plot_data.dat}\datatable
-            \addplot+[
-                mark = none,
-                color = red,
-            ]
-            table[
-                    x=turn,
-                    y=ucb_mean,
-                ]{\datatable};
-
-            \addplot[
-                mark = none,
-                color = blue,
-            ]
-            table[x=turn, y=qucb_mean]{\datatable};
-
-            \addplot[
-                mark = none,
-                color = green,
-            ]
-            table[x=turn, y=thomp_mean]{\datatable};
-
-            \legend{UCB, QUCB, Thompson}
-
-        \end{axis}
-    \end{tikzpicture}
-    \caption{Two arms, means 0.01, 0.0095.}
-\end{figure}
+At these extreme values, it seems the gap must shrink for QUCB to be able to outperform Thompson sampling.
+This is shown in \cref{fig:high_prob}, where the gap is reduced to $0.0005$,
+Even so, the QUCB advantage is not as pronounced as in \cref{fig:big2}.
 
 \begin{figure}
     \centering
@@ -254,8 +179,16 @@
         \end{axis}
     \end{tikzpicture}
     \caption{Regret for two arms, means 0.99, 0.9905.}
+    \label{fig:high_prob}
 \end{figure}
 
+\subsection{Four arms}
+As a final test, the number of arms is increased to four.
+The results are plotted in \cref{fig:four_arms}.
+Only cases with two arms were tested in the original paper, so this is a new test, further validating the correctness of the algorithm and its implementation.
+The results are similar to the two-arm case, with QUCB outperforming UCB.
+At these particular reward means, Thompson sampling performs very similarly to QUCB.
+In general, QUCB provides no advantages or noteworthy changes from UCB with respect to the number of arms, so its behaviour should be expected to be similar as UCB when the number of arms is increased.
 
 \begin{figure}
     \centering
@@ -309,110 +242,168 @@
 \end{figure}
 
 
+
+\clearpage
 \section{Bayesian regret}
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-                width=0.8\textwidth,
-                height=0.6\textwidth,
-                xlabel={Turn},
-                ylabel={Regret},
-                grid=major,
-                legend pos=north west,
-                legend cell align=left,
-                x tick label style={
-                        /pgf/number format/.cd,
-                        fixed,
-                        fixed zerofill,
-                        precision=1,
-                        sci,
-                        /tikz/.cd
-                    },
-                scaled x ticks=false,
-            ]
-            \pgfplotstableread[col sep=comma]{../code/wan/results/random/plot_data.dat}\datatable
-            \addplot+[
-                mark = none,
-                color = red,
-            ]
-            table[
-                    x=turn,
-                    y=ucb_mean,
-                ]{\datatable};
+\label{sec:results_bayesian}
 
-            \addplot[
-                mark = none,
-                color = blue,
-            ]
-            table[x=turn, y=qucb_mean]{\datatable};
+\subsection{Uniform prior}
 
-            \addplot[
-                mark = none,
-                color = green,
-            ]
-            table[x=turn, y=thomp_mean]{\datatable};
+As described in \cref{sec:bayesian-optimality}, the Bayesian regret is the average regret over some set prior.
+What priors to choose is a topic for discussion, which will not be covered deeply here.
+Instead, the simple case of two arms, whose means are independently drawn from a uniform distribution on the interval $[0, 1]$ will be considered.
+The Bayesian regret for this case is on display in \cref{fig:random}.
+All three were run on 294 instances sampled from the prior\footnotemark, and the results are averaged over these instances.
 
-            \legend{UCB, QUCB, Thompson}
+\footnotetext{
+    During the 295th run, the program crashed due issues relating to disk usage permissions.
+}
 
-        \end{axis}
-    \end{tikzpicture}
-    \caption{Bayesian regret for two arms, independent and uniform priors.}
-\end{figure}
+It is obvious that the Thompson sampling algorithm performs best.
+QUCB does outperform UCB, but not by as much as the previously considered cases and only after some time.
+
+The lack of any quantum advantage is probably due to this prior generally yielding \enquote{easy} problems, where the optimal arm can be quickly identified.
+In such cases, the initial overhead of the quantum algorithm appears not to be worth the effort.
+Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produce a very flat regret curse; when looking at the log-log-plot in \cref{fig:random}, it may seem like the QUCB regret will be lower than even Thompson sampling for some great and admittedly unrealistic number of turns.
+
 
 
 \begin{figure}
     \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-                width=0.8\textwidth,
-                height=0.6\textwidth,
-                xlabel={Turn},
-                ylabel={Regret},
-                grid=major,
-                legend pos=north west,
-                legend cell align=left,
-                x tick label style={
-                        /pgf/number format/.cd,
-                        fixed,
-                        fixed zerofill,
-                        precision=1,
-                        sci,
-                        /tikz/.cd
-                    },
-                scaled x ticks=false,
-                % loglog
-                xmode=log,
-                ymode=log,
-            ]
-            \pgfplotstableread[col sep=comma]{../code/wan/results/random/plot_data_log.dat}\datatable
-            \addplot+[
-                mark = none,
-                color = red,
-            ]
-            table[
-                    x=turn,
-                    y=ucb_mean,
-                ]{\datatable};
+    \begin{subfigure}[]{0.8\textwidth}
+        \begin{tikzpicture}
+            \centering
+            \begin{axis}[
+                    width=1.0\textwidth,
+                    height=0.75\textwidth,
+                    xlabel={Turn},
+                    ylabel={Regret},
+                    grid=major,
+                    legend pos=north west,
+                    legend cell align=left,
+                    x tick label style={
+                            /pgf/number format/.cd,
+                            fixed,
+                            fixed zerofill,
+                            precision=1,
+                            sci,
+                            /tikz/.cd
+                        },
+                    scaled x ticks=false,
+                ]
+                \pgfplotstableread[col sep=comma]{../code/wan/results/random/plot_data.dat}\datatable
+                \addplot+[
+                    mark = none,
+                    color = red,
+                ]
+                table[
+                        x=turn,
+                        y=ucb_mean,
+                    ]{\datatable};
 
-            \addplot[
-                mark = none,
-                color = blue,
-            ]
-            table[x=turn, y=qucb_mean]{\datatable};
+                \addplot[
+                    mark = none,
+                    color = blue,
+                ]
+                table[x=turn, y=qucb_mean]{\datatable};
 
-            \addplot[
-                mark = none,
-                color = green,
-            ]
-            table[x=turn, y=thomp_mean]{\datatable};
+                \addplot[
+                    mark = none,
+                    color = green,
+                ]
+                table[x=turn, y=thomp_mean]{\datatable};
 
-            \legend{UCB, QUCB, Thompson}
+                % \legend{UCB, QUCB, Thompson}
+            \end{axis}
+        \end{tikzpicture}
+        % \caption{}
+    \end{subfigure}
+    \vspace{1cm}
 
-        \end{axis}
-    \end{tikzpicture}
-    \caption{Bayesian regret for two arms, independent and uniform priors.}
+    \begin{subfigure}[]{0.8\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    width=1.0\textwidth,
+                    height=0.75\textwidth,
+                    xlabel={Turn},
+                    ylabel={Regret},
+                    grid=major,
+                    % legend pos=north west,
+                    % legend cell align=left,
+                    legend style={
+                            at={(0.5,-0.1)},
+                            anchor=north,
+                            legend columns=-1
+                        },
+                    x tick label style={
+                            /pgf/number format/.cd,
+                            fixed,
+                            fixed zerofill,
+                            precision=1,
+                            sci,
+                            /tikz/.cd
+                        },
+                    scaled x ticks=false,
+                    % loglog
+                    xmode=log,
+                    ymode=log,
+                ]
+                \pgfplotstableread[col sep=comma]{../code/wan/results/random/plot_data_log.dat}\datatable
+                \addplot+[
+                    mark = none,
+                    color = red,
+                ]
+                table[
+                        x=turn,
+                        y=ucb_mean,
+                    ]{\datatable};
+
+                \addplot[
+                    mark = none,
+                    color = blue,
+                ]
+                table[x=turn, y=qucb_mean]{\datatable};
+
+                \addplot[
+                    mark = none,
+                    color = green,
+                ]
+                table[x=turn, y=thomp_mean]{\datatable};
+
+                \legend{UCB, QUCB, Thompson}
+
+            \end{axis}
+        \end{tikzpicture}
+        % \caption{}
+    \end{subfigure}
+    \caption{
+        Bayesian regret for two arms, independent and uniform priors.
+        Top: linear scale, bottom: log-log scale.
+        Thompson sampling performs best, but it can appear as QUCB would be best at unreasonably great time horizons.
+    }
+    \label{fig:random}
 \end{figure}
+
+
+\subsection{Challenging prior}
+One might argue that the uniform prior is too easy, and that the quantum advantage should be more apparent in a more challenging prior.
+Firstly, for real-world Bernoulli bandits, there are reasons to believe that the means would lie closer to the endpoints 0 and 1 than in the middle.
+Secondly, for the problem to be interesting and warrant the use of clever quantum algorithms or even just any bandit theory, the means should be close to each other.
+Thus, the following prior was chosen:
+\begin{equation}
+    \label{eq:challenging_prior}
+    \begin{aligned}
+        \mu_1               & \sim \text{B}(0.5, 0.5)                 \\
+        \text{logit}(\mu_2) & \sim \text{N}(\text{logit}(\mu_1), 0.1)
+    \end{aligned}
+\end{equation}
+where $\text{logit}(\mu) = \log(\mu/(1-\mu))$.
+
+Running a successful 1000 simulations with this prior, the regrets visualised in \cref{fig:random2} were obtained.
+At the final 250,000th turn, the QUCB and Thompson sampling algorithms have virtually equal regrets.
+QUCB lags behind in the beginning, but its regret curve appears flatter towards the end, and it is likely that it would beat Thompson sampling in the long run.
+The UCB algorithm, on the other hand, is as before clearly outperformed by both QUCB and Thompson sampling.
 
 
 \begin{figure}
@@ -464,8 +455,8 @@
     \end{tikzpicture}
     \caption{
         Bayesian regret for two arms.
-        Prior for arm 1: $\text{Beta}(0.5, 0.5)$.
-        Prior for logit of arm 2: $\text{N}(\text{logit} \mu_1, 0.1)$.
+        The means are drawn from a challenging prior in which the reward means are highly correlated, as described in \cref{eq:challenging_prior}.
     }
+    \label{fig:random2}
 \end{figure}
 
