@@ -27,9 +27,9 @@ class BernoulliBanditsEnv(gym.Env):
         self.max_turns = max_turns
         self.action_space = spaces.Discrete(2)
         self.observation_space = spaces.Box(
-            low=0,
+            low=-1,
             high=1,
-            shape=(2 * arms + 1,),
+            shape=(arms,),  # * 2 + 1,),
             dtype=np.float64,
         )
         self.prior = prior
@@ -51,7 +51,7 @@ class BernoulliBanditsEnv(gym.Env):
 
         turn = np.tanh(self.turn)
 
-        return np.concatenate([means, counts, [turn]])
+        return 2 * np.concatenate([means]) - 1  # , counts, [turn]]) - 1
 
     def _regret_baseline(self) -> float:
         # upper_bound = (
@@ -76,14 +76,22 @@ class BernoulliBanditsEnv(gym.Env):
 
     def step(self, action: int) -> tuple[Observables, float, bool, Info]:
 
+        arm: int | np.int64 = 0
+        if action == 0:
+            # exploit
+            arm = np.argmax(self.results / self.times_pulled)
+        else:
+            # explore
+            arm = np.random.randint(self.arms)
+
         p = self.p_list[action]
 
         result = np.random.binomial(1, p)
         regret = self.p_list.max() - p
         reward = float(regret == 0)
 
-        self.times_pulled[action] += 1
-        self.results[action] += result
+        self.times_pulled[arm] += 1
+        self.results[arm] += result
 
         done = self._is_done()
         observation = self._get_obs()
@@ -95,10 +103,10 @@ class BernoulliBanditsEnv(gym.Env):
             "turn": self.turn,
         }
 
-        if done and self.turn < self.max_turns:
-            reward -= 100
-        elif done and self.turn >= self.max_turns:
-            reward += 100 * (1 - self.regret() / self._regret_baseline())
+        # if done and self.turn < self.max_turns:
+        #     reward -= 100
+        # elif done and self.turn >= self.max_turns:
+        #     reward += 100 * (1 - self.regret() / self._regret_baseline())
 
         self.turn += 1
         return observation, reward, done, info

@@ -14,15 +14,11 @@ agents = {
     "DQN": sb3.DQN,
 }
 
-regrets = {name: np.zeros(TURNS) for name in agents.keys()}
-
 # %%
 for name, agent in agents.items():
     obs = env.reset()
-    print(obs)
-    print(type(obs))
     model = agent("MlpPolicy", env, verbose=1)
-    model.learn(total_timesteps=100000)
+    model.learn(total_timesteps=500_000)
 
     obs = env.reset()
     done = False
@@ -30,8 +26,6 @@ for name, agent in agents.items():
         action, _ = model.predict(obs)
         obs, result, done, info = env.step(action)
         print(info["turn"], info["p_list"], action, info["times_pulled"])
-    regrets[name] = env.regret
-
 # %%
 obs = env.reset()
 done = False
@@ -40,12 +34,13 @@ while not done:
     obs, result, done, info = env.step(action)
     print(info["turn"], info["p_list"], action, info["times_pulled"])
     done = info["turn"] > 10_000
+
 # %%
 # play 100 times, save and plot regret
 import matplotlib.pyplot as plt
 
 turns = 20_000
-N = 100
+N = 10
 
 regrets = np.zeros((N, turns + 1))
 
