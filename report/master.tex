@@ -50,20 +50,23 @@
 % disable page numbering
 \pagenumbering{gobble}
 
-% \import{tex/frontmatter/}{abstract}
-% \import{tex/frontmatter/}{sammendrag}
-% \import{tex/frontmatter/}{acknowledgements}
+\import{tex/frontmatter/}{abstract}
+\import{tex/frontmatter/}{sammendrag}
+\import{tex/frontmatter/}{acknowledgements}
 
 
 \pagenumbering{arabic}
 \pdfbookmark{Contents}{toc}
 \setcounter{tocdepth}{1}
 \tableofcontents
-% \listoffigures
-% \listoftables
+
 \cleardoublepage
+\listoffigures
 
+\cleardoublepage
+\listoftables
 
+\cleardoublepage
 \import{tex/00_intro}{main}
 \import{tex/02_bandits}{main}
 \import{tex/03_qc}{main}

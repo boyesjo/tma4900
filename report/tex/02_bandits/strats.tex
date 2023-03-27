@@ -1,8 +1,12 @@
 \section{Strategies}
 \begin{table}
     \centering
-    \caption{
-        Comparison of strategies.
+    \caption[
+        Comparison of strategies for the unstructured, stochastic multi-armed bandit problem.
+    ]
+    {
+        Comparison of strategies for the unstructured, stochastic multi-armed bandit problem.
+        The minimax regret is the instance-indepedent upper bound, while the regret is the dependent.
         Note that different UCB variants with different regret bounds exist, with UCB1 only achieving the listed bounds for rewards in $[0, 1]$.
         Also note that the Thompson sampling properties listed assumes Bernoulli rewards and a uniform prior.
     }
@@ -196,8 +200,11 @@ Further, incorporating estimates of second moments improve performance in some c
             \vspace{0.5cm}
         }
     \label{fig:ucb}
-    \caption{
-        Estimates and error bars for each arm at different turns.
+    \caption[
+        UCB1 algorithm visualisation.
+    ]
+    {
+        Visualisation of the UCB1 algorithm on three Bernoulli arms; estimates and error bars for each arm at different turns.
         The dots represent the estimates of the means of the arms, while the error bars represent the upper confidence bounds and the dashed lines represent the true means.
         As the number of turns increases, the estimate of the highest mean converge quickly to the true mean, while the estimates of the suboptimal arms remain bad.
     }
@@ -379,8 +386,11 @@ Even with conjugate priors, the computational costs of sampling will be higher t
         \end{groupplot}
     \end{tikzpicture}
     \label{fig:thompson}
-    \caption{
-        Thompson sampling with Bernoulli rewards.
+    \caption[
+        Thompson sampling visualisation.
+    ]
+    {
+        Thompson sampling algorithm with Bernoulli rewards and three arms visualised.
         In the top row, the uniform priors for the reward distribution means are on display.
         Thereunder, the posteriors are shown at turns 10, 100 and 1000.
         The dashed vertical lines indicate the true means.
