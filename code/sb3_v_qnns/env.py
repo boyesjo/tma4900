@@ -27,7 +27,7 @@ class BernoulliBanditsEnv(gym.Env):
         self.max_turns = max_turns
         self.action_space = spaces.Discrete(2)
         self.observation_space = spaces.Box(
-            low=-1,
+            low=0,
             high=1,
             shape=(arms,),  # * 2 + 1,),
             dtype=np.float64,
@@ -62,13 +62,14 @@ class BernoulliBanditsEnv(gym.Env):
         )
 
     def _is_done(self) -> bool:
-        if self.turn < self.min_turns:
-            return False
+        return self.turn >= self.max_turns
+        # if self.turn < self.min_turns:
+        #     return False
 
-        if self.turn >= self.max_turns:
-            return True
+        # if self.turn >= self.max_turns:
+        #     return True
 
-        return self.regret() >= 1.2 * self._regret_baseline()
+        # return self.regret() >= 1.2 * self._regret_baseline()
 
     def regret(self) -> float:
 
@@ -76,19 +77,20 @@ class BernoulliBanditsEnv(gym.Env):
 
     def step(self, action: int) -> tuple[Observables, float, bool, Info]:
 
-        arm: int | np.int64 = 0
-        if action == 0:
-            # exploit
-            arm = np.argmax(self.results / self.times_pulled)
-        else:
-            # explore
-            arm = np.random.randint(self.arms)
+        arm = action
+
+        # arm: int | np.int64 = 0
+        # if action == 0:
+        #     # exploit
+        #     arm = np.argmax(self.results / self.times_pulled)
+        # else:
+        #     # explore
+        #     arm = np.random.randint(self.arms)
 
         p = self.p_list[action]
 
         result = np.random.binomial(1, p)
-        regret = self.p_list.max() - p
-        reward = float(regret == 0)
+        reward = result
 
         self.times_pulled[arm] += 1
         self.results[arm] += result
