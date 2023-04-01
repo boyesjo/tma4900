@@ -1,6 +1,38 @@
 \chapter{Reinforcement learning}
 \label{chap:rl}
 
-\section{Markov decision processes}
-\section{Neural networks}
-\section{Methods}
+Machine learning lies at the intersection of statistics, computer science and optimisation.
+The central idea is to design an algorithm that uses data to solve a problem, and in so avoid explicitly programming a solution.
+With ever more data available and with ever more powerful computers, machine learning has become a powerful tool in many fields, solving problems previously thought intractable.
+Such algorithms or models can be used for a plethora of tasks, which are mainly divided into three main categories:
+\begin{description}
+
+    \item[Supervised learning]
+        Given data with corresponding labels, find the relationship and try to assign correct labels to new, unseen data.
+
+    \item[Unsupervised learning]
+        Given data, find some underlying structure, patterns, properties or relationships, such as clusters or outliers.
+
+    \item[Reinforcement learning]
+        Given an environment with a set of possible actions, such as a game, explore different strategies and determine one that optimises some reward.
+
+\end{description}
+
+This chapter will focus on the third category, reinforcement learning (RL).
+While bandits are a useful tool for the study of interaction of environments, they are limited in their ability to model complex environments wherein actions have long-term consequences.
+The following will serve mostly as an introduction to the topic of RL, and will not go into the mathematical details of the state-of-the-art algorithms.
+
+Unlike bandit problems which can be considered analytically and solved somewhat optimally, MDPs are generally intractable and far too complex to be solved optimally.
+Exempli gratia, the game of go has approximately $10^{170}$ possible states, far too complicated to be solved exactly optimally.
+However, with modern machine learning techniques, namely neural networks, it is possible to learn good policies and beat the best human players~\autocite{silver2016}.
+
+In contrast to bandits whose performance is important from the start, reinforcement learning is generally tackled by first training the model on a set of data or a simulated environment before deploying it to the real problem at hand.
+Consequently, the exploration-exploitation dilemma is not as pressing in reinforcement learning as it is in bandits, but it is still present.
+While learning strategies, there is indeed a trade-off between optimising the more promising strategies contra attempting something radically different.
+Epsilon-greedy strategies can be used, though more advanced strategies with adaptive exploration rates appear to be more effective~\autocite{tokic2011}.
+
+
+
+\subimport{}{mdp}
+\subimport{}{nn}
+\subimport{}{algs}

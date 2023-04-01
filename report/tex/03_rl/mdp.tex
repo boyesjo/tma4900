@@ -1,0 +1,128 @@
+\section{Markov decision processes}
+The mathematical framework for reinforcement learning is the Markov decision process (MDP).
+It can be considered as a generalisation of multi-armed bandits, where the agent observes a state before choosing an action, from which the reward probabilities — and now also state transition probabilities — depend.
+More precisely, a Markov decision process is a tuple $M = (\mathcal{S}, \mathcal{A}, P, r)$.
+The sets $\mathcal{S}$ and $\mathcal{A}$ are the state and action spaces, respectively, both of which may be infinite.
+The transition probabilities $P(s' | s, a_t)$ are the probability of transitioning from state $s'$ to state $s$, given that action $a$ was taken.
+Next, the reward function $r : \mathcal{S}^2 \times \mathcal{A} \to \mathbb{R}$ is a function that maps each transition and causing action to a real-valued reward.
+
+The game is played similarly to a multi-armed bandit, in that the agent chooses an action at each time step $t$.
+However, before each turn, the agent observes the current state $s_t \in \mathcal{S}$.
+For the first turn, the state is chosen from some distribution $p(s_0)$.
+When the agent commits to an action $a_t \in \mathcal{A}$, the environment transitions to a new state $s_{t+1}$ according to the transition probabilities $P(s_{t+1} | s_t, a_t)$, and the agent receives a reward $r(s_t, a_t)$.
+
+The goal is to find a (potentially probabilistic) policy which maps each state to an action, such that the agent receives the highest possible expected cumulative reward.
+In particular, one attempts to maximise expected future sum of discounted rewards, the return, defined as
+\begin{equation}
+    R_t = \mathbb{E} \left[ \sum_{\tau=0}^{\infty} \gamma^\tau X_{t+\tau} \right],
+\end{equation}
+where $X_t$ is the reward received at time $t$, $\gamma \in [0,1]$ is the discount factor. The horizon $T$ may be infinite.
+The discount factor is used to balance the importance of immediate rewards versus future rewards and to ensure convergence regardless of horizon finiteness.
+In practice, $\gamma$ is a hyperparameter that is tuned to the problem at hand.
+
+Hence, the optimal policy is given by the policy that maximises the expected return in starting state, namely
+\begin{equation}
+    \pi^* = \argmax_{\pi} \mathbb{E} \left[ R_0 \right],
+\end{equation}
+where the expectation is taken over the distribution of initial states.
+
+Note that policies will in general depend on the whole history of states, action and rewards, and not just the current state.
+
+\begin{figure}
+    \centering
+    %placeholder image
+    \includegraphics[width=\textwidth]{example-image-a}
+
+    \caption{A simple Markov decision process.}
+    \label{fig:mdp}
+\end{figure}
+
+
+\subsection{Example: Cart-pole}
+A popular platform for testing RL algorithms is OpenAI Gym \autocite{gym}, which provides a suite of environments with different difficulty levels and objectives.
+One of the most well-known environments in Gym is the \texttt{CartPole-v0}~\autocite{barto1983}.
+In this physically two-two-dimensional environment, a pole is attached to a cart that can move left or right, initially at some small angle from the vertical.
+The objective is to keep the pole from falling over for as long as possible by applying appropriate forces to the cart.
+At each time, the agent must either apply a set constant force to the right or to the left.
+The state observed is a vector of four real numbers: the position and velocity of the cart, and the angle and angular velocity of the pole.
+For each time step where the pole remains upright, the agent receives a constant reward of $+1$, while the episode ends if the pole falls or the cart moves too far from the centre.
+Internally, the environment evolves according to the explicit Euler method, with a time step of $0.02$ seconds\footnotemark.
+
+\footnotetext{
+    At least in its OpenAI Gym implementation the default settings. C.f. \url{https://github.com/openai/gym/blob/master/gym/envs/classic_control/cartpole.py}
+}
+
+
+\subsection{Value functions}
+One key concept in MDPs is the notion of value functions.
+A value function is a function that estimates the expected cumulative reward from a given state or state-action pair, under a given policy.
+Specifically, the state-value function $V^{\pi}(s)$ estimates the expected cumulative reward from state $s$, under policy $\pi$.
+It is given by
+\begin{equation}
+    V^{\pi}(s) = \mathbb{E} \left[ R_0 | s_0 = s \right],
+\end{equation}
+
+The value functions satisfy recursive equations known as the Bellman equations, which express the expected value of a state or state-action pair in terms of the expected value of its successor states or state-action pairs.
+The Bellman equations
+\begin{equation}
+    V^{\pi}(s) = \mathbb{E} \left[ R_0 + \gamma V^{\pi}(s') | s_0 = s \right],
+\end{equation}
+where $s'$ is the successor state of $s$, provide a recursive relationship that can be used to solve for the optimal value functions and optimal policy.
+
+Alternatively, one may consider a state-action value function $Q^{\pi}(s, a)$, which estimates the expected cumulative reward from state $s$, given that the agent takes action $a$, under policy $\pi$ for future steps.
+It can be expressed as
+\begin{equation}
+    Q^{\pi}(s, a) = \mathbb{E} \left[ R_0 + \gamma V^{\pi}(s') | s_0 = s, a_0 = a \right],
+\end{equation}
+where $s'$ is the successor state of $s$.
+
+\subsection{Learning MDPs}
+There are three main categories of Reinforcement Learning algorithms: model-based, policy-based, and value-based. Each category of algorithm approaches the problem of finding the optimal policy from a different perspective, and has its own strengths and weaknesses.
+
+\begin{description}
+    \item[Model-based algorithms]
+        These algorithms learn a model of the environment, including the transition function and the reward function, and then use this model to plan and optimise the agent's behaviour.
+        Model-based algorithms can be very effective in problems where the environment is predictable, and the agent can simulate different action sequences to find the optimal policy.
+        However, these algorithms can be computationally expensive and may require a large amount of data to learn an accurate model.
+
+    \item[Policy-based algorithms]
+        These algorithms directly learn a policy, either a deterministic or stochastic mapping from states to actions, that maximises the expected cumulative reward.
+        This is done by defining some parametric policy $\pi_\theta(a | s)$, where $\theta$ is a vector of parameters, and then optimising the parameters $\theta$ given the data collected from the agent's interactions with the environment.
+        Policy-based algorithms can be effective in problems with continuous action spaces or when the agent needs to explore to find the optimal policy.
+        However, they can be difficult to optimise and may suffer from high variance in the gradient estimates.
+
+    \item[Value-based algorithms]
+        These algorithms learn the value function, either the state-value function or the action-value function, and then use this function to determine the optimal policy.
+        Value-based algorithms can be very effective in problems with large state spaces, where it may not be feasible to maintain a model of the environment.
+        However, they can be sensitive to the choice of hyperparameters and may struggle in problems with continuous action spaces.
+\end{description}
+
+As will be made clear later, many reinforcement learning algorithms are hybrids of these three categories, combining the strengths of each approach to achieve better performance in complex environments.
+It is primarily the latter two, model-free algorithms that have seen the most success in recent years, and these that will be discussed further in \cref{sec:rl_algs}.
+But also the model-based have seen some solid results recently, for example being able to find diamonds in Minecraft \cite{hafner2023}.
+
+
+\subsection{Difficulties}
+\label{sec:difficulties}
+One of the main challenges in RL is the exploration-exploitation dilemma.
+To learn an optimal policy, an agent needs to explore the environment to discover new and potentially rewarding actions, while at the same time exploiting the actions that are already known to be rewarding.
+Balancing exploration and exploitation is a difficult problem, and many RL algorithms use heuristic exploration strategies or rely on random noise to encourage exploration.
+
+Another challenge in RL is the problem of credit assignment.
+The credit assignment problem refers to the difficulty of assigning credit to the actions that lead to a particular reward.
+In some cases, the reward may be delayed, making it difficult to determine which actions led to the reward.
+This problem is especially pronounced in environments with long time horizons, where the actions taken early in the episode may have a significant impact on the final reward.
+
+Another challenge in RL is the curse of dimensionality.
+As the number of states and actions in an environment increases, the size of the state and action spaces grows exponentially, making it difficult to learn an optimal policy.
+This problem is particularly acute in continuous state and action spaces, where traditional RL algorithms may not be effective.
+
+RL algorithms are also susceptible to the problem of overfitting.
+An RL algorithm may learn a policy that is only optimal for the specific set of states and actions encountered during training, and may not generalise to new situations.
+To address this problem, RL algorithms may use techniques such as regularisation or early stopping.
+
+Finally, RL algorithms can be computationally expensive and require significant amounts of data to learn an optimal policy.
+RL algorithms may require millions or even billions of training examples to learn an optimal policy, which can make RL infeasible for some applications.
+
+This leads to the necessity of deep learning in reinforcement learning.
+Before those methods can be explained, the general concept of deep learning needs to be discussed, namely the artificial neural network.

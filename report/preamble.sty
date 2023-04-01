@@ -66,6 +66,7 @@
 \captionsetup[figure]{labelfont=bf}
 \captionsetup[table]{labelfont=bf, position=top}
 \captionsetup{width=0.9\textwidth}
+\setcapindent{1em}
 \usepackage{subcaption}
 \usepackage{environ}
 \usepackage{bm}
@@ -113,3 +114,24 @@
 
 % 
 \usepackage{microtype}
+
+
+% italic front and back matters in toc
+\makeatletter
+\newcommand\matter@switch{}
+\addtokomafont{chapterentry}{\matter@switch}
+\g@addto@macro\frontmatter{%
+  \addtocontents{toc}{%
+    \protect\renewcommand\protect\matter@switch{\normalfont\itshape}%
+  }%
+}
+\g@addto@macro\mainmatter{%
+  \addtocontents{toc}{%
+    \protect\renewcommand\protect\matter@switch{}%
+  }%
+}
+\g@addto@macro\backmatter{%
+  \addtocontents{toc}{%
+    \protect\renewcommand\protect\matter@switch{\normalfont\itshape}%
+  }%
+}

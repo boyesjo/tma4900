@@ -1,0 +1,70 @@
+\section{State-of-the-art algorithms}
+\label{sec:rl_algs}
+
+\subsection{Value-based methods}
+Value-based methods are another class of reinforcement learning algorithms that use the value function to learn an optimal policy.
+Such methods learn the value function that represents the expected return from a given state.
+The optimal policy can then be derived from the value function by selecting the action with the highest expected return.
+
+One of the most popular value-based algorithms is the Deep Q-Network (DQN) algorithm \autocite{mnih2013}.
+DQN is an extension of Q-learning that uses a neural network to approximate the Q-function.
+The neural network takes the current state as input and outputs the Q-values for each action.
+The algorithm uses an experience replay buffer to store transitions from the environment, which are then used to sample mini-batches for training the neural network.
+The network is trained using a variant of stochastic gradient descent that minimises the mean squared error between the predicted Q-values and the target Q-values.
+
+One of the key innovations of DQN is the use of a target network to stabilise the training process.
+The target network is a separate neural network that is used to compute the target Q-values for the Q-learning update.
+The target network is updated less frequently than the online network to prevent the Q-learning targets from becoming unstable.
+Another innovation of DQN is the use of an $\epsilon$-greedy exploration strategy to balance exploration and exploitation during training.
+This strategy randomly selects an action with probability $\epsilon$ and selects the action with the highest Q-value with probability $1-\epsilon$.
+
+DQN has been shown to be effective in a wide range of reinforcement learning problems, including Atari games and robotics tasks.
+Receiving only pixel values from the video game screen, the DQN algorithm was able to learn to play Atari games at a level comparable to professional human players \autocite{mnih2015}.
+
+One limitation of DQN is that it can be slow to converge, especially in large state spaces.
+To address this issue, several extensions to DQN have been proposed in the literature.
+For example, the Double DQN algorithm \autocite{hasselt2016} uses a separate network to estimate the target Q-values for the Q-learning update, which reduces the overestimation bias of the Q-function.
+The Prioritised Experience Replay algorithm \autocite{schaul2015} uses a prioritised replay buffer to sample transitions that are more informative for learning the Q-function.
+The Duelling DQN algorithm \autocite{wang2016} separates the Q-function into an estimate of the state value and an estimate of the action advantage, which reduces the variance of the Q-value estimates.
+
+\subsection{Policy gradient methods}
+Policy gradient methods are a class of Reinforcement Learning algorithms that directly optimise the policy of an agent.
+These methods are particularly well-suited to problems with continuous or high-dimensional action spaces, where it may be difficult to find the optimal policy using value-based methods.
+
+One popular policy gradient algorithm is the REINFORCE algorithm \autocite{williams1992}.
+The REINFORCE algorithm is a Monte Carlo policy gradient method that estimates the gradient of the expected cumulative reward with respect to the current policy parameters, using this gradient to update the policy.
+The algorithm is based on the likelihood ratio method, which allows the gradient of the expected returns to be expressed as the product of the reward and the gradient of the log-probability of the actions under the policy.
+
+The REINFORCE algorithm uses this gradient to update the policy parameters in the direction that increases the expected cumulative reward. Specifically, the update rule for the policy parameters is given by
+\begin{equation}
+    \theta_{t+1} = \theta_t + \alpha \nabla_{\theta} \log \pi_{\theta}(a_k|s_k) G_t,
+\end{equation}
+where $\theta_t$ and $\theta_{t+1}$ are the policy parameters at time steps $t$ and $t+1$, $\alpha$ is the learning rate, $\pi_{\theta}(a_k|s_k)$ is the probability of taking action $a_k$ in state $s_k$ under the policy $\pi_{\theta}$ and $G_t$ is the expected cumulative reward starting from time step $t$, found by sampling trajectories from the current policy.
+This sampling results in high variance, which can make the training process unstable \autocite{arulkumaran2017}.
+
+The Proximal Policy Optimisation (PPO) algorithm \autocite{schulman2017} has been particularly succcesful, expanding on the ideas from the Trust Region Policy Optimisation (TRPO) algorithm \autocite{schulman2015}.
+It is based on the idea of clipping the policy update, which helps to prevent large policy updates that could destabilise the training process, and was designed to require little hyperparameter tuning.
+The algorithm uses a surrogate objective function that combines the clipped policy objective and the value function objective, and updates the policy and value function parameters using a combination of stochastic gradient descent and trust region optimisation.
+It good at problems like idk \autocite{NEEDED}.
+
+
+\subsection{Actor-critic methods}
+Actor-critic methods are a type of reinforcement learning algorithms that combine ideas from both value-based and policy-based methods.
+Proposed in \autocite{konda1999}, these algorithms maintain both a policy function and a value function that are learned simultaneously during the training process.
+The value function estimates the expected return from a given state, while the policy function defines the probability distribution over actions given the current state.
+The policy function is typically represented using a neural network, and the value function can also be represented using a neural network or some other function approximator.
+
+One popular actor-critic algorithm is the Advantage Actor-Critic (A2C) algorithm \autocite{mnih2016}.
+The A2C algorithm updates both the policy and value function parameters using stochastic gradient descent.
+The policy update is based on the policy gradient, while the value function update is based on the temporal difference (TD) error.
+The A2C algorithm has been shown to be effective in a variety of problems, including Atari games and continuous control tasks \autocite{NEEDED}.
+
+One advantage of actor-critic methods is their ability to handle high-dimensional state and action spaces \autocite{NEEDED}.
+This is because the value function can be used to reduce the dimensionality of the state space by encoding relevant features of the state that are predictive of the expected return.
+Another advantage is that actor-critic methods can improve the stability and convergence of the training process by using the value function to guide the policy updates.
+This is because the value function provides a baseline estimate of the expected return, which reduces the variance of the policy gradient estimates.
+
+In addition to A2C and PPO, there are other actor-critic algorithms that have been proposed in the literature.
+For example, the Asynchronous Advantage Actor-Critic (A3C) algorithm \autocite{mnih2016} is an extension of A2C that is designed to run on multiple parallel threads to improve the sample efficiency of the algorithm.
+
+These algorithms demonstrate the versatility of the actor-critic approach and its applicability to a wide range of reinforcement learning problems.

@@ -2,13 +2,15 @@
 \documentclass[
     12pt,
     a4paper,
-    % 10pt,
-    % b5paper,
-    twoside,
-    openright,
     % draft,
-]{report} % Template using the report document class.
-% 10 pt font size for b5 paper, twoside adjusts margins on left/right sides, and openright ensures that new chapters start on a right page.
+    toc=listof,
+    listof=totoc,
+    listof=entryprefix,
+    egregdoesnotlikesansseriftitles,
+    titlepage=true,
+]{scrbook}
+
+\pagestyle{plain}
 
 \usepackage[
     bindingoffset=20mm,
@@ -17,6 +19,7 @@
 
 \usepackage{import}
 \usepackage{preamble}
+
 
 % newpage on sections
 % \usepackage{titlesec}
@@ -45,28 +48,36 @@
     hidelinks,
 }
 
+
+
 \begin{document}
 
-% disable page numbering
-\pagenumbering{gobble}
+
+\begin{titlepage}
+    \centering
+    \vspace*{7cm}
+    \Huge
+    \textbf{Multi-armed Banditry \\ and Quantum Agents}
+\end{titlepage}
+
+\frontmatter
+\addtocounter{tocdepth}{-1}
+\pdfbookmark[1]{Table of Contents}{toc}
+\tableofcontents
+% \setcounter{tocdepth}{1}
+
 
 \import{tex/frontmatter/}{abstract}
 \import{tex/frontmatter/}{sammendrag}
 \import{tex/frontmatter/}{acknowledgements}
 
 
-\pagenumbering{arabic}
-\pdfbookmark{Contents}{toc}
-\setcounter{tocdepth}{1}
-\tableofcontents
-
+% \addtocontents{toc}{\protect\renewcommand{\cftchapfont}{\cftchapfontorig}}
+% \addtocontents{toc}{\protect\renewcommand{\cftchappagefont}{\cftchappagefontorig}}
+\mainmatter
 \cleardoublepage
-\listoffigures
+% \pagenumbering{arabic}
 
-\cleardoublepage
-\listoftables
-
-\cleardoublepage
 \import{tex/00_intro}{main}
 \import{tex/02_bandits}{main}
 \import{tex/03_rl}{main}
@@ -75,12 +86,21 @@
 \import{tex/07_simulations}{main}
 \import{tex/10_final}{main}
 
-
+\backmatter
 % \begin{sloppypar}
 \printbibliography[
     heading=bibintoc,
     title={References}
 ]
 % \end{sloppypar}
+
+\cleardoublepage
+\listoffigures
+% \addcontentsline{toc}{chapter}{Figures}
+
+\cleardoublepage
+\listoftables
+% \addcontentsline{toc}{chapter}{Tables}
+
 
 \end{document}
