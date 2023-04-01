@@ -638,3 +638,6 @@ Untitled.ipynb
 # files tracked by dvc
 *.parquet
 *.csv
+
+# rendered pdf
+master.pdf

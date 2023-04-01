@@ -3,11 +3,9 @@
     12pt,
     a4paper,
     % draft,
-    toc=listof,
-    listof=totoc,
-    listof=entryprefix,
     egregdoesnotlikesansseriftitles,
-    titlepage=true,
+    headings=twolinechapter,
+    listof=totoc,
 ]{scrbook}
 
 \pagestyle{plain}
@@ -52,7 +50,7 @@
 
 \begin{document}
 
-
+\frontmatter
 \begin{titlepage}
     \centering
     \vspace*{7cm}
@@ -60,7 +58,6 @@
     \textbf{Multi-armed Banditry \\ and Quantum Agents}
 \end{titlepage}
 
-\frontmatter
 \addtocounter{tocdepth}{-1}
 \pdfbookmark[1]{Table of Contents}{toc}
 \tableofcontents
