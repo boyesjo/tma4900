@@ -14,7 +14,7 @@ When the agent commits to an action $a_t \in \mathcal{A}$, the environment trans
 The goal is to find a (potentially probabilistic) policy which maps each state to an action, such that the agent receives the highest possible expected cumulative reward.
 In particular, one attempts to maximise expected future sum of discounted rewards, the return, defined as
 \begin{equation}
-    R_t = \mathbb{E} \left[ \sum_{\tau=0}^{\infty} \gamma^\tau X_{t+\tau} \right],
+    G_t = \mathbb{E} \left[ \sum_{\tau=0}^{\infty} \gamma^\tau X_{t+\tau} \right],
 \end{equation}
 where $X_t$ is the reward received at time $t$, $\gamma \in [0,1]$ is the discount factor. The horizon $T$ may be infinite.
 The discount factor is used to balance the importance of immediate rewards versus future rewards and to ensure convergence regardless of horizon finiteness.
@@ -22,7 +22,7 @@ In practice, $\gamma$ is a hyperparameter that is tuned to the problem at hand.
 
 Hence, the optimal policy is given by the policy that maximises the expected return in starting state, namely
 \begin{equation}
-    \pi^* = \argmax_{\pi} \mathbb{E} \left[ R_0 \right],
+    \pi^* = \argmax_{\pi} \mathbb{E} \left[ G_0 \right],
 \end{equation}
 where the expectation is taken over the distribution of initial states.
 
@@ -40,7 +40,7 @@ Note that policies will in general depend on the whole history of states, action
 
 \subsection{Example: Cart-pole}
 A popular platform for testing RL algorithms is OpenAI Gym \autocite{gym}, which provides a suite of environments with different difficulty levels and objectives.
-One of the most well-known environments in Gym is the \texttt{CartPole-v0}~\autocite{barto1983}.
+One of the most well-known environments in Gym is the cart-pole problem~\autocite{barto1983}.
 In this physically two-two-dimensional environment, a pole is attached to a cart that can move left or right, initially at some small angle from the vertical.
 The objective is to keep the pole from falling over for as long as possible by applying appropriate forces to the cart.
 At each time, the agent must either apply a set constant force to the right or to the left.
@@ -49,35 +49,32 @@ For each time step where the pole remains upright, the agent receives a constant
 Internally, the environment evolves according to the explicit Euler method, with a time step of $0.02$ seconds\footnotemark.
 
 \footnotetext{
-    At least in its OpenAI Gym implementation the default settings. C.f. \url{https://github.com/openai/gym/blob/master/gym/envs/classic_control/cartpole.py}
+    At least in its OpenAI Gym implementation the default settings.
+    C.f. \url{https://github.com/openai/gym/blob/master/gym/envs/classic_control/cartpole.py}
 }
 
 
-\subsection{Value functions}
+\subsection{Learning MDPs}
 One key concept in MDPs is the notion of value functions.
 A value function is a function that estimates the expected cumulative reward from a given state or state-action pair, under a given policy.
 Specifically, the state-value function $V^{\pi}(s)$ estimates the expected cumulative reward from state $s$, under policy $\pi$.
 It is given by
 \begin{equation}
-    V^{\pi}(s) = \mathbb{E} \left[ R_0 | s_0 = s \right],
+    V^{\pi}(s) = \mathbb{E}_/pi \left[ G_t | S_t = s \right],
 \end{equation}
-
-The value functions satisfy recursive equations known as the Bellman equations, which express the expected value of a state or state-action pair in terms of the expected value of its successor states or state-action pairs.
-The Bellman equations
-\begin{equation}
-    V^{\pi}(s) = \mathbb{E} \left[ R_0 + \gamma V^{\pi}(s') | s_0 = s \right],
-\end{equation}
-where $s'$ is the successor state of $s$, provide a recursive relationship that can be used to solve for the optimal value functions and optimal policy.
+where the expectation is taken over the distribution of future rewards and states, given that the agent is in state $s$ at time $t$.
 
 Alternatively, one may consider a state-action value function $Q^{\pi}(s, a)$, which estimates the expected cumulative reward from state $s$, given that the agent takes action $a$, under policy $\pi$ for future steps.
 It can be expressed as
 \begin{equation}
-    Q^{\pi}(s, a) = \mathbb{E} \left[ R_0 + \gamma V^{\pi}(s') | s_0 = s, a_0 = a \right],
+    Q^{\pi}(s, a) = \mathbb{E}_/pi \left[ G_t | S_t = s, A_t = a \right].
 \end{equation}
-where $s'$ is the successor state of $s$.
 
-\subsection{Learning MDPs}
-There are three main categories of Reinforcement Learning algorithms: model-based, policy-based, and value-based. Each category of algorithm approaches the problem of finding the optimal policy from a different perspective, and has its own strengths and weaknesses.
+Naturally, it is desirable to maximise either, leading to the Bellman equations, from which the optimal policies can be derived.
+This is alas rarely possible exactly; even if the transition probabilities are known (like in a card game), the state spaces will generally be too large to be able to compute the value functions exactly.
+Instead, one must resort to approximate methods, such as dynamic programming, Monte Carlo methods, and temporal difference learning.
+
+There are three main categories of reinforcement learning algorithms: model-based, policy-based, and value-based. Each category of algorithm approaches the problem of finding the optimal policy from a different perspective, and has its own strengths and weaknesses.
 
 \begin{description}
     \item[Model-based algorithms]
@@ -113,16 +110,15 @@ The credit assignment problem refers to the difficulty of assigning credit to th
 In some cases, the reward may be delayed, making it difficult to determine which actions led to the reward.
 This problem is especially pronounced in environments with long time horizons, where the actions taken early in the episode may have a significant impact on the final reward.
 
-Another challenge in RL is the curse of dimensionality.
-As the number of states and actions in an environment increases, the size of the state and action spaces grows exponentially, making it difficult to learn an optimal policy.
-This problem is particularly acute in continuous state and action spaces, where traditional RL algorithms may not be effective.
+Designing appropriate rewards is a critical component of reinforcement learning, as they guide the agent's behaviour towards achieving the desired outcome.
+However, poorly designed rewards can lead to slow or intractable learning, as the agent may not receive sufficient feedback on its actions to adjust its policy.
+Specialised rewards that provide more detailed feedback and guidance can improve learning, but they also make it harder to generalise to new situations.
+For instance, the Atari game \textit{Montezuma's Revenge} is nigh impossible to solve with off-the-shelf methods and without specialising the rewards~\autocite{salimans2018}.
+Implementing this guidance is demanding and useless for the other games.
 
-RL algorithms are also susceptible to the problem of overfitting.
-An RL algorithm may learn a policy that is only optimal for the specific set of states and actions encountered during training, and may not generalise to new situations.
-To address this problem, RL algorithms may use techniques such as regularisation or early stopping.
-
-Finally, RL algorithms can be computationally expensive and require significant amounts of data to learn an optimal policy.
-RL algorithms may require millions or even billions of training examples to learn an optimal policy, which can make RL infeasible for some applications.
+RL is fundamentally more challenging than supervised learning because it requires an agent to explore and interact with its environment to learn from experience, as opposed to having access to labelled data.
+Randomly discovering an optimal strategy can be highly unlikely, especially in high-dimensional state and action spaces, making it necessary to develop specialised algorithms~\autocite{sutton2018}.
+Finally, RL algorithms can be computationally expensive and require significant amounts of data to learn an optimal policy, which can make RL infeasible for some applications~\autocite{silver2016}.
 
 This leads to the necessity of deep learning in reinforcement learning.
 Before those methods can be explained, the general concept of deep learning needs to be discussed, namely the artificial neural network.
