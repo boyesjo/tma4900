@@ -84,7 +84,9 @@ Geometrically, this can be interpreted as contraction of states on the Bloch sph
         node[midway,above] {\footnotesize Noisy $X$-gate}
         ([yshift=-2.5cm] group c2r1.north);
     \end{tikzpicture}
-    \caption{
+    \caption[
+        Illustration of applying a noisy $X$-gate on the Bloch sphere.
+    ]{
         Illustration of applying a noisy $X$-gate on the Bloch sphere.
         The left plot shows the set of all pure states, the Bloch sphere.
         On the right, the same set of states is shown after the application of a noisy $X$-gate with probability $p=0.2$ of failing.
@@ -129,7 +131,7 @@ When a gate like the $X$-gate is applied many times, even small errors will add 
                 % samples = 100,
                 % domain = 0:100,
             ]
-            table[x = n, y = p, col sep=comma] {../code/noise_fig/noise.csv};
+            table[x = n, y = p, col sep=comma] {tex/04_qc/noise.dat};
             % add exponential dampening to the plot
             \addplot[
                 color = gray,
@@ -165,7 +167,10 @@ When a gate like the $X$-gate is applied many times, even small errors will add 
             {0.5*(1+cos(x)*(1-2*0.003)^x)};
         \end{axis}
     \end{tikzpicture}
-    \caption{
+    \caption[
+        Proportion of correct measurements of a qubit after applying several noisy $X$-gates.
+    ]
+    {
         Proportion of correct measurements of a qubit after applying several noisy $X$-gates.
         The error in the rotation is \ang{1}, while the probability of failing to apply the gate is $p=0.3\%$.
         For each number of gates, the measurement is repeated 1000 times.
@@ -186,7 +191,9 @@ There are more sources of noise than the two included in the figure, and having 
 \begin{figure}
     \centering
     \includegraphics[width=0.65\textwidth]{connectivity.pdf}
-    \caption{
+    \caption[
+        Qubit connectivity and error rates example.
+    ]{
         Qubit connectivity and error rates in IBM's Montreal 27-qubit Falcon r4 chip~\autocite{connectivity}.
         Brighter coloured nodes indicate higher $X$-error rates, while brighter edges indicate higher CNOT-error rates.
     }

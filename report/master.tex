@@ -29,63 +29,37 @@
 % bibliography
 \usepackage[
     backend=biber,
-    % backend=bibtex,
-    % maxbibnames=99,
-    % style=nature,
-    % style=numeric-comp, 
     citestyle=numeric, 
-    % ibid author year,
-    % style=authoryear-ibid,
     sorting=none, 
-    % natbib=true
 ]{biblatex}
 \addbibresource{zotero.bib} 
 \addbibresource{refs.bib}
 \usepackage{hyperref}
 \usepackage{cleveref}
-% \hypersetup{colorlinks={false}}
-\hypersetup{
-    hidelinks,
-}
+\hypersetup{hidelinks,}
 
-
+\renewcommand{\listalgorithmcfname}{Algorithms}
+\renewcaptionname{UKenglish}{\listfigurename}{Figures}
+\renewcaptionname{UKenglish}{\listtablename}{Tables}
 
 \begin{document}
 
 \frontmatter
-\begin{titlepage}
-    \centering
-    \vspace*{7cm}
-    \Huge
-    \usekomafont{title}{Multi-armed Banditry \\ and Quantum Agents}
-\end{titlepage}
-
-\DeclareTOCStyleEntries[
-    pagenumberformat=\bfseries\sffamily
-]{default}{chapter}
-
-\addtocounter{tocdepth}{-1}
-\pdfbookmark[1]{Table of Contents}{toc}
-\tableofcontents
-% \setcounter{tocdepth}{1}
-
-
+\import{tex/frontmatter/}{titlepage}
+\import{tex/frontmatter/}{toc}
 \import{tex/frontmatter/}{abstract}
 \import{tex/frontmatter/}{sammendrag}
-\import{tex/frontmatter/}{acknowledgements}
+\import{tex/frontmatter/}{preface}
 
 
-% \addtocontents{toc}{\protect\renewcommand{\cftchapfont}{\cftchapfontorig}}
-% \addtocontents{toc}{\protect\renewcommand{\cftchappagefont}{\cftchappagefontorig}}
+
 \mainmatter
-\cleardoublepage
-% \pagenumbering{arabic}
-
 \import{tex/00_intro}{main}
 \import{tex/02_bandits}{main}
 \import{tex/03_rl}{main}
 \import{tex/04_qc}{main}
 \import{tex/05_qbandits}{main}
+\import{tex/06_qrl}{main}
 \import{tex/07_simulations}{main}
 \import{tex/10_final}{main}
 
@@ -99,14 +73,11 @@
 
 \cleardoublepage
 \listoffigures
-% \addcontentsline{toc}{chapter}{Figures}
 
 \cleardoublepage
 \listoftables
-% \addcontentsline{toc}{chapter}{Tables}
 
 \cleardoublepage
 \listofalgorithms
-
 
 \end{document}
