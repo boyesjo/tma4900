@@ -83,17 +83,17 @@
   noend,
 ]{algorithm2e}
 
-\addtotoclist[float]{loa}
-\renewcommand\listofalgorithms{\listoftoc[{\listalgorithmcfname}]{loa}}
-
 \DontPrintSemicolon 
 
-\newcommand{\mycapsty}[1]{\sffamily\bfseries\small1}
+\newcommand{\mycapsty}[1]{\sffamily\bfseries\small#1}
 \SetKwSty{mycapsty}
 \SetAlCapSty{mycapsty}
 \SetNlSty{mycapsty}{}{}
 
 \SetArgSty{text}
+
+\addtotoclist[float]{loa}
+\renewcommand\listofalgorithms{\listoftoc[{\listalgorithmcfname}]{loa}}
 
 \makeatletter
 \renewcommand*{\@algocf@pre@ruled}{\hrule height\heavyrulewidth depth0pt \kern\belowrulesep}
