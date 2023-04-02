@@ -378,7 +378,10 @@ Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produc
         \end{tikzpicture}
         % \caption{}
     \end{subfigure}
-    \caption{
+    \caption[
+        Bayesian regret for two arms, independent and uniform priors.
+    ]
+    {
         Bayesian regret for two arms, independent and uniform priors.
         Top: linear scale, bottom: log-log scale.
         Thompson sampling performs best, but it can appear as QUCB would be best at unreasonably great time horizons.
@@ -395,8 +398,8 @@ Thus, the following prior was chosen:
 \begin{equation}
     \label{eq:challenging_prior}
     \begin{aligned}
-        \mu_1               & \sim \text{B}(0.5, 0.5)                 \\
-        \text{logit}(\mu_2) & \sim \text{N}(\text{logit}(\mu_1), 0.1)
+        \mu_1               & \sim \text{B}(0.5, 0.5),                 \\
+        \text{logit}(\mu_2) & \sim \text{N}(\text{logit}(\mu_1), 0.1),
     \end{aligned}
 \end{equation}
 where $\text{logit}(\mu) = \log(\mu/(1-\mu))$.

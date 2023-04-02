@@ -2,10 +2,10 @@
 \begin{table}
     \centering
     \captionabove[
-        Comparison of strategies for the multi-armed bandit problem.
+        Strategies for the multi-armed bandit problem.
     ]
     {
-        Comparison of strategies for the unstructured, stochastic multi-armed bandit problem.
+        Strategies for the unstructured, stochastic multi-armed bandit problem.
         The minimax regret is the instance-indepedent upper bound, while the regret is the dependent.
         Note that different UCB variants with different regret bounds exist, with UCB1 only achieving the listed bounds for rewards in $[0, 1]$.
         Also note that the Thompson sampling properties listed assumes Bernoulli rewards and a uniform prior.
@@ -32,13 +32,12 @@
 Pure exploration is obviously a suboptimal strategy, but it is a good baseline against which to compare.
 It can be implemented by selecting an arm uniformly or in order, performing poorly either way.
 A random arm-selection procedure is described by \cref{alg:random}.
+
 \begin{algorithm}
     \caption{Random arm selection}
     \label{alg:random}
-    \begin{algorithmic}
-        \State Sample $a$ from $\mathcal{A}$ uniformly
-        \State \Return $a$
-    \end{algorithmic}
+    Sample $a$ from $\mathcal{A}$ uniformly\;
+    \Return $a$\;
 \end{algorithm}
 
 It is easy that the regret is
@@ -53,17 +52,17 @@ Tending away from pure exploration to exploitation, a greedy algorithm will alwa
 Here, all arms are pulled an initial $m \geq 1$ times, after which estimated means are used to select the best arm.
 Then, the arm with the highest empirical mean is selected for all remaining turns.
 The arm-selection procedure is listed in \cref{alg:greedy}, where $\hat{\mu}_a$ is the estimated mean of arm $a$.
+
 \begin{algorithm}
     \caption{Greedy arm selection}
     \label{alg:greedy}
-    \begin{algorithmic}
-        \If{$t \leq mk$}
-        \State \Return $(t \mod k) + 1$
-        \Else
-        \State \Return $\argmax_{a \in \mathcal{A}} \hat{\mu}_a$
-        \EndIf
-    \end{algorithmic}
+    \If{$t \leq mk$}{
+        \Return $(t \mod k) + 1$\;
+    } \Else {
+        \Return $\argmax_{a \in \mathcal{A}} \hat{\mu}_a$\;
+    }
 \end{algorithm}
+
 
 With greedy selection, the expected regret is clearly still linear in the horizon, as there is a non-zero probability of selecting the wrong arm.
 Still, there is a chance of achieving zero regret and the constant factor is reduced compared to pure exploration selection.
@@ -78,22 +77,37 @@ This ensures convergence to correct exploitation as the horizon increases, and i
 Still, with a constant $\epsilon$, a constant proportion of the turns will be spent exploring, keeping the regret necessarily linear in the horizon.
 Choosing $\epsilon$ is a trade-off between exploration and exploitation and can significantly affect the regret.
 
+% \begin{algorithm}
+%     \caption{Epsilon-greedy arm selection}
+%     \label{alg:eps_greedy}
+%     \begin{algorithmic}
+%         \If{$t \leq mk$}
+%         \State \Return $(t \mod k) + 1$
+%         \Else
+%         \State Sample $u$ from $[0,1)$ uniformly
+%         \If{$u < \epsilon$}
+%         \State Sample $a$ from $\mathcal{A}$ uniformly
+%         \State \Return $a$
+%         \Else
+%         \State \Return $\argmax_{a \in \mathcal{A}}\hat{\mu}_a$
+%         \EndIf
+%         \EndIf
+%     \end{algorithmic}
+% \end{algorithm}
 \begin{algorithm}
     \caption{Epsilon-greedy arm selection}
     \label{alg:eps_greedy}
-    \begin{algorithmic}
-        \If{$t \leq mk$}
-        \State \Return $(t \mod k) + 1$
-        \Else
-        \State Sample $u$ from $[0,1)$ uniformly
-        \If{$u < \epsilon$}
-        \State Sample $a$ from $\mathcal{A}$ uniformly
-        \State \Return $a$
-        \Else
-        \State \Return $\argmax_{a \in \mathcal{A}}\hat{\mu}_a$
-        \EndIf
-        \EndIf
-    \end{algorithmic}
+    \eIf{$t \leq mk$}{
+    \Return $(t \mod k) + 1$;
+    }{
+    Sample $u$ from $[0,1)$ uniformly\;
+    \eIf{$u < \epsilon$}{
+        Sample $a$ from $\mathcal{A}$ uniformly\;
+        \Return $a$\;
+    }{
+        \Return $\argmax_{a \in \mathcal{A}}\hat{\mu}_a$\;
+    }
+    }
 \end{algorithm}
 
 
@@ -151,15 +165,13 @@ Further, incorporating estimates of second moments improve performance in some c
 \begin{algorithm}
     \caption{UCB arm selection}
     \label{alg:ucb}
-    \begin{algorithmic}
-        \If{$t \leq k$}
-        \State \Return $t$
-        \Else
-        \State \Return $\argmax_{a \in \mathcal{A}} (\hat{\mu}_a + \text{UCB}_a)$
-        \EndIf
-    \end{algorithmic}
+    \If{$t \leq k$}{
+        \Return $t$\;
+    }{
+    } \Else {
+        \Return $\argmax_{a \in \mathcal{A}} (\hat{\mu}_a + \text{UCB}_a)$\;
+    }
 \end{algorithm}
-
 
 \begin{figure}
     \centering
@@ -240,13 +252,11 @@ Notably, the Jeffreys prior was shown to be inadequate in achieving optimal regr
 \begin{algorithm}
     \caption{Thompson sampling arm selection}
     \label{alg:thompson}
-    \begin{algorithmic}
-        \For {$a \in \mathcal{A}$}
-        \State Sample $\theta_a \sim P(\mu_a \mid \mathcal{D})$
-        \EndFor
-        \State \Return $\argmax_{a \in \mathcal{A}} \theta_a$
-        \State Update posterior for arm $a$ with reward $X_t$
-    \end{algorithmic}
+    Update posterior for arm $a_{t-1}$ with reward $X_{t-1}$\;
+    \For{$a \in \mathcal{A}$}{
+        Sample $\theta_a \sim P(\mu_a \mid \mathcal{D})$\;
+    }
+    \Return $\argmax_{a \in \mathcal{A}} \theta_a$\;
 \end{algorithm}
 
 One of the key advantages of Thompson sampling is that it can natively incorporate prior knowledge about the arms, whereas doing so with the above methods would require some sort of ad-hoc manipulation of the recorded rewards and arm pulls.

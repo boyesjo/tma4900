@@ -29,23 +29,41 @@ A confidence parameter $\delta$ is used to determine the number of QMC samples t
 The constant $C_1>1$ is only described existentially to give an upper bound to the number of QMC queries needed, coming from the big-O notation used to describe QMC convergence.
 How it should be set for implementation of the algorithm is not described in the paper.
 
+% \begin{algorithm}
+%     \caption{QUCB1 as proposed in~\autocite{wan2022}}
+%     \label{alg:qucb1}
+%     \begin{algorithmic}[1]
+%         \Require Set of arms $\mathcal{A}$, $\mathcal{O}_i$ as in \cref{eq:wan_oracle}, $T$ horizon, $0 < \delta \ll 1$
+%         \For {$a \in \mathcal{A}$}
+%         \State $\text{UCB}_a \gets 1$
+%         \State $N_a \gets (C_1/\text{UCB}_a) \log(1/\delta)$
+%         \State Estimate $\mu_a$ using QMC with $N_a$ samples
+%         \EndFor
+%         \While{Total number of queries to the oracles is less than $T$}
+%         \State $a \gets \argmax_a (\hat\mu_a + \text{UCB}_a)$
+%         \State $\text{UCB}_a \gets \text{UCB}_a /2$
+%         \State $N_a \gets (C_1/\text{UCB}_a) \log(1/\delta)$
+%         \State Update estimate of $\mu_a$ using QMC with $N_a$ samples
+%         \EndWhile
+%     \end{algorithmic}
+% \end{algorithm}
+
 \begin{algorithm}
-    \caption{QUCB1 as proposed in~\autocite{wan2022}}
+    \SetAlgoLined
+    \caption{QUCB1}
     \label{alg:qucb1}
-    \begin{algorithmic}[1]
-        \Require Set of arms $\mathcal{A}$, $\mathcal{O}_i$ as in \cref{eq:wan_oracle}, $T$ horizon, $0 < \delta \ll 1$
-        \For {$a \in \mathcal{A}$}
-        \State $\text{UCB}_a \gets 1$
-        \State $N_a \gets (C_1/\text{UCB}_a) \log(1/\delta)$
-        \State Estimate $\mu_a$ using QMC with $N_a$ samples
-        \EndFor
-        \While{Total number of queries to the oracles is less than $T$}
-        \State $a \gets \argmax_a (\hat\mu_a + \text{UCB}_a)$
-        \State $\text{UCB}_a \gets \text{UCB}_a /2$
-        \State $N_a \gets (C_1/\text{UCB}_a) \log(1/\delta)$
-        \State Update estimate of $\mu_a$ using QMC with $N_a$ samples
-        \EndWhile
-    \end{algorithmic}
+    \KwIn{Set of arms $\mathcal{A}$, $\mathcal{O}_i$ as in \cref{eq:wan_oracle}, $T$ horizon, $0 < \delta \ll 1$}
+    \For {$a \in \mathcal{A}$}{
+        $\text{UCB}_a \gets 1$\;
+        $N_a \gets (C_1/\text{UCB}_a) \log(1/\delta)$\;
+        Estimate $\mu_a$ using QMC with $N_a$ samples\;
+    }
+    \While{Total number of queries to the oracles is less than $T$}{
+        $a \gets \argmax_a (\hat\mu_a + \text{UCB}_a)$\;
+        $\text{UCB}_a \gets \text{UCB}_a /2$\;
+        $N_a \gets (C_1/\text{UCB}_a) \log(1/\delta)$\;
+        Update estimate of $\mu_a$ using QMC with $N_a$ samples\;
+    }
 \end{algorithm}
 
 \subsection{Proof of logarithmic regret}

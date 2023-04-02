@@ -3,11 +3,13 @@
     12pt,
     a4paper,
     % draft,
-    egregdoesnotlikesansseriftitles,
+    % egregdoesnotlikesansseriftitles,
     headings=twolinechapter,
     listof=totoc,
+    listof=flat,
 ]{scrbook}
 
+% no headers
 \pagestyle{plain}
 
 \usepackage[
@@ -55,8 +57,12 @@
     \centering
     \vspace*{7cm}
     \Huge
-    \textbf{Multi-armed Banditry \\ and Quantum Agents}
+    \usekomafont{title}{Multi-armed Banditry \\ and Quantum Agents}
 \end{titlepage}
+
+\DeclareTOCStyleEntries[
+    pagenumberformat=\bfseries\sffamily
+]{default}{chapter}
 
 \addtocounter{tocdepth}{-1}
 \pdfbookmark[1]{Table of Contents}{toc}
@@ -98,6 +104,9 @@
 \cleardoublepage
 \listoftables
 % \addcontentsline{toc}{chapter}{Tables}
+
+\cleardoublepage
+\listofalgorithms
 
 
 \end{document}

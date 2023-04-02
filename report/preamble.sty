@@ -12,6 +12,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Font encoding:
+\usepackage[defaultsans,oldstyle,scale=0.95]{opensans}
 \usepackage[T1]{fontenc}
 %\usepackage{lmodern} % font
 %\usepackage{bookman} % font
@@ -63,13 +64,42 @@
 \usepackage{mathtools}
 \usepackage[version=4]{mhchem}
 \usepackage{caption}
-\captionsetup[figure]{labelfont=bf}
-\captionsetup[table]{labelfont=bf, position=top}
-\captionsetup{width=0.9\textwidth}
+% \captionsetup[figure]{labelfont=bf}
+% \captionsetup[table]{labelfont=bf, position=top}
+% \captionsetup{width=0.9\textwidth}
+\setkomafont{captionlabel}{\sffamily\bfseries}
 \setcapindent{1em}
 \usepackage{subcaption}
 \usepackage{environ}
 \usepackage{bm}
+
+% algorithms
+% \usepackage{algorithm}
+% \usepackage{algpseudocodex}
+\usepackage[
+  algochapter, 
+  algoruled, 
+  linesnumbered,
+  noend,
+]{algorithm2e}
+
+\addtotoclist[float]{loa}
+\renewcommand\listofalgorithms{\listoftoc[{\listalgorithmcfname}]{loa}}
+
+\DontPrintSemicolon 
+
+\newcommand{\mycapsty}[1]{\sffamily\bfseries\small1}
+\SetKwSty{mycapsty}
+\SetAlCapSty{mycapsty}
+\SetNlSty{mycapsty}{}{}
+
+\SetArgSty{text}
+
+\makeatletter
+\renewcommand*{\@algocf@pre@ruled}{\hrule height\heavyrulewidth depth0pt \kern\belowrulesep}
+\renewcommand*{\algocf@caption@ruled}{\box\algocf@capbox\kern\aboverulesep\hrule height\lightrulewidth\kern\belowrulesep}
+\renewcommand*{\@algocf@post@ruled}{\kern\aboverulesep\hrule height\heavyrulewidth\relax}
+\makeatother
 
 
 
@@ -100,11 +130,6 @@
 
 \makeatother\ExplSyntaxOff
 
-
-% algorithms
-\usepackage{algorithm}
-\usepackage{algpseudocodex}
-
 % ...
 \DeclareMathOperator*{\argmax}{argmax}
 \DeclareMathOperator*{\argmin}{argmin}
@@ -122,7 +147,8 @@
 \addtokomafont{chapterentry}{\matter@switch}
 \g@addto@macro\frontmatter{%
   \addtocontents{toc}{%
-    \protect\renewcommand\protect\matter@switch{\normalfont\itshape}%
+    % \protect\renewcommand\protect\matter@switch{\normalfont\itshape}%
+    \protect\renewcommand\protect\matter@switch{\itshape}%
   }%
 }
 \g@addto@macro\mainmatter{%
@@ -132,6 +158,10 @@
 }
 \g@addto@macro\backmatter{%
   \addtocontents{toc}{%
-    \protect\renewcommand\protect\matter@switch{\normalfont\itshape}%
+    % \protect\renewcommand\protect\matter@switch{\normalfont\itshape}%
+    \protect\renewcommand\protect\matter@switch{\itshape}%
   }%
 }
+
+% footnotes
+\counterwithout{footnote}{chapter}
