@@ -1,4 +1,37 @@
 \section{Quantum algorithms}
+Quantum computers allure stem from their ability to solve certain problems more efficiently, exponentially so, than classical computers can.
+Most (in-) famous of these problems are integer factorisation and discrete logarithms, which could be used to break effectively all public-key cryptography.
+Encrypted data is already being hoarded, and the research and development of quantum computers is already well underway.
+
+There are still several more problems for which quantum computers are believed to offer great advantages.
+It is proven that the class of problems quantum computers can solve in polynomial time (with high probability), BQP, contains the complexity class P~\autocite{nielsen2012}.
+This follows from the fact than quantum computers can efficiently run any efficient classical algorithm.
+Since quantum computers can solve problems like integer factorisation and discrete logarithms efficiently, it is believed that BQP is strictly greater than P, but as whether P = NP remains unknown, these problems could turn out actually to be in P.
+In a similar vein, NP-complete problems are believed to lie outside BQP, but this is not proven.
+
+Exponential speed-ups do not come for free.
+Although the states spaces are exponentially large, with only a limited set of operations available, states can not be created and manipulated arbitrarily.
+What is more, recapturing all the information in a general state can not be done without negating any exponential gains.
+The problem must have some structure to be exploited for a speed-up to be possible.
+Quantum computers do only solve certain problems more efficiently than classical computers, and finding the algorithms to do so is not trivial.
+Shor's algorithm has time complexity $O((\log N)^3)$ while the most efficient known classical algorithm, the general number field sieve, is sub-exponential with a time complexity on the form $\Omega(k^{\frac{1}{3}}\log^{2/3}k)$, where $k=O(2^N)$~\autocite{dervovic2018}.
+To solve linear system, there is the HHL algorithm with time complexity $O(\log(N)\kappa^2)$, where $\kappa$ is the condition number.
+This is an exponential speed-up over the fastest known classical algorithm\footnotemark{}, which has time complexity $O(N \kappa)$.
+Still, these are non-trivial algorithms, not yet usable in practice and that were not easily found.
+
+\footnotetext{
+    Given that the condition number does not grow exponentially.
+    There are also difficulties in loading the data into the quantum computer and extracting the solution that could negate any exponential speed-up.
+    C.f.~\autocite{aaronson2015}.
+}
+
+Polynomial speed-ups are perhaps more easily found.
+For example, the Grover algorithm which is used to search for an element in an unsorted list has time complexity $O(\sqrt{N})$~\autocite{grover1996}.
+Classically, this can not be done in less than $O(N)$ time.
+It can be proven that the Grover algorithm is optimal~\autocite{zalka1999}, so for this problem, an exponential speed-up is impossible.
+This algorithm and the more general amplitude amplification on which it builds solves very general problems and are often used subroutines to achieve quadratic speed-ups in other algorithms.
+Being only a quadratic speed-up, it is not as impressive as the exponential speed-ups, and achieving quantum supremacy in that manner would require larger quantum computers than if the speed-up were exponential.
+
 
 \subsection{Grover's algorithm}
 The quantum search algorithm of Grover~\autocite{grover1996} is a quantum algorithm that finds an element in an unstructured list with high probability.

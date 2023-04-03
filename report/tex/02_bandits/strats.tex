@@ -98,7 +98,7 @@ Choosing $\epsilon$ is a trade-off between exploration and exploitation and can 
     \caption{Epsilon-greedy arm selection}
     \label{alg:eps_greedy}
     \eIf{$t \leq mk$}{
-    \Return $(t \mod k) + 1$;
+    \Return $(t \mod k) + 1$\;
     }{
     Sample $u$ from $[0,1)$ uniformly\;
     \eIf{$u < \epsilon$}{
@@ -233,6 +233,169 @@ The idea is to sample from the posterior distribution of the means of the arms a
 The posterior distribution is updated after each pull, using the observed reward as evidence.
 By graphing the posterior distribution, such as is done in \cref{fig:thompson}, it is possible to see how the algorithm efficiently exploits the best arm while giving enough explorative efforts.
 
+\begin{figure}
+    \pgfplotsset{
+        ylabel right/.style={
+                after end axis/.append code={
+                        \node [rotate=90, anchor=north] at (rel axis cs:1.1,0.5) {#1};
+                    }
+            }
+    }
+
+    \centering
+    \begin{tikzpicture}
+        \begin{groupplot}[
+                group style={
+                        group size=3 by 4,
+                    },
+                width=0.35\textwidth,
+                height=0.3\textwidth,
+                no markers,
+                grid=major,
+            ]
+            \nextgroupplot[
+                ylabel=Probability,
+                title=Arm 1,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y1,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_0.dat};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 2)};
+
+            \nextgroupplot[
+                title=Arm 2,
+            ]
+            ]
+            \addplot table[
+                    x=x,
+                    y=y2,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_0.dat};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 2)};
+
+            \nextgroupplot[
+                title=Arm 3,
+                ylabel right=Priors,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y3,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_0.dat};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 2)};
+
+
+            % row 2
+            \nextgroupplot[
+                ylabel = Probability,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y1,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_10.dat};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 2.5)};
+
+            \nextgroupplot
+            \addplot table[
+                    x=x,
+                    y=y2,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_10.dat};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 2.5)};
+
+            \nextgroupplot[
+                ylabel right = Turn 10,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y3,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_10.dat};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 4)};
+
+            % row 3
+            \nextgroupplot[
+                ylabel = Probability,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y1,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_100.dat};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 3)};
+
+            \nextgroupplot[
+            ]
+            \addplot table[
+                    x=x,
+                    y=y2,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_100.dat};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 4)};
+
+            \nextgroupplot[
+                ylabel right = Turn 100,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y3,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_100.dat};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 11)};
+
+            % row 4
+            \nextgroupplot[
+                xlabel = Reward mean,
+                ylabel = Probability,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y1,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_1000.dat};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 4)};
+
+            \nextgroupplot[
+                xlabel = Reward mean,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y2,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_1000.dat};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 4)};
+
+            \nextgroupplot[
+                xlabel = Reward mean,
+                ylabel right = Turn 1000,
+            ]
+            \addplot table[
+                    x=x,
+                    y=y3,
+                    col sep=comma,
+                ] {../code/bandit_figs/thompson/thompson_1000.dat};
+            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 30)};
+
+
+        \end{groupplot}
+    \end{tikzpicture}
+    \label{fig:thompson}
+    \caption[
+        Thompson sampling visualisation.
+    ]
+    {
+        Thompson sampling algorithm with Bernoulli rewards and three arms visualised.
+        In the top row, the uniform priors for the reward distribution means are on display.
+        Thereunder, the posteriors are shown at turns 10, 100 and 1000.
+        The dashed vertical lines indicate the true means.
+        As the algorithm progresses, the posterior of the optimal arm quickly spikes and approaches the true mean, while the other remain rather wide, but importantly with almost all their mass less than the optimal arm posterior.
+    }
+\end{figure}
+
+
 It was first in 2012 that Thompson sampling was proven asymptotically optimal for Bernoulli rewards with uniform priors~\autocite{kaufmann2012}.
 Namely, for every $\epsilon > 0$, there exists a constant $C_\epsilon$ such that
 \begin{equation}
@@ -264,149 +427,6 @@ Furthermore, empirical results generally indicate better performance than UCB va
 Still, Thompson sampling is not without its drawbacks.
 The algorithm can be computationally expensive, as it requires sampling from the posterior distribution for each arm at each time step.
 Even with conjugate priors, the computational costs of sampling will be higher than the simple computations required by UCB and epsilon-greedy algorithms.
-
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \begin{groupplot}[
-                group style={
-                        group size=3 by 4,
-                    },
-                width=0.35\textwidth,
-                height=0.35\textwidth,
-                no markers,
-                grid=major,
-            ]
-            \nextgroupplot[
-                ylabel=Priors,
-            ]
-            \addplot table[
-                    x=x,
-                    y=y1,
-                    col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_0.dat};
-            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 2)};
-
-            \nextgroupplot
-            \addplot table[
-                    x=x,
-                    y=y2,
-                    col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_0.dat};
-            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 2)};
-
-            \nextgroupplot
-            \addplot table[
-                    x=x,
-                    y=y3,
-                    col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_0.dat};
-            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 2)};
-
-
-            % row 2
-            \nextgroupplot[
-                ylabel = Turn 10,
-            ]
-            \addplot table[
-                    x=x,
-                    y=y1,
-                    col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_10.dat};
-            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 2.5)};
-
-            \nextgroupplot
-            \addplot table[
-                    x=x,
-                    y=y2,
-                    col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_10.dat};
-            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 2.5)};
-
-            \nextgroupplot
-            \addplot table[
-                    x=x,
-                    y=y3,
-                    col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_10.dat};
-            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 4)};
-
-            % row 3
-            \nextgroupplot[
-                ylabel = Turn 100,
-            ]
-            \addplot table[
-                    x=x,
-                    y=y1,
-                    col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_100.dat};
-            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 3)};
-
-            \nextgroupplot[
-            ]
-            \addplot table[
-                    x=x,
-                    y=y2,
-                    col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_100.dat};
-            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 4)};
-
-            \nextgroupplot[
-            ]
-            \addplot table[
-                    x=x,
-                    y=y3,
-                    col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_100.dat};
-            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 11)};
-
-            % row 4
-            \nextgroupplot[
-                xlabel=Arm 1,
-                ylabel = Turn 1000,
-            ]
-            \addplot table[
-                    x=x,
-                    y=y1,
-                    col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_1000.dat};
-            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.2, 0) (0.2, 4)};
-
-            \nextgroupplot[
-                xlabel=Arm 2,
-            ]
-            \addplot table[
-                    x=x,
-                    y=y2,
-                    col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_1000.dat};
-            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.4, 0) (0.4, 4)};
-
-            \nextgroupplot[
-                xlabel=Arm 3,
-            ]
-            \addplot table[
-                    x=x,
-                    y=y3,
-                    col sep=comma,
-                ] {../code/bandit_figs/thompson/thompson_1000.dat};
-            \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.7, 0) (0.7, 30)};
-
-
-        \end{groupplot}
-    \end{tikzpicture}
-    \label{fig:thompson}
-    \caption[
-        Thompson sampling visualisation.
-    ]
-    {
-        Thompson sampling algorithm with Bernoulli rewards and three arms visualised.
-        In the top row, the uniform priors for the reward distribution means are on display.
-        Thereunder, the posteriors are shown at turns 10, 100 and 1000.
-        The dashed vertical lines indicate the true means.
-        As the algorithm progresses, the posterior of the optimal arm quickly spikes and approaches the true mean, while the other remain rather wide, but importantly with almost all their mass less than the optimal arm posterior.
-    }
-\end{figure}
 
 
 \subsection{The doubling trick}
