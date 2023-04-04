@@ -231,7 +231,7 @@ In result, the oracle initialisation can be implemented as is listed in \cref{al
 \subsection{QMC}
 Thankfully, amplitude estimation is a well-studied problem in quantum computing, and there are several implementations available.
 For example, in the Qiskit library, the \texttt{AmplitudeEstimation} class can be used to perform amplitude estimation on a quantum circuit with a given number of qubits.
-It assumes a \texttt{EstimationProblem} object is initialised with the quamtum algorithm to be estimated and the objective qubit(s).
+It assumes a \texttt{EstimationProblem} object is initialised with the quantum algorithm to be estimated and the objective qubit(s).
 
 What is more, with binary rewards encoded in the final qubit, QMC can be implemented without the extra qubit that is described in \cref{sec:qmc}.
 Instead, amplitude estimation can be performed directly on the oracles as they are implemented in \cref{alg:qucb_oracle}.
@@ -256,7 +256,7 @@ In total, the QMC subroutine is implemented as in \cref{alg:qucb_qmc}.
     \label{alg:qucb_qmc}
 \end{algorithm}
 
-\section{QUCB1}
+\subsection{QUCB1}
 Oracles and QMC being available, the QUCB1 algorithm can be implemented easily.
 First, a set of oracles is initialised for each arm, and the algorithm is run for a given number of iterations.
 The number of oracle calls is tracked, and the algorithm is stopped when the number of oracle calls exceeds the number of iterations.
@@ -265,7 +265,10 @@ The simulation code thus appears as in \cref{alg:qucb1}.
 
 \begin{algorithm}
     \SetAlgoLined
-    \KwIn{Set of arm probabilities $\{p_1, \ldots, p_k\}$, number of iterations $T$, confidence $\delta$}
+    \KwIn{
+        Set of arm probabilities $\{p_1, \ldots, p_k\}$, \\
+        number of iterations $T$, confidence $\delta$
+    }
     \KwOut{Regret at each iteration}
     Initialise $t \leftarrow 0$ \;
     \For {$a \in \{1, \ldots, k\}$}{
@@ -280,12 +283,12 @@ The simulation code thus appears as in \cref{alg:qucb1}.
         $a \leftarrow \argmax_a (\hat{\mu}_a + \text{UCB}_a$ )\;
         $\text{UCB}_a \leftarrow \text{UCB}_a / 2$ \;
         $N_a \leftarrow (C_1/\text{UCB}_a) \log(1/\delta)$ \;
-            Estimate $\hat{\mu}_a$ with \cref{alg:qucb_qmc} \;
+            Update estimate $\hat{\mu}_a$ with new estimate from \cref{alg:qucb_qmc} \;
             Update $t$ with the number of oracle calls \;
         Log regret\;
     }
     Discard any regret from excess turns \;
     \Return regrets $R_1, \ldots, R_T$
-    \caption{QUCB1 simulation with a known set of Bernoulli arms}
+    \caption{QUCB1 simulation with a set of Bernoulli arms}
     \label{alg:qucb1_sim}
 \end{algorithm}

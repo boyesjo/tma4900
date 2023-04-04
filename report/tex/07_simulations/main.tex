@@ -14,6 +14,7 @@ It was thus set to $0.01$ for all experiments.
 Moreover, the constant $C_1$ which was only defined existentially was arbitrarily set to $2$ across all experiments, as it was not clear how to choose it in a principled manner, and this value seemed able to reproduce the results of \autocite{wan2022}.
 
 \section{Fixed arms}
+\label{sec:sim_fixed_arms}
 First, the algorithms are tested on fixed bandit instances with two arms.
 The mean of the first arm is set to $0.5$ and the mean of the second arm is set to $0.505$, an instance also tested in \autocite{wan2022}.
 The results are shown in \cref{fig:big2}, agreeing with the original paper; QUCB greatly outperforms UCB.
@@ -314,12 +315,12 @@ Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produc
                 ]
                 table[x=turn, y=thomp_mean]{\datatable};
 
-                % \legend{UCB, QUCB, Thompson}
+                \legend{UCB, QUCB, Thompson}
             \end{axis}
         \end{tikzpicture}
-        % \caption{}
+        \caption{Linear scale.}
     \end{subfigure}
-    \vspace{1cm}
+    \vspace{0.5cm}
 
     \begin{subfigure}[]{0.8\textwidth}
         \centering
@@ -330,13 +331,13 @@ Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produc
                     xlabel={Turn},
                     ylabel={Regret},
                     grid=major,
-                    % legend pos=north west,
+                    legend pos=south east,
                     % legend cell align=left,
-                    legend style={
-                            at={(0.5,-0.1)},
-                            anchor=north,
-                            legend columns=-1
-                        },
+                    % legend style={
+                    %         at={(0.5,-0.1)},
+                    %         anchor=north,
+                    %         legend columns=-1
+                    %     },
                     x tick label style={
                             /pgf/number format/.cd,
                             fixed,
@@ -376,14 +377,15 @@ Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produc
 
             \end{axis}
         \end{tikzpicture}
-        % \caption{}
+        \caption{Log-log scale.}
+
     \end{subfigure}
     \caption[
         Bayesian regret for two arms, independent and uniform priors.
     ]
     {
         Bayesian regret for two arms, independent and uniform priors.
-        Top: linear scale, bottom: log-log scale.
+        While Thompson sampling performs best, the log-log plot may indicate that QUCB could be better with a very large number of turns.
         Thompson sampling performs best, but it can appear as QUCB would be best at unreasonably great time horizons.
     }
     \label{fig:random}
@@ -409,58 +411,127 @@ At the final 250,000th turn, the QUCB and Thompson sampling algorithms have virt
 QUCB lags behind in the beginning, but its regret curve appears flatter towards the end, and it is likely that it would beat Thompson sampling in the long run.
 The UCB algorithm, on the other hand, is as before clearly outperformed by both QUCB and Thompson sampling.
 
+\subsection{More challenging prior}
+As the above prior proved to still too easy to demonstrate quantum advantage, a third was chosen, catering even more to QUCB's strengths discovered in \cref{sec:sim_fixed_arms}, id est having close means and means centred around one half.
+The prior was constructed similarly to the one in \cref{eq:challenging_prior}, but with different parameters, namely:
+\begin{equation}
+    \label{eq:more_challenging_prior}
+    \begin{aligned}
+        \mu_1               & \sim \text{B}(2, 2),                     \\
+        \text{logit}(\mu_2) & \sim \text{N}(\text{logit}(\mu_1), 0.2),
+    \end{aligned}
+\end{equation}
+
+This simulation was run for 966 parallels before the computation server got tired.
+As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson sampling still clearly outperforms UCB.
+
 
 \begin{figure}
     \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-                width=0.8\textwidth,
-                height=0.6\textwidth,
-                xlabel={Turn},
-                ylabel={Regret},
-                grid=major,
-                legend pos=north west,
-                legend cell align=left,
-                x tick label style={
-                        /pgf/number format/.cd,
-                        fixed,
-                        fixed zerofill,
-                        precision=1,
-                        sci,
-                        /tikz/.cd
-                    },
-                scaled x ticks=false,
-            ]
-            \pgfplotstableread[col sep=comma]{../code/wan/results/random2/plot_data.dat}\datatable
-            \addplot+[
-                mark = none,
-                color = red,
-            ]
-            table[
-                    x=turn,
-                    y=ucb_mean,
-                ]{\datatable};
+    \begin{subfigure}{\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    width=0.8\textwidth,
+                    height=0.6\textwidth,
+                    xlabel={Turn},
+                    ylabel={Regret},
+                    grid=major,
+                    legend pos=north west,
+                    legend cell align=left,
+                    x tick label style={
+                            /pgf/number format/.cd,
+                            fixed,
+                            fixed zerofill,
+                            precision=1,
+                            sci,/tikz/.cd},scaled x ticks=false,                ]
+                \pgfplotstableread[col sep=comma]
+                {../code/wan/results/random2/plot_data.dat}\datatable
+                \addplot+[
+                    mark = none,
+                    color = red,
+                ]
+                table[
+                        x=turn,
+                        y=ucb_mean,
+                    ]{\datatable};
 
-            \addplot[
-                mark = none,
-                color = blue,
-            ]
-            table[x=turn, y=qucb_mean]{\datatable};
+                \addplot[
+                    mark = none,
+                    color = blue,
+                ]
+                table[x=turn, y=qucb_mean]{\datatable};
 
-            \addplot[
-                mark = none,
-                color = green,
-            ]
-            table[x=turn, y=thomp_mean]{\datatable};
+                \addplot[
+                    mark = none,
+                    color = green,
+                ]
+                table[x=turn, y=thomp_mean]{\datatable};
+                \legend{UCB, QUCB, Thompson}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{
+            Prior as in \cref{eq:challenging_prior}.
+        }
+        \label{fig:random2}
+    \end{subfigure}
 
-            \legend{UCB, QUCB, Thompson}
+    \vspace*{0.5cm}
 
-        \end{axis}
-    \end{tikzpicture}
-    \caption{
-        Bayesian regret for two arms.
-        The means are drawn from a challenging prior in which the reward means are highly correlated, as described in \cref{eq:challenging_prior}.
+    \begin{subfigure}{\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    width=0.8\textwidth,
+                    height=0.6\textwidth,
+                    xlabel={Turn},
+                    ylabel={Regret},
+                    grid=major,
+                    legend pos=north west,
+                    legend cell align=left,
+                    x tick label style={
+                            /pgf/number format/.cd,
+                            fixed,
+                            fixed zerofill,
+                            precision=1,
+                            sci,/tikz/.cd},scaled x ticks=false,                ]
+                \pgfplotstableread[col sep=comma]
+                {../code/wan/results/random3/plot_data.dat}\datatable
+                \addplot+[
+                    mark = none,
+                    color = red,
+                ]
+                table[
+                        x=turn,
+                        y=ucb_mean,
+                    ]{\datatable};
+
+                \addplot[
+                    mark = none,
+                    color = blue,
+                ]
+                table[x=turn, y=qucb_mean]{\datatable};
+
+                \addplot[
+                    mark = none,
+                    color = green,
+                ]
+                table[x=turn, y=thomp_mean]{\datatable};
+
+                \legend{UCB, QUCB, Thompson}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{
+            Prior as in \cref{eq:more_challenging_prior}.
+        }
+        \label{fig:random3}
+    \end{subfigure}
+    \caption[
+        Bayesian regret for two arms, challenging priors.
+    ]
+    {
+        Bayesian regret for two arms, challenging priors,
+        The lower figure has the means closer to the $1/2$ and even higher correlation between the means, which is more favourable to QUCB.
     }
-    \label{fig:random2}
+    \label{fig:random_challenging}
 \end{figure}
-

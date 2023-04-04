@@ -194,7 +194,7 @@ Recurrent neural networks (RNNs) are a special type of neural network wherein cy
 This enables a temporal quality, which makes them particularly suited for tasks such as time-series prediction, speech recognition and machine translation.
 RNNs' flexibility permits them to take inputs of varying length, which is not natively supported by regular feed-forward networks.
 They are subsequently well suited for reinforcement learning, where the states and rewards from the environment can be continuously fed into the network as the agent interacts with it.
-For example, they have shown particularly useful for so-called partially observable Markov decision processes (POMDPs), where the agent does not have access to the full state of the environment \autocite{arulkumaran2017}.
+For example, they have shown particularly useful for so-called partially observable Markov decision processes, where the agent does not have access to the full state of the environment \autocite{arulkumaran2017}.
 
 However, the flexibility comes at a cost.
 As the network is allowed to have cycles, gradients of parameters can compound and either vanish or explode exponentially, which makes training difficult.
