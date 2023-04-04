@@ -105,3 +105,15 @@ As the quantum part is restrained to a single layer and a small convolutional ke
 More recently, in \cite{zeng2022}, using a hybrid model for multi-class classification on real world data sets using a CNN-inspired structure was explored.
 In the model used, the quantum part was placed in the middle, after classical convolutions and pooling and before a classical fully connected layer.
 There, it was shown that the hybrid model could outperform a classical CNN of similar parameter size.
+
+\subsubsection{Quantum recurrent neural networks}
+The quantum state is collapsed upon measurement, losing information in the process.
+There is therefore not straightforward to translate the classical recurrent neural network (RNN) to a variational quantum circuit in the manner of \cref{fig:qnn} and the above discussed architectures.
+Still, there attempts have been made to define a QRNN, such as in \autocite{bausch2020} where parametrised quantum neurons are defined and used to construct layers.
+These layers have two sets of qubits.
+The first set is not measured, and the state persists to the next layer.
+In contrast, the second set consists of ancillary qubits, which are either initiated in the state $\ket{0}$ or used to input data.
+The ancillary qubits are measured after each layer and interpreted as the output of the layer.
+It is shown to achieve 95\% accuracy on classifying 0 and 1 in the MNIST data set with only 12 qubits.
+
+In \cite{takaki2021}, a similar design for QRRNs is used to learn temporal patterns in data, such as cosine waves or spin quantum dynamics.

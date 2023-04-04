@@ -1,0 +1,27 @@
+\section{Quantum agents}
+\label{sec:quantum_agents}
+
+As quantum neural networks are shown to be usable function approximators, they can be used in the same way classical neural networks are used in classical deep reinforcement learning algorithms.
+In this section, we will discuss how quantum neural networks can be used as agents in reinforcement learning algorithms.
+For this, several designs have been proposed, though the field of quantum reinforcement learning is still much less developed than quantum supervised learning is.
+
+Like with QML, the two fields of reinforcement learning and quantum machine learning can be combined in several ways.
+The entire environment or Markov decision process can be assumed to be quantum, such as is done in \autocite{ying2021}.
+There, approaches based on dynamic programming are used to solve the problem.
+Nonetheless, continuing the theme of solving classical problems with quantum methods, this thesis will focus mainly on the use of quantum neural networks as agents in classical reinforcement learning algorithms.
+Still, as will be seen, quantum agents provide the greatest benefits when the interacting with the environment is quantum also.
+
+In \autocite{chen2020}, quantum neural networks are used to approximate Q-functions, which are used in reinforcement learning.
+Moreover, by including experience replay and a target network, the model proposed is effectively a true translation of the classical DQN algorithm to the quantum setting, a QDQN.
+The authors note that the model is more efficient than classical DQN in terms of memory usage and parameter counts.
+
+Quantum Q-learning is also studied in \autocite{skolik2022}, where a QNN-based Q-learning is tested in several standard benchmark environments, including the cart-pole environment.
+The model achieves results comparable to those of a DQN.
+As is the case with classical reinforcement learning, it appears that hyperparameter tuning and model architectures matter more than the pure parameter count for the performance of the model.
+
+The authors of \autocite{jerbi2021} propose to use a QNN to approximate the policy function in reinforcement learning and train it with the REINFORCE algorithm.
+Their model is shown to solve several basic benchmark problems, including the cart-pole environment, with performance comparable to that of classical neural networks.
+Furthermore, by designing quantum environments particularly suited for the quantum model, it is shown to outperform classical neural networks.
+
+By letting the agent communicate over a quantum channel, \autocite{saggio2021} show that the learning of an agent can be accelerated.
+Somewhat similarly, in \autocite{hamann2022}, hybrid agents are shown to learn quadratically faster than purely classical agents.
