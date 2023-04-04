@@ -60,14 +60,14 @@ A value function is a function that estimates the expected cumulative reward fro
 Specifically, the state-value function $V^{\pi}(s)$ estimates the expected cumulative reward from state $s$, under policy $\pi$.
 It is given by
 \begin{equation}
-    V^{\pi}(s) = \mathbb{E}_/pi \left[ G_t | S_t = s \right],
+    V^{\pi}(s) = \mathbb{E}_\pi \left[ G_t | S_t = s \right],
 \end{equation}
 where the expectation is taken over the distribution of future rewards and states, given that the agent is in state $s$ at time $t$.
 
 Alternatively, one may consider a state-action value function $Q^{\pi}(s, a)$, which estimates the expected cumulative reward from state $s$, given that the agent takes action $a$, under policy $\pi$ for future steps.
 It can be expressed as
 \begin{equation}
-    Q^{\pi}(s, a) = \mathbb{E}_/pi \left[ G_t | S_t = s, A_t = a \right].
+    Q^{\pi}(s, a) = \mathbb{E}_\pi \left[ G_t | S_t = s, A_t = a \right].
 \end{equation}
 
 Naturally, it is desirable to maximise either, leading to the Bellman equations, from which the optimal policies can be derived.
@@ -96,7 +96,7 @@ There are three main categories of reinforcement learning algorithms: model-base
 
 As will be made clear later, many reinforcement learning algorithms are hybrids of these three categories, combining the strengths of each approach to achieve better performance in complex environments.
 It is primarily the latter two, model-free algorithms that have seen the most success in recent years, and these that will be discussed further in \cref{sec:rl_algs}.
-But also the model-based have seen some solid results recently, for example being able to find diamonds in Minecraft \cite{hafner2023}.
+But also the model-based have seen some solid results recently, for example being able to find diamonds in \textit{Minecraft}~\autocite{hafner2023}.
 
 
 \subsection{Difficulties}
@@ -118,7 +118,7 @@ Implementing this guidance is demanding and useless for the other games.
 
 RL is fundamentally more challenging than supervised learning because it requires an agent to explore and interact with its environment to learn from experience, as opposed to having access to labelled data.
 Randomly discovering an optimal strategy can be highly unlikely, especially in high-dimensional state and action spaces, making it necessary to develop specialised algorithms~\autocite{sutton2018}.
-Finally, RL algorithms can be computationally expensive and require significant amounts of data to learn an optimal policy, which can make RL infeasible for some applications~\autocite{silver2016}.
+It can be computationally expensive and require significant amounts of data to learn an optimal policy, which is why the idea of algorithms competing against themselves has been so central in achieving super-human performance in board and video games~\autocite{silver2016}.
 
 This leads to the necessity of deep learning in reinforcement learning.
 Before those methods can be explained, the general concept of deep learning needs to be discussed, namely the artificial neural network.

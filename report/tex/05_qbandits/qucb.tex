@@ -199,3 +199,93 @@ Setting $\delta = 1/T$,
     \end{aligned}
 \end{equation}
 as desired.
+
+\section{Implementing QUCB1}
+To translate \cref{alg:qucb1} into something that can be either run on a quantum computer or simulated on a classical computer, the arm-oracles need to be made available and QMC needs to be implemented.
+
+\subsection{Arm-oracles}
+The oracles of \cref{eq:wan_oracle} can be implemented as quantum gates by first constructing their matrix representation.
+With Bernoulli variables and considering the simplest case of $\Omega = \{0, 1\}$ and associating only $0 \in \Omega$ with the reward, the first row of the matrix representation of the oracle is
+\begin{equation}
+    \sqrt{p} \ket{0} \ket{1} + \sqrt{1-p} \ket{1} \ket{0}
+    =
+    (0, 0, \sqrt{p}, \sqrt{1-p}).
+\end{equation}
+They are, however, not well-defined unitary operators, leaving several rows open for free choice.
+These can be easily filled by using Gram-Schmidt orthogonalisation on the remaining rows.
+More explicit solutions are of course possible, but these become more intricate with different reward distributions and $\Omega$.
+
+In result, the oracle initialisation can be implemented as is listed in \cref{alg:qucb_oracle}, which is easily done in Qiskit.
+
+\begin{algorithm}
+    \SetAlgoLined
+    \KwIn{Arm probability $p$}
+    \KwOut{Quantum circuit}
+    Initialise first row $(0, 0, \sqrt{p}, \sqrt{1-p})$ \;
+    Complete matrix using Gram-Schmidt orthogonalisation \;
+    \Return Quantum circuit implementing matrix
+    \caption{QUCB oracle initialisation for a Bernoulli arm}
+    \label{alg:qucb_oracle}
+\end{algorithm}
+
+\subsection{QMC}
+Thankfully, amplitude estimation is a well-studied problem in quantum computing, and there are several implementations available.
+For example, in the Qiskit library, the \texttt{AmplitudeEstimation} class can be used to perform amplitude estimation on a quantum circuit with a given number of qubits.
+It assumes a \texttt{EstimationProblem} object is initialised with the quamtum algorithm to be estimated and the objective qubit(s).
+
+What is more, with binary rewards encoded in the final qubit, QMC can be implemented without the extra qubit that is described in \cref{sec:qmc}.
+Instead, amplitude estimation can be performed directly on the oracles as they are implemented in \cref{alg:qucb_oracle}.
+Additionally, since the number of iterations is described by QUCB, it is fed directly into the amplitude estimation simulation.
+The MLE estimate is automagically calculated by the \texttt{AmplitudeEstimation} class, which will be used to update the QUCB estimate.
+The number of oracle calls is also automatically tracked by the \texttt{AmplitudeEstimation} class, which is iterated by 1 to account for the initialisation of the oracle before amplitude estimation is performed.
+In total, the QMC subroutine is implemented as in \cref{alg:qucb_qmc}.
+
+\begin{algorithm}
+    \SetAlgoLined
+    \KwIn{Oracle $\mathcal{O}$, number of iterations $N$, confidence $\delta$}
+    \KwOut{Estimate of $p$ with confidence $1-\delta$, number of oracle calls}
+    Initialise \texttt{EstimationProblem} with oracle $\mathcal{O}$ and objective qubit 0 \;
+    Number of shots $N_S \leftarrow \log(1 / \delta)$ \;
+    Number of qubits $N_Q \leftarrow \lceil \log_2 N \rceil$ \;
+    Initialise \texttt{AmplitudeEstimation} with number of shots $N_S$ and number of qubits $N_Q$ \;
+    Estimate $p$ with \texttt{AmplitudeEstimation} on the \texttt{EstimationProblem} object \;
+    $\hat{p} \leftarrow$ MLE result of \texttt{AmplitudeEstimation} \;
+    $T \leftarrow$ number of iterations used by \texttt{AmplitudeEstimation} \;
+    \Return $\hat{p}, T + 1$
+    \caption{QMC for a Bernoulli arm oracle}
+    \label{alg:qucb_qmc}
+\end{algorithm}
+
+\section{QUCB1}
+Oracles and QMC being available, the QUCB1 algorithm can be implemented easily.
+First, a set of oracles is initialised for each arm, and the algorithm is run for a given number of iterations.
+The number of oracle calls is tracked, and the algorithm is stopped when the number of oracle calls exceeds the number of iterations.
+Regret contributions are tracked and output after the simulation.
+The simulation code thus appears as in \cref{alg:qucb1}.
+
+\begin{algorithm}
+    \SetAlgoLined
+    \KwIn{Set of arm probabilities $\{p_1, \ldots, p_k\}$, number of iterations $T$, confidence $\delta$}
+    \KwOut{Regret at each iteration}
+    Initialise $t \leftarrow 0$ \;
+    \For {$a \in \{1, \ldots, k\}$}{
+        Initialise oracle $\mathcal{O}_a$ \;
+        Initialise $\text{UCB}_a \leftarrow 1$ \;
+        Initialise $N_a \leftarrow (C_1/\text{UCB}_a) \log(1/\delta)$ \;
+        Estimate $\hat{\mu}_a$ with \cref{alg:qucb_qmc} \;
+        Update $t$ with the number of oracle calls \;
+        Log regret\;
+    }
+    \While {$t < T$}{
+        $a \leftarrow \argmax_a (\hat{\mu}_a + \text{UCB}_a$ )\;
+        $\text{UCB}_a \leftarrow \text{UCB}_a / 2$ \;
+        $N_a \leftarrow (C_1/\text{UCB}_a) \log(1/\delta)$ \;
+            Estimate $\hat{\mu}_a$ with \cref{alg:qucb_qmc} \;
+            Update $t$ with the number of oracle calls \;
+        Log regret\;
+    }
+    Discard any regret from excess turns \;
+    \Return regrets $R_1, \ldots, R_T$
+    \caption{QUCB1 simulation with a known set of Bernoulli arms}
+    \label{alg:qucb1_sim}
+\end{algorithm}

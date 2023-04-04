@@ -55,7 +55,7 @@ def main():
     from qiskit import Aer, assemble
     from qiskit.quantum_info import Statevector
 
-    qc = Oracle(0.7, 2)
+    qc = Oracle(0.7, 1)
     backend = Aer.get_backend("statevector_simulator")
     job = backend.run(assemble(qc))
     result = job.result()
@@ -64,6 +64,8 @@ def main():
     for k, v in probs.items():
         print(f"{k}: {v:.3f}")
     print()
+
+    print(statevector)
 
 
 if __name__ == "__main__":
