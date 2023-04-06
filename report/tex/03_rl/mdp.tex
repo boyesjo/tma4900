@@ -83,15 +83,15 @@ There are three main categories of reinforcement learning algorithms: model-base
         However, these algorithms can be computationally expensive and may require a large amount of data to learn an accurate model.
 
     \item[Policy-based algorithms]
-        These algorithms directly learn a policy, either a deterministic or stochastic mapping from states to actions, that maximises the expected cumulative reward.
-        This is done by defining some parametric policy $\pi_\theta(a | s)$, where $\theta$ is a vector of parameters, and then optimising the parameters $\theta$ given the data collected from the agent's interactions with the environment.
+        A policy, either a deterministic or stochastic mapping from states to actions, that maximises the expected cumulative reward, is learnt directly.
+        This is done by defining some parametric policy $\pi_\theta(a | s)$, where $\theta$ is a vector of parameters, and then optimising the parameters $\theta$ given the data collected from the agent's interactions with the environment thus far.
         Policy-based algorithms can be effective in problems with continuous action spaces or when the agent needs to explore to find the optimal policy.
-        However, they can be difficult to optimise and may suffer from high variance in the gradient estimates.
+        Still, they can be difficult to optimise and may suffer from high variance in the gradient estimates.
 
     \item[Value-based algorithms]
-        These algorithms learn the value function, either the state-value function or the action-value function, and then use this function to determine the optimal policy.
+        The state-value function or the action-value function is learnt and then used  to determine the optimal policy.
         Value-based algorithms can be very effective in problems with large state spaces, where it may not be feasible to maintain a model of the environment.
-        However, they can be sensitive to the choice of hyperparameters and may struggle in problems with continuous action spaces.
+        They can nonetheless be sensitive to the choice of hyperparameters and may struggle in problems with continuous action spaces.
 \end{description}
 
 As will be made clear later, many reinforcement learning algorithms are hybrids of these three categories, combining the strengths of each approach to achieve better performance in complex environments.
@@ -112,13 +112,17 @@ This problem is especially pronounced in environments with long time horizons, w
 
 Designing appropriate rewards is a critical component of reinforcement learning, as they guide the agent's behaviour towards achieving the desired outcome.
 However, poorly designed rewards can lead to slow or intractable learning, as the agent may not receive sufficient feedback on its actions to adjust its policy.
+A classic example thereof is pausing the game in \textit{Tetris} as to not lose the game~\autocite{murphy2013}.
+
 Specialised rewards that provide more detailed feedback and guidance can improve learning, but they also make it harder to generalise to new situations.
 For instance, the Atari game \textit{Montezuma's Revenge} is nigh impossible to solve with off-the-shelf methods and without specialising the rewards~\autocite{salimans2018}.
-Implementing this guidance is demanding and useless for the other games.
+While the suite of Atari games is mostly solvable with the same algorithms, the lack of immediate rewards leaves agents clueless as how to progress.
+Implementing the necessary guidance is can not only be demanding, but it also looses the general applicability that is so central to RL.
 
 RL is fundamentally more challenging than supervised learning because it requires an agent to explore and interact with its environment to learn from experience, as opposed to having access to labelled data.
 Randomly discovering an optimal strategy can be highly unlikely, especially in high-dimensional state and action spaces, making it necessary to develop specialised algorithms~\autocite{sutton2018}.
+While humans can employ prior knowledge, such as that keys will open doors, reinforcement learning agents will generally have to learn this by chance.
+By removing the visual cues, games become harder for humans but not for agents~\autocite{dubey2018}.
 It can be computationally expensive and require significant amounts of data to learn an optimal policy, which is why the idea of algorithms competing against themselves has been so central in achieving super-human performance in board and video games~\autocite{silver2016}.
-
 This leads to the necessity of deep learning in reinforcement learning.
 Before those methods can be explained, the general concept of deep learning needs to be discussed, namely the artificial neural network.

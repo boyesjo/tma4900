@@ -1,13 +1,46 @@
 \section{Quantum algorithms}
+\subsection{Computational complexity and quantum supremacy}
 Quantum computers allure stem from their ability to solve certain problems more efficiently, exponentially so, than classical computers can.
 Most (in-) famous of these problems are integer factorisation and discrete logarithms, which could be used to break effectively all public-key cryptography.
-Encrypted data is already being hoarded, and the research and development of quantum computers is already well underway.
+Encrypted data is already being hoarded~\autocite{NEEDED}, and the research and development of quantum computers is already well underway.
 
 There are still several more problems for which quantum computers are believed to offer great advantages.
-It is proven that the class of problems quantum computers can solve in polynomial time (with high probability), BQP, contains the complexity class P~\autocite{nielsen2012}.
-This follows from the fact than quantum computers can efficiently run any efficient classical algorithm.
-Since quantum computers can solve problems like integer factorisation and discrete logarithms efficiently, it is believed that BQP is strictly greater than P, but as whether P = NP remains unknown, these problems could turn out actually to be in P.
-In a similar vein, NP-complete problems are believed to lie outside BQP, but this is not proven.
+It is proven that the class of problems quantum computers can solve in polynomial time (with high probability), $\BQP$, contains the complexity class $\P$~\autocite{nielsen2012} and $\BPP$, the class of problems that can be solved in polynomial time with a classical probabilistic algorithm~\autocite{nielsen2012}.
+This follows from the fact than quantum computers can efficiently run any efficient classical algorithm and reproduce any classical randomness by performing quantum measurements.
+
+The Deutsch-Jozsa algorithm~\autocite{deutsch1992}, while of no practical use, is proved to be exponentially faster than any deterministic classical algorithm\footnotemark~\autocite{simon1994}.x
+Since quantum computers can solve problems like integer factorisation and discrete logarithms efficiently, it is believed that $\BQP$ is strictly greater than $\P$ by containing elements of $\NP \setminus \P$, but as whether $\P = \NP$ is unknown, these problems could turn out actually to be in $\P$.
+In a similar vein, $\NP$-complete problems are believed to lie outside $\BQP$, but this is not proven~\autocite{NEEDED}.
+
+\footnotetext{
+    The provable exponential speed-up does not prove $\P \neq \BQP$, as the algorithm requires an oracle~\autocite{NEEDED}.
+    Oracle separations, a weaker notion than true inequality, have been found not only between $\P$ and $\BQP$, but also between $\BQP$ and $\BPP$ with Simon's algorithm~\autocite{simon1994}.
+}
+
+The complexity hierarchy can be expressed thus:
+
+\begin{center}
+    \begin{tikzpicture}
+
+        \node at (0,0) (p) {\P};
+        \node at (2,-1) (bpp) {\BPP};
+        \node at (4,-1) (bqp) {\BQP};
+        \node at (6,0) (pspace) {\PSPACE};
+        \node at (3,1) (np) {\NP};
+
+        \draw[->] (p) -- (bpp);
+        \draw[->] (bpp) -- (bqp);
+        \draw[->] (bqp) -- (pspace);
+
+        \draw[->] (p) -- (np);
+        \draw[->] (np) -- (pspace);
+
+    \end{tikzpicture}
+
+\end{center}
+BPP is the class of problems that can be solved in polynomial time with a probabilistic algorithm, and $\PSPACE$ is the class of problems that can be solved in polynomial space.
+It is widely conjectured that the containments are strict, but this is not proven.
+As disproving $\P = \PSPACE$ remains elusive, proving that $\BQP$ is strictly greater than P must be even harder.
 
 Exponential speed-ups do not come for free.
 Although the states spaces are exponentially large, with only a limited set of operations available, states can not be created and manipulated arbitrarily.
@@ -223,7 +256,7 @@ For lists with more than a single desired element, a similar reasoning will lead
 \label{sec:amplitude-amplification}
 Amplitude amplification can be considered a generalisation of Grover's algorithm.
 Instead of a single oracle, let the partitioning of the state space be given by a Hermitian projector $P$, whose image will be the space of states to amplify.
-Then, for some given initial state $\ket{\psi}$, it is decomposed into the orthogonal components
+Then, for some initial state $\ket{\psi}$, it is decomposed into the orthogonal components
 \begin{equation}
     \ket{\psi} = \sin(\theta)\ket{\psi_0} + \cos(\theta)\ket{\psi_1},
 \end{equation}
