@@ -118,8 +118,8 @@ Non-linearity is needed for the network not to collapse to one great linear tran
 Some commonly used activation functions are listed in \cref{tab:activations}.
 
 The output layer is similar to the hidden layers, though perhaps with different activation functions and fewer nodes.
-For instance, if the goal is to classify the data into $k$ classes, the output layer could have $k$ nodes with an activation function that ensures the sum of the outputs is one.
-In that way, the output can be interpreted as probabilities of the sample belonging to the respective classes.
+For instance, if the goal is to choose one of $k$ different action, the output layer could have $k$ nodes with an activation function that ensures the sum of the outputs is one.
+In that way, the output can be interpreted as a policy for choosing an action.
 
 \begin{table}
     \centering
@@ -186,7 +186,7 @@ Typically, pooling layers complement the convolutions by reducing the dimensiona
 CNNs generally finish with one or more dense layers, which then operate on a significantly reduced number of features.
 The reduction of dimensionality is important because it reduces the number of parameters in the model and the risk of overfitting.
 Furthermore, the convolutional approach forces the model to learn local features.
-This is very beneficial for tasks such as image classification, where local features, such as edges, are more important than global ones, such as the position of the subject.
+This is very beneficial for tasks where the inputs are images, as local features, such as edges, are more important than global ones, such as the position of the subject.
 
 \subsubsection{Recurrent neural networks}
 \label{sec:rnn}

@@ -1,7 +1,7 @@
 \section{Optimality}
 In the realm of multi-armed banditry, expressing optimality is fraught with difficulties.
-Any precise formulation is contingent upon not only the assumptions made, but also the particular instance, namely actual means and any other parameters.
-No distributions are placed on the bandit classes $\mathcal{E}$, so no average regret over all instances can be defined.
+Any precise formulation is contingent upon not only the assumptions made, but also the particular instance, namely actual means and distributions overall.
+Usually, no hyper-distributions are placed on the bandit classes $\mathcal{E}$, so no average regret over all instances can be defined.
 Lower bounds resort then to either determine what a reasonable policy can achieve on a given instance, or to describing its worst performance over all instances in the class.
 
 \subsection{Instance-dependent lower bound}
@@ -92,4 +92,4 @@ The Bayesian regret can be a useful tool for designing algorithms, as knowledge 
 Furthermore, calculating the optimal policy is generally intractable for any horizon of size and reward distributions more complicated than Bernoulli~\autocite{lattimore2020}.
 In simpler cases, dynamic programming can be fruitful.
 With Bernoulli bandits and clever implementations, optimal strategies can indeed be found \autocite{pilarski2021}.
-For longer horizons, discounting, namely reducing the weight of future rewards, can be used to make the problem tractable.
+For longer horizons, discounting, namely reducing the weight of future rewards, can be used to make the problem tractable or at least easier to approximate well.

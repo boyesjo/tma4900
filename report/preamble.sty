@@ -44,19 +44,21 @@
 % \usetikzlibrary{tikzmark}
 % \usetikzlibrary{decorations.markings}
 % \usetikzlibrary{backgrounds}
-% \usetikzlibrary{fadings}
+% \usetikzlibrary{fadings}}
+% }
 % \pgfplotsset{
-%     every axis plot/.append style={line width=1pt},
-%     every axis plot post/.append style={
-%             every mark/.append style={line width=2pt}
-%         }
+%     tick label style={font=\scriptsize},
+%     label style={font=\footnote},
+%     every axis legend/.append style={font=\footnotesize},
+%     title style={font=\footnotesize},
 % }
 \pgfplotsset{
     %every axis/.append style={font=\footnotesize},
-    %every axis label/.append style={font=\footnotesize},
-    every x tick label/.append style = {font=\footnotesize},
-    every y tick label/.append style = {font=\footnotesize},
+    every axis label/.append style={font=\footnotesize},
+    every x tick label/.append style = {font=\scriptsize},
+    every y tick label/.append style = {font=\scriptsize},
     every axis legend/.append style={font=\footnotesize},
+    every axis title/.append style={font=\footnotesize},
 }
 
 

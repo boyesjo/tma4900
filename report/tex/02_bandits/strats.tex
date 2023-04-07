@@ -40,12 +40,13 @@ A random arm-selection procedure is described by \cref{alg:random}.
     \Return $a$\;
 \end{algorithm}
 
-It is easy that the regret is
+It is easy to understand that the regret is
 \begin{equation}
     R_T = T\left(\mu^* - \frac{1}{k}\sum_{i=1}^k \mu_i\right),
 \end{equation}
 which is necessarily linear in $T$.
 This motivates the search for an algorithm with sublinear regret.
+It should be clear that a linear regret is actually the worst possible.
 
 \subsection{Greedy}
 Tending away from pure exploration to exploitation, a greedy algorithm will always select the arm with the highest empirical mean.
@@ -64,7 +65,7 @@ The arm-selection procedure is listed in \cref{alg:greedy}, where $\hat{\mu}_a$ 
 \end{algorithm}
 
 
-With greedy selection, the expected regret is clearly still linear in the horizon, as there is a non-zero probability of selecting the wrong arm.
+With greedy selection, the expected regret is clearly still linear in the horizon, as there is a non-zero probability of selecting the wrong arm when taking the greedy action.
 Still, there is a chance of achieving zero regret and the constant factor is reduced compared to pure exploration selection.
 To improve hereupon, it is necessary to occasionally explore other arms, which leads into the epsilon-greedy algorithm.
 
@@ -77,23 +78,6 @@ This ensures convergence to correct exploitation as the horizon increases, and i
 Still, with a constant $\epsilon$, a constant proportion of the turns will be spent exploring, keeping the regret necessarily linear in the horizon.
 Choosing $\epsilon$ is a trade-off between exploration and exploitation and can significantly affect the regret.
 
-% \begin{algorithm}
-%     \caption{Epsilon-greedy arm selection}
-%     \label{alg:eps_greedy}
-%     \begin{algorithmic}
-%         \If{$t \leq mk$}
-%         \State \Return $(t \mod k) + 1$
-%         \Else
-%         \State Sample $u$ from $[0,1)$ uniformly
-%         \If{$u < \epsilon$}
-%         \State Sample $a$ from $\mathcal{A}$ uniformly
-%         \State \Return $a$
-%         \Else
-%         \State \Return $\argmax_{a \in \mathcal{A}}\hat{\mu}_a$
-%         \EndIf
-%         \EndIf
-%     \end{algorithmic}
-% \end{algorithm}
 \begin{algorithm}
     \caption{Epsilon-greedy arm selection}
     \label{alg:eps_greedy}
@@ -110,22 +94,22 @@ Choosing $\epsilon$ is a trade-off between exploration and exploitation and can 
     }
 \end{algorithm}
 
-
 \subsubsection{Epsilon-decay}
 To remedy the linear term in the regret, modifications to the epsilon-greedy algorithm have been proposed wherein $\epsilon$ is a function of the current time step $t$.
 Specifically, in order to achieve sublinear regret, it is necessary to decay $\epsilon$ towards zero.
-Decreasing $\epsilon$ over time makes intuitive sense; exploration is more crucial in the beginning stages of the algorithm, whereas exploitation is more important when the agent has more reliable estimates of the reward means.
+Decreasing $\epsilon$ over time should make intuitive sense; exploration is more crucial in the early stages of the algorithm, whereas exploitation is more important when the agent has more reliable estimates of the reward means.
 For example, one successful strategy is to set $\epsilon \sim 1/t$, which has been shown to achieve logarithmic instance-dependent regret~\autocite{auer2002}.
 It is worth noting, however, that the optimal decay rate depends on the specific instance, and achieving logarithmic regret can be challenging in practice~\autocite{bubeck2012}.
 
 
 \subsection{Upper confidence bounds}
-The upper confidence bound (UCB) algorithm is a more sophisticated algorithm based on estimating an upper bound for the mean of each arm.
+The upper confidence bound (UCB) algorithm is a family of more sophisticated algorithm based on estimating an upper bound for the mean of each arm, and they are commonly used in practice~\autocite{NEEDED}.
 One always chooses the arm whose upper confidence bound is highest, a principle known as \enquote{optimism in the face of uncertainty}.
 This should make sense, as if the wrong arm appears best, it will be pulled more often and the empirical mean will be corrected, while the true best arm with its larger bound will eventually become highest and so pulled.
 When exploiting the actual best arm, the agent can trust it to be the best, as the confidence bound will remain above those of all the other arms.
-In addition, by increasing the confidence bounds as the number of pulls increases, getting stuck in suboptimality is avoided.
+In addition, by increasing the confidence as the number of pulls increases, getting stuck in suboptimality is avoided.
 
+\subsubsection{UCB1}
 Assuming rewards in $[0,1]$ and using Hoeffding's inequality, one has
 \begin{equation}
     p
@@ -149,11 +133,10 @@ In~\autocite{auer2002}, it is shown that UCB1 achieves
     \left( 8 \sum_{a \in \mathcal{A} \setminus a^*} \frac{\log T}{\Delta_a} \right)
     + \left(1 + \frac{\pi^2}{3}\right) \sum_{a \in \mathcal{A}} \Delta_a,
 \end{equation}
-which only misses instance-dependent optimality by some constant factor.
+which misses instance-dependent optimality only by some constant factor.
 Nor is UCB1 truly minimax-optimal, as its instance-independent upper bound is $O(\sqrt{kT \log T})$~\autocite{bubeck2012}.
 
-
-Regardless of the assumptions made and the bandit class, the procedure follows as in \cref{alg:ucb}.
+Regardless of the assumptions made and the bandit class, the procedure for UCB strageies follows as in \cref{alg:ucb}.
 For few arms, the process is easily visualised, as is done in \cref{fig:ucb}.
 There it is made clear how the confidence bound based strategy naturally exploits the best arm and how the poorer arms are not explored more than needed.
 
@@ -237,7 +220,9 @@ By graphing the posterior distribution, such as is done in \cref{fig:thompson}, 
     \pgfplotsset{
         ylabel right/.style={
                 after end axis/.append code={
-                        \node [rotate=90, anchor=north] at (rel axis cs:1.1,0.5) {#1};
+                        \node[rotate=90, anchor=north]
+                        at (rel axis cs:1.1,0.5)
+                        {\footnotesize #1};
                     }
             }
     }
@@ -266,7 +251,6 @@ By graphing the posterior distribution, such as is done in \cref{fig:thompson}, 
 
             \nextgroupplot[
                 title=Arm 2,
-            ]
             ]
             \addplot table[
                     x=x,

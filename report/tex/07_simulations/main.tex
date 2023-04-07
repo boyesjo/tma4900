@@ -2,7 +2,7 @@
 \label{sec:simulations}
 
 While the upper bound shown in \cref{sec:wan2022} implies QUCB1 advantage, it does not necessarily mean it is supreme in all cases or even on average.
-It is therefore of much interest to test it on a variety of problems and compare its average performance to other algorithms — not only the classical UCB1 to which it is compared in the original paper, but also the more performant Thompson sampling algorithm.
+It is therefore of much interest to test it on a variety of problems and compare its average performance to other algorithms — not only with the classical UCB1 to which it is compared in the original paper, but also with the more performant Thompson sampling algorithm.
 
 All algorithms were implemented in Python 3 \autocite{python} with quantum computing support provided by IBM's Qiskit library \autocite{qiskit}.
 The experiments were run on an external computation server with an Intel Xeon E5-2690 v4 CPU and 768 GB of RAM, permitting 28 concurrent simulations.
@@ -78,111 +78,120 @@ with a reward gap of $0.005$ equal to the above, are tested.
 Here, QUCB beats UCB thoroughly still, both algorithms achieving similar regrets as in \cref{fig:big2}, but now Thompson sampling is clearly superior.
 
 
+
+
 \begin{figure}
     \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-                width=0.8\textwidth,
-                height=0.6\textwidth,
-                xlabel={Turn},
-                ylabel={Regret},
-                grid=major,
-                legend pos=north west,
-                legend cell align=left,
-                x tick label style={
-                        /pgf/number format/.cd,
-                        fixed,
-                        fixed zerofill,
-                        precision=1,
-                        sci,
-                        /tikz/.cd
-                    },
-                scaled x ticks=false,
-            ]
-            \pgfplotstableread[col sep=comma]{../code/wan/results/low_prob_fix/plot_data.dat}\datatable
-            \addplot+[
-                mark = none,
-                color = red,
-            ]
-            table[
-                    x=turn,
-                    y=ucb_mean,
-                ]{\datatable};
+    \begin{subfigure}{\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    width=0.8\textwidth,
+                    height=0.6\textwidth,
+                    xlabel={Turn},
+                    ylabel={Regret},
+                    grid=major,
+                    legend pos=north west,
+                    legend cell align=left,
+                    x tick label style={
+                            /pgf/number format/.cd,
+                            fixed,
+                            fixed zerofill,
+                            precision=1,
+                            sci,
+                            /tikz/.cd
+                        },
+                    scaled x ticks=false,
+                ]
+                \pgfplotstableread[col sep=comma]{../code/wan/results/low_prob_fix/plot_data.dat}\datatable
+                \addplot+[
+                    mark = none,
+                    color = red,
+                ]
+                table[
+                        x=turn,
+                        y=ucb_mean,
+                    ]{\datatable};
 
-            \addplot[
-                mark = none,
-                color = blue,
-            ]
-            table[x=turn, y=qucb_mean]{\datatable};
+                \addplot[
+                    mark = none,
+                    color = blue,
+                ]
+                table[x=turn, y=qucb_mean]{\datatable};
 
-            \addplot[
-                mark = none,
-                color = green,
-            ]
-            table[x=turn, y=thomp_mean]{\datatable};
+                \addplot[
+                    mark = none,
+                    color = green,
+                ]
+                table[x=turn, y=thomp_mean]{\datatable};
 
-            \legend{UCB, QUCB, Thompson}
+                \legend{UCB, QUCB, Thompson}
 
-        \end{axis}
-    \end{tikzpicture}
-    \caption{Two arms, means 0.01, 0.005.}
-    \label{fig:low_prob_fix}
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Two arms, means 0.01, 0.005.}
+        \label{fig:low_prob_fix}
+    \end{subfigure}
+    \\[3ex]
+    \begin{subfigure}{\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    width=0.8\textwidth,
+                    height=0.6\textwidth,
+                    xlabel={Turn},
+                    ylabel={Regret},
+                    grid=major,
+                    legend pos=north west,
+                    legend cell align=left,
+                    x tick label style={
+                            /pgf/number format/.cd,
+                            fixed,
+                            fixed zerofill,
+                            precision=1,
+                            sci,
+                            /tikz/.cd
+                        },
+                    scaled x ticks=false,
+                ]
+                \pgfplotstableread[col sep=comma]{../code/wan/results/high_prob/plot_data.dat}\datatable
+                \addplot+[
+                    mark = none,
+                    color = red,
+                ]
+                table[
+                        x=turn,
+                        y=ucb_mean,
+                    ]{\datatable};
+
+                \addplot[
+                    mark = none,
+                    color = blue,
+                ]
+                table[x=turn, y=qucb_mean]{\datatable};
+
+                \addplot[
+                    mark = none,
+                    color = green,
+                ]
+                table[x=turn, y=thomp_mean]{\datatable};
+
+                \legend{UCB, QUCB, Thompson}
+
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Regret for two arms, means 0.99, 0.9905.}
+        \label{fig:high_prob}
+    \end{subfigure}
+    \caption{QUCB1 regret for especially high and low means.}
+    \label{fig:low_high_prob}
 \end{figure}
 
 At these extreme values, it seems the gap must shrink for QUCB to be able to outperform Thompson sampling.
 This is shown in \cref{fig:high_prob}, where the gap is reduced to $0.0005$,
 Even so, the QUCB advantage is not as pronounced as in \cref{fig:big2}.
 
-\begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-                width=0.8\textwidth,
-                height=0.6\textwidth,
-                xlabel={Turn},
-                ylabel={Regret},
-                grid=major,
-                legend pos=north west,
-                legend cell align=left,
-                x tick label style={
-                        /pgf/number format/.cd,
-                        fixed,
-                        fixed zerofill,
-                        precision=1,
-                        sci,
-                        /tikz/.cd
-                    },
-                scaled x ticks=false,
-            ]
-            \pgfplotstableread[col sep=comma]{../code/wan/results/high_prob/plot_data.dat}\datatable
-            \addplot+[
-                mark = none,
-                color = red,
-            ]
-            table[
-                    x=turn,
-                    y=ucb_mean,
-                ]{\datatable};
 
-            \addplot[
-                mark = none,
-                color = blue,
-            ]
-            table[x=turn, y=qucb_mean]{\datatable};
-
-            \addplot[
-                mark = none,
-                color = green,
-            ]
-            table[x=turn, y=thomp_mean]{\datatable};
-
-            \legend{UCB, QUCB, Thompson}
-
-        \end{axis}
-    \end{tikzpicture}
-    \caption{Regret for two arms, means 0.99, 0.9905.}
-    \label{fig:high_prob}
-\end{figure}
 
 \subsection{Four arms}
 As a final test, the number of arms is increased to four.
@@ -203,15 +212,15 @@ In general, QUCB provides no advantages or noteworthy changes from UCB with resp
                 grid=major,
                 legend pos=north west,
                 legend cell align=left,
-                x tick label style={
-                        /pgf/number format/.cd,
-                        fixed,
-                        fixed zerofill,
-                        precision=1,
-                        sci,
-                        /tikz/.cd
-                    },
-                scaled x ticks=false,
+                % x tick label style={
+                %         /pgf/number format/.cd,
+                %         fixed,
+                %         fixed zerofill,
+                %         precision=1,
+                %         sci,
+                %         /tikz/.cd
+                %     },
+                % scaled x ticks=false,
             ]
             \pgfplotstableread[col sep=comma]{../code/wan/results/four_arms/plot_data.dat}\datatable
             \addplot+[
@@ -320,8 +329,7 @@ Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produc
         \end{tikzpicture}
         \caption{Linear scale.}
     \end{subfigure}
-    \vspace{0.5cm}
-
+    \\[3ex]
     \begin{subfigure}[]{0.8\textwidth}
         \centering
         \begin{tikzpicture}
@@ -475,9 +483,7 @@ As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson s
         }
         \label{fig:random2}
     \end{subfigure}
-
-    \vspace*{0.5cm}
-
+    \\[3ex]
     \begin{subfigure}{\textwidth}
         \centering
         \begin{tikzpicture}
