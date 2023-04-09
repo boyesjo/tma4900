@@ -11,22 +11,22 @@ from loguru import logger
 EPS = np.finfo(np.float32).eps.item()
 
 
-# Define the policy network
 class Policy(nn.Module):
-    def __init__(self):
+    def __init__(self, n_states=4, n_actions=2):
         super(Policy, self).__init__()
-        self.fc1 = nn.Linear(4, 128)
-        self.dropout = nn.Dropout(p=0.6)
-        self.fc2 = nn.Linear(128, 2)
+        self.layers = nn.Sequential(
+            nn.Linear(n_states, 64),
+            nn.ReLU(),
+            nn.Linear(64, 64),
+            nn.ReLU(),
+            nn.Linear(64, n_actions),
+        )
 
-        self.saved_log_probs = []
-        self.rewards = []
+        # self.saved_log_probs = []
+        # self.rewards = []
 
     def forward(self, x):
-        x = self.fc1(x)
-        x = self.dropout(x)
-        x = F.relu(x)
-        x = self.fc2(x)
+        x = self.layers(x)
         return F.softmax(x, dim=0)
 
 
@@ -37,9 +37,18 @@ class Reinforce:
         policy,
     ):
         self.env = env
-        self.policy = policy
-        self.optimizer = optim.Adam(policy.parameters(), lr=1e-3)
+        self.n_states = env.observation_space.shape[0]
+        self.n_actions = env.action_space.n
+        self.policy = policy(self.n_states, self.n_actions)
+        self.optimizer = optim.Adam(self.policy.parameters(), lr=1e-3)
         self.gamma = 1.0
+
+        self.baseline = nn.Linear(self.n_states, 1)
+        self.baseline_optimizer = optim.Adam(
+            self.baseline.parameters(), lr=1e-3
+        )
+        self.states_history = []
+        self.returns_history = []
 
     def select_action(self, state: torch.Tensor) -> torch.Tensor:
         probs = self.policy(state)
@@ -53,18 +62,23 @@ class Reinforce:
             running_return = rewards[t] + self.gamma * running_return
             returns[t] = running_return
 
-        returns = (returns - returns.mean()) / (returns.std() + EPS)
+        # returns = (returns - returns.mean()) / (returns.std() + EPS)
         return returns
 
     def loss(
-        self, log_probs: torch.Tensor, returns: torch.Tensor
+        self,
+        actions: torch.Tensor,
+        returns: torch.Tensor,
     ) -> torch.Tensor:
-        return -log_probs * returns
+        log_probs = torch.log(self.policy(self.states))
+        log_probs = log_probs.gather(1, actions.unsqueeze(1)).squeeze()
+        loss = -(log_probs * returns).sum()
+        return loss
 
     def play_episode(self):
         states = []
         rewards = []
-        log_probs = []
+        actions = []
 
         state = self.env.reset()
         state = torch.tensor(state)
@@ -78,37 +92,106 @@ class Reinforce:
             state = torch.tensor(state)
 
             rewards.append(reward)
-            log_prob = torch.log(self.policy(state))[action] + EPS
-            log_probs.append(log_prob)
+            actions.append(action)
 
-        self.states = torch.concat(states)
+        self.actions = torch.concat(actions)
+        self.states = torch.stack(states)
         self.rewards = torch.tensor(rewards)
-        self.log_probs = torch.concat(log_probs)
 
     def train_once(self):
         self.optimizer.zero_grad()
-        self.play_episode()
-        returns = self.get_returns(self.rewards)
-        loss = self.loss(self.log_probs, returns)
-        loss.sum().backward()
-        logger.success(f"loss: {loss.sum()}, len: {len(returns)}")
+
+        with torch.no_grad():
+            self.play_episode()
+            returns = self.get_returns(self.rewards)
+
+            self.states_history.append(self.states)
+            self.returns_history.append(returns)
+
+            returns -= self.baseline_value(self.states)
+
+        loss = self.loss(self.actions, returns)
+        loss.backward()
+        logger.info(f"epsiode length: {len(returns)}, loss: {loss}")
         self.optimizer.step()
 
-        # print average parameter norm
-        total_norm = 0
-        for p in self.policy.parameters():
-            param_norm = p.grad.data.norm(2)
-            total_norm += param_norm.item() ** 2
-        total_norm = total_norm ** (1.0 / 2)
-        logger.info(f"grad norm: {total_norm}")
+        self.update_baseline()
+
+    def baseline_value(self, state: torch.Tensor) -> torch.Tensor:
+        return self.baseline(state).squeeze()
+
+    def old_update_baseline(self):
+        # state_history = torch.cat(self.states_history)
+        # returns_history = torch.cat(self.returns_history)
+        state_history = self.states
+        returns_history = self.rewards
+
+        self.baseline_optimizer.zero_grad()
+        criterion = nn.MSELoss()
+        baseline_loss = criterion(
+            self.baseline_value(state_history), returns_history
+        )
+        baseline_loss.backward()
+        self.baseline_optimizer.step()
+
+    def update_baseline(self):
+        states = self.states
+        returns = self.get_returns(self.rewards)
+        # Add bias term to input X
+        states = torch.cat([states, torch.ones(states.size(0), 1)], dim=1)
+
+        weights = (
+            torch.linalg.inv(torch.matmul(states.t(), states))
+            @ states.t()
+            @ returns
+        )
+
+        print(f"{weights=}")
+
+        W = weights[:-1].t()
+        b = weights[-1]
+
+        baseline = nn.Linear(self.n_states, 1, bias=False)
+        baseline.weight = nn.Parameter(W)
+        baseline.bias = nn.Parameter(b)
+
+        self.baseline = baseline
 
 
 # %%
 env = gym.make("CartPole-v1")
-policy = Policy()
-reinforce = Reinforce(env, policy)
+reinforce = Reinforce(env, Policy)
 
-for i in range(10000):
+# %%
+for i in range(1000):
     reinforce.train_once()
+
+
+# %%
+# play and render the game
+import matplotlib.pyplot as plt
+from IPython.display import clear_output
+import os
+
+os.environ["SDL_VIDEODRIVER"] = "dummy"
+
+
+env = gym.make("CartPole-v1")
+obs = env.reset()
+env.seed(0)
+score = 0
+
+for _ in range(1000):
+    obs, reward, done, info = env.step(env.action_space.sample())
+    score += reward
+    if done:
+        score = 0
+        obs = env.reset()
+    clear_output(wait=True)
+    plt.imshow(env.render(mode="rgb_array"))
+    plt.title(f"score: {score}")
+    plt.show()
+
+env.close()
 
 # %%
