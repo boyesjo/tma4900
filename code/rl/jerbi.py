@@ -43,10 +43,7 @@ class Reinforce:
         self.optimizer = optim.Adam(self.policy.parameters(), lr=1e-3)
         self.gamma = 1.0
 
-        self.baseline = nn.Linear(self.n_states, 1)
-        self.baseline_optimizer = optim.Adam(
-            self.baseline.parameters(), lr=1e-3
-        )
+        self.baseline = torch.zeros(self.n_states + 1)
         self.states_history = []
         self.returns_history = []
 
@@ -76,6 +73,7 @@ class Reinforce:
         return loss
 
     def play_episode(self):
+
         states = []
         rewards = []
         actions = []
@@ -108,6 +106,7 @@ class Reinforce:
             self.states_history.append(self.states)
             self.returns_history.append(returns)
 
+            self.update_baseline()
             returns -= self.baseline_value(self.states)
 
         loss = self.loss(self.actions, returns)
@@ -115,47 +114,31 @@ class Reinforce:
         logger.info(f"epsiode length: {len(returns)}, loss: {loss}")
         self.optimizer.step()
 
-        self.update_baseline()
-
     def baseline_value(self, state: torch.Tensor) -> torch.Tensor:
-        return self.baseline(state).squeeze()
-
-    def old_update_baseline(self):
-        # state_history = torch.cat(self.states_history)
-        # returns_history = torch.cat(self.returns_history)
-        state_history = self.states
-        returns_history = self.rewards
-
-        self.baseline_optimizer.zero_grad()
-        criterion = nn.MSELoss()
-        baseline_loss = criterion(
-            self.baseline_value(state_history), returns_history
-        )
-        baseline_loss.backward()
-        self.baseline_optimizer.step()
+        return state @ self.baseline[:-1] + self.baseline[-1]
 
     def update_baseline(self):
-        states = self.states
-        returns = self.get_returns(self.rewards)
-        # Add bias term to input X
-        states = torch.cat([states, torch.ones(states.size(0), 1)], dim=1)
 
-        weights = (
-            torch.linalg.inv(torch.matmul(states.t(), states))
-            @ states.t()
-            @ returns
+        # cf https://arxiv.org/pdf/1604.06778.pdf
+
+        states = torch.cat(self.states_history)
+        t = torch.arange(len(states))
+
+        x = torch.cat(
+            [
+                states,
+                states**2,
+                0.01 * t.unsqueeze(1),
+                (0.01 * t.unsqueeze(1)) ** 2,
+                (0.01 * t.unsqueeze(1)) ** 3,
+                torch.ones(len(states), 1),
+            ],
+            dim=1,
         )
 
-        print(f"{weights=}")
-
-        W = weights[:-1].t()
-        b = weights[-1]
-
-        baseline = nn.Linear(self.n_states, 1, bias=False)
-        baseline.weight = nn.Parameter(W)
-        baseline.bias = nn.Parameter(b)
-
-        self.baseline = baseline
+        y = torch.cat(self.returns_history)
+        params = torch.linalg.inv(x.T @ x) @ x.T @ y
+        self.baseline = params
 
 
 # %%
