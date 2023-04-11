@@ -7,6 +7,8 @@ import torch.nn.functional as F
 import gym
 import numpy as np
 from loguru import logger
+from pqcs import RawPQC
+import pennylane as qml
 
 EPS = np.finfo(np.float32).eps.item()
 
@@ -17,17 +19,51 @@ class Policy(nn.Module):
         self.layers = nn.Sequential(
             nn.Linear(n_states, 64),
             nn.ReLU(),
-            nn.Linear(64, 64),
-            nn.ReLU(),
             nn.Linear(64, n_actions),
         )
-
-        # self.saved_log_probs = []
-        # self.rewards = []
 
     def forward(self, x):
         x = self.layers(x)
         return F.softmax(x, dim=0)
+
+
+class SoftmaxPQC(RawPQC):
+    def __init__(
+        self,
+        n_states: int = 4,
+        n_actions: int = 2,
+    ):
+        assert n_actions == 2
+        n_layers = 1
+        super().__init__(
+            observables=[
+                lambda: qml.expval(
+                    qml.PauliZ(0)
+                    @ qml.PauliZ(1)
+                    @ qml.PauliZ(2)
+                    @ qml.PauliZ(3)
+                ),
+                # lambda: qml.expval(
+                #     qml.PauliX(0)
+                #     @ qml.PauliX(1)
+                #     @ qml.PauliX(2)
+                #     @ qml.PauliX(3)
+                # ),
+            ],
+            n_layers=n_layers,
+            n_state=n_states,
+            entangle_strat="all_to_all",
+            learnable=False,
+            device="default.qubit",
+            post_obs=lambda x: torch.cat([x, -x], dim=-1),
+        )
+        self.beta = 1.0
+        self.w = nn.Parameter(torch.ones(1))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self._obs(x)
+        x = self.w * x
+        return torch.softmax(self.beta * x, dim=-1)
 
 
 class Reinforce:
@@ -40,12 +76,30 @@ class Reinforce:
         self.n_states = env.observation_space.shape[0]
         self.n_actions = env.action_space.n
         self.policy = policy(self.n_states, self.n_actions)
-        self.optimizer = optim.Adam(self.policy.parameters(), lr=1e-3)
+        self.optimizer = optim.Adam(
+            [
+                {"params": self.policy.qnn.phi, "lr": 0.01},
+                {"params": self.policy.qnn.lam, "lr": 0.1},
+                {"params": self.policy.w, "lr": 0.1},
+            ],
+            lr=0.01,
+        )
         self.gamma = 1.0
 
-        self.baseline = torch.zeros(self.n_states + 1)
+        self.state_normalizer = torch.tensor(
+            [
+                2.4,
+                2.4,
+                0.2,
+                2.5,
+            ]
+        )
+
+        self.actions_history = []
         self.states_history = []
         self.returns_history = []
+
+        self.use_baseline = False
 
     def select_action(self, state: torch.Tensor) -> torch.Tensor:
         probs = self.policy(state)
@@ -59,17 +113,19 @@ class Reinforce:
             running_return = rewards[t] + self.gamma * running_return
             returns[t] = running_return
 
-        # returns = (returns - returns.mean()) / (returns.std() + EPS)
+        returns = (returns - returns.mean()) / (returns.std() + EPS)
         return returns
 
     def loss(
         self,
+        states: torch.Tensor,
         actions: torch.Tensor,
         returns: torch.Tensor,
+        batch_size: int = 1,
     ) -> torch.Tensor:
-        log_probs = torch.log(self.policy(self.states))
-        log_probs = log_probs.gather(1, actions.unsqueeze(1)).squeeze()
-        loss = -(log_probs * returns).sum()
+        log_probs = torch.log(self.policy(states))
+        log_probs_taken = log_probs[torch.arange(len(states)), actions]
+        loss = -(log_probs_taken * returns.detach()).sum() / batch_size
         return loss
 
     def play_episode(self):
@@ -79,7 +135,7 @@ class Reinforce:
         actions = []
 
         state = self.env.reset()
-        state = torch.tensor(state)
+        state = torch.tensor(state) / self.state_normalizer
         done = False
         while not done:
 
@@ -87,44 +143,62 @@ class Reinforce:
             action = self.select_action(state)
             state, reward, done, _ = self.env.step(action.item())
 
-            state = torch.tensor(state)
+            state = torch.tensor(state) / self.state_normalizer
 
             rewards.append(reward)
             actions.append(action)
 
-        self.actions = torch.concat(actions)
-        self.states = torch.stack(states)
-        self.rewards = torch.tensor(rewards)
+        return (
+            torch.stack(states),
+            torch.concat(actions),
+            torch.tensor(rewards),
+        )
 
     def train_once(self):
-        self.optimizer.zero_grad()
 
         with torch.no_grad():
-            self.play_episode()
-            returns = self.get_returns(self.rewards)
+            states, actions, rewards = self.play_episode()
+            returns = self.get_returns(rewards)
 
-            self.states_history.append(self.states)
+            self.states_history.append(states)
+            self.actions_history.append(actions)
             self.returns_history.append(returns)
+            logger.debug(f"episode length: {len(rewards)}")
 
-            self.update_baseline()
-            returns -= self.baseline_value(self.states)
+    def train_batch(self, batch_size: int = 10):
+        self.optimizer.zero_grad()
 
-        loss = self.loss(self.actions, returns)
+        self.states_history = []
+        self.actions_history = []
+        self.returns_history = []
+
+        for _ in range(batch_size):
+            self.train_once()
+
+        self.fit_baseline()
+        states = torch.cat(self.states_history)
+        actions = torch.cat(self.actions_history)
+        returns = torch.cat(self.returns_history)
+
+        if self.use_baseline:
+            returns = returns - self.baseline(states)
+
+        loss = self.loss(states, actions, returns, batch_size)
         loss.backward()
-        logger.info(f"epsiode length: {len(returns)}, loss: {loss}")
+
+        logger.info(f"epsiode length: {int(len(returns)/batch_size):3}")
+        logger.info(f"loss: {loss.item():.3f}")
+
+        # log gradients
+        for name, param in self.policy.named_parameters():
+            if param.grad is not None:
+                logger.debug(f"{name}: {param.grad}")
+
         self.optimizer.step()
 
-    def baseline_value(self, state: torch.Tensor) -> torch.Tensor:
-        return state @ self.baseline[:-1] + self.baseline[-1]
-
-    def update_baseline(self):
-
-        # cf https://arxiv.org/pdf/1604.06778.pdf
-
-        states = torch.cat(self.states_history)
+    def _pre_baseline(self, states: torch.Tensor) -> torch.Tensor:
         t = torch.arange(len(states))
-
-        x = torch.cat(
+        return torch.cat(
             [
                 states,
                 states**2,
@@ -136,18 +210,26 @@ class Reinforce:
             dim=1,
         )
 
+    def fit_baseline(self) -> None:
+        x = torch.cat(self.states_history)
+        x = self._pre_baseline(x)
         y = torch.cat(self.returns_history)
         params = torch.linalg.inv(x.T @ x) @ x.T @ y
-        self.baseline = params
+        self.baseline_params = params
+
+    def baseline(self, new_states: torch.Tensor) -> torch.Tensor:
+        x = self._pre_baseline(new_states)
+        return x @ self.baseline_params
 
 
 # %%
 env = gym.make("CartPole-v1")
-reinforce = Reinforce(env, Policy)
+reinforce = Reinforce(env, SoftmaxPQC)
 
 # %%
-for i in range(1000):
-    reinforce.train_once()
+for i in range(200):
+    logger.info(f"batch: {i}")
+    reinforce.train_batch(10)
 
 
 # %%
