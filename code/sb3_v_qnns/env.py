@@ -102,6 +102,7 @@ class BernoulliBanditsEnv(gym.Env):
             "times_pulled": self.times_pulled,
             "rewards": self.results,
             "regret": self.regret(),
+            "regret_action": self.p_list.max() - self.p_list[arm],
             "turn": self.turn,
         }
 
