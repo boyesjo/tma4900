@@ -541,3 +541,50 @@ As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson s
     }
     \label{fig:random_challenging}
 \end{figure}
+
+
+\section{Reinforcement learning}
+\subsection{Cart-pole}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.8\textwidth,
+                height=0.6\textwidth,
+                xlabel={Episode},
+                ylabel={Sum of rewards},
+                grid=major,
+                % legend pos=north west,
+                legend cell align=left,
+            ]
+            \pgfplotstableread[col sep=comma]{../code/rl/cartpole_training/results.dat}\datatable
+
+            \addplot+[mark = none, color = red]
+            table[x=episode,y=A2C]{\datatable};
+
+
+            \addplot[mark = none, color = green]
+            table[x=episode, y=DQN]{\datatable};
+
+            \addplot[ mark = none, color = orange]
+            table[x=episode, y=PPO]{\datatable};
+
+            \addplot[mark = none, color = blue]
+            table[x=episode, y=QNN]{\datatable};
+
+            \legend{A2C, DQN, PPO, QNN}
+
+
+        \end{axis}
+    \end{tikzpicture}
+    \caption[
+        Cart-pole training.
+    ]
+    {
+        Cart-pole training.
+        Each algorithm was trained 10 times.
+        A rolling mean of 20 episodes was used to smooth the highly noisy data.
+    }
+    \label{fig:cartpole_training}
+\end{figure}
