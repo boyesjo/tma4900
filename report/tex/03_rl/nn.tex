@@ -3,7 +3,7 @@
 Modern machine learning owes much of its popularity to the success of artificial neural networks, or if the context is clear, just neural networks (NNs).
 With easier access to larger data sets, more powerful hardware (in particular GPUs or even dedicated TPUs) and the backpropagation algorithm, NNs have become able to solve problems far too complicated for traditional methods.
 
-Though state-of-the-art neural networks can contain billions of parameters \autocite{smith2022,openai2023}, training them remains feasible.
+Though state-of-the-art neural networks can contain billions of parameters~\autocite{smith2022,openai2023}, training them remains feasible.
 Modern hardware is of course paramount, but also backpropagation is crucial.
 Neural networks are trained using gradient methods, and with backpropagation, the gradient can be computed efficiently.
 By cleverly storing intermediate results, the gradients for all parameters can be computed in a single backward pass through the network.
@@ -14,7 +14,7 @@ This is a phenomenon where, after some point, the variance no longer increases w
 Instead, it decreases and converges toward some value.
 This can be seen in \cref{fig:double_descent}, where convolutional networks\footnote{Q.v. \cref{sec:cnn}.} were tested with different layer sizes.
 Unlike statistical methods, once past this complexity threshold, there is little reason, other than the increased computational cost, not to increase the model complexity and thereby the performance.
-Double descent have been shown to appear for a variety of models \cite{nakkiran2021}.
+Double descent have been shown to appear for a variety of models~\autocite{nakkiran2021}.
 
 \begin{figure}
     \centering
@@ -73,7 +73,7 @@ Double descent have been shown to appear for a variety of models \cite{nakkiran2
         As model complexity increases, the train error decreases steadily, but the test error reaches a minimum and after which the test error starts to increase again.
         However, past a certain point, the test error decreases again.
         This defines two regimes: the first classical regime, where the bias-variance trade-off applies, and model complexity must remain low to avoid overfitting, compared to the modern ML regime, where more complexity is always better.
-        The data is from \cite{nakkiran2021}, where ResNet18 models were used for image classification with added label noise.
+        The data is from~\autocite{nakkiran2021}, where ResNet18 models were used for image classification with added label noise.
     }
     \label{fig:double_descent}
 \end{figure}
@@ -99,7 +99,7 @@ There can be more or fewer nodes in each layer, and as many or few hidden layers
         Typical structure of a dense feed-forward neural network.
         Here it has three hidden layers of constant size $m$, but the number of layers and the size of each layer can be chosen arbitrarily.
         Being dense means that each node in one layer is connected to all nodes in the next layer, while being feed-forward means that the connections are unidirectional.
-        From \cite{nn_figs}.
+        From~\autocite{nn_figs}.
     }
     \label{fig:nn}
 \end{figure}
@@ -174,7 +174,7 @@ A greatly simplified CNN is shown in \cref{fig:cnn}.
         The basic structure of a convolutional neural network.
         Data is input before conventional layers are applied, in which perceptrons are only connected to small regions of the previous layer.
         After sufficient dimensionality reduction, regular dense layers can be used.
-        From \cite{nn_figs}.
+        From~\autocite{nn_figs}.
     }
     \label{fig:cnn}
 \end{figure}
@@ -194,7 +194,7 @@ Recurrent neural networks (RNNs) are a special type of neural network wherein cy
 This enables a temporal quality, which makes them particularly suited for tasks such as time-series prediction, speech recognition and machine translation.
 RNNs' flexibility permits them to take inputs of varying length, which is not natively supported by regular feed-forward networks.
 They are subsequently well suited for reinforcement learning, where the states and rewards from the environment can be continuously fed into the network as the agent interacts with it.
-For example, they have shown particularly useful for so-called partially observable Markov decision processes, where the agent does not have access to the full state of the environment \autocite{arulkumaran2017}.
+For example, they have shown particularly useful for so-called partially observable Markov decision processes, where the agent does not have access to the full state of the environment~\autocite{arulkumaran2017}.
 
 However, the flexibility comes at a cost.
 As the network is allowed to have cycles, gradients of parameters can compound and either vanish or explode exponentially, which makes training difficult.

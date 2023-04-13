@@ -78,7 +78,7 @@ Any state of the form
     \ket{\psi} = \sum_{i} a_i \ket{i}
 \end{equation}
 must be efficiently and correctly prepared, which is not trivial.
-Unless some very specific assumptions are made, this is not possible with polynomially many gates (as a function of the number of qubits), which limits the potential for exponential speed-ups \cite{schuld2018}.
+Unless some very specific assumptions are made, this is not possible with polynomially many gates (as a function of the number of qubits), which limits the potential for exponential speed-ups~\autocite{schuld2018}.
 In general, for classical data, circuits must be linearly deep in the size of the data and ergo exponentially deep in the amount of qubits, which makes it beyond the reach of NISQ hardware.
 
 \subsection{Angle encoding}
@@ -94,11 +94,10 @@ For $Z$-rotations, a Hadamard gate is prepended for the rotation to have an effe
 $N$ qubits are still required, but with native support for continuous variables, angle encoding can require fewer qubits than basis encoding.
 A constant number of gates are needed to prepare the state, which is a significant advantage over amplitude encoding.
 Still, being a product state, it offers no inherent quantum advantage.
-A possible way to improve this is a second order variant.
 
 \subsection{Second order angle encoding}
 \label{sec:second_order_angle_encoding}
-In \cite{havlicek2019}, a second-order angle encoding is proposed, which is conjectured to be hard to simulate classically.
+Conjectured to be hard to simulate classically, a second-order angle encoding is proposed in~\autocite{havlicek2019}.
 First, angles are encoded as above, but thereafter the qubits are entangled and rotated further based on second order terms.
 In circuit notation, such an encoding with $Z$-rotations reads
 \begin{equation}
@@ -120,5 +119,5 @@ Were it indeed classically hard to simulate, it could provide quantum advantage.
 The expressive power of models heavily rely on the encoding strategy.
 For instance, a single qubit rotation only allows the model to learn sine functions, where the frequency is determined by the scaling of the data.
 Generally, quantum models will learn periodic functions, and thus Fourier analysis is a useful tool.
-The implications of this is studied in \cite{schuld2021}, where it is shown that simply repeating simple encoding blocks allows for learning of more frequencies and thus more complicated functions.
+The implications of this is studied in~\autocite{schuld2021}, where it is shown that simply repeating simple encoding blocks allows for learning of more frequencies and thus more complicated functions.
 Asymptotically, such repeats lets a quantum model learn arbitrary functions.

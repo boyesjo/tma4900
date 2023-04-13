@@ -1,6 +1,6 @@
 \chapter{Quantum reinforcement learning}
 \label{chap:qml}
-There are four fundamental ways to combine machine learning and quantum computing \cite{schuld2018}.
+There are four fundamental ways to combine machine learning and quantum computing~\autocite{schuld2018}.
 One can differentiate between the type of the data being processed and the way of processing these data, giving the following table:
 
 % \begin{table}[h]
@@ -9,12 +9,12 @@ One can differentiate between the type of the data being processed and the way o
     % increase padding
     \renewcommand{\arraystretch}{1.5}
     % \caption{
-    %     The four fundamental ways to combine quantum computing and machine learning \cite{schuld2018}.
+    %     The four fundamental ways to combine quantum computing and machine learning~\autocite{schuld2018}.
     %     % CC: classical computer and classical data.
     %     % CQ: classical computer and quantum data.
     %     % QC: quantum computer and classical data.
     %     % QQ: quantum computer and quantum data.
-    %     % Adapted from \cite{schuld2018}.
+    %     % Adapted from~\autocite{schuld2018}.
     % }
     \begin{tabular}{cc|cc}
         \begin{tabular}{cc|cc}
@@ -54,11 +54,11 @@ One can differentiate between the type of the data being processed and the way o
 \begin{description}
     \item[CC]
         Classical data being processed on classical computers is classical machine learning.
-        Though not explicitly linked to quantum computing, there are some ways in which quantum computing influences classical machine learning, such as the quantum-inspired application of tensor networks \cite{felser2021}.
+        Though not explicitly linked to quantum computing, there are some ways in which quantum computing influences classical machine learning, such as the quantum-inspired application of tensor networks~\autocite{felser2021}.
 
     \item[CQ]
         Using classical machine learning for quantum data includes improving quantum computers' general performance.
-        For example, with machine learning algorithms, the variance of the measurements can be reduced \cite{torlai2020}.
+        For example, with machine learning algorithms, the variance of the measurements can be reduced~\autocite{torlai2020}.
         Alternatively, advanced machine learning models like neural networks can be employed to describe quantum states more efficiently.
 
 
@@ -66,14 +66,14 @@ One can differentiate between the type of the data being processed and the way o
         How to use quantum computers to process classical data is the main topic of this thesis and is what will be meant when quantum machine learning (QML) is mentioned.
         QML concerns itself with how to improve classical machine learning, be it in terms of being easier to train, requiring less data or delivering better predictions.
         Quantum algorithms are most often advertised with speed-ups contra classical algorithms, often exponentially so as with Shor's algorithm.
-        In the fault-tolerant setting, speed-ups can be achieved using support-vector machines with discrete logarithms \cite{liu2021} or fast quantum procedures for linear algebra, e.g., HHL to invert matrices in linear regression \cite{wiebe2012}.
+        In the fault-tolerant setting, speed-ups can be achieved using support-vector machines with discrete logarithms~\autocite{liu2021} or fast quantum procedures for linear algebra, e.g., HHL to invert matrices in linear regression~\autocite{wiebe2012}.
         However, whether NISQ-era quantum computers can provide any benefits for machine learning is still an open question.
-        To this end, the study of VQAs as machine learning models have garnered much attention \cite{benedetti2019}, which is the topic to be discussed in what follows.
+        To this end, the study of VQAs as machine learning models have garnered much attention~\autocite{benedetti2019}, which is the topic to be discussed in what follows.
 
     \item[QQ]
         Lastly, using quantum computing for handling quantum data is another way to combine quantum computing and machine learning.
         Here, quantum data can have two meanings.
-        Either it can be data from quantum measurements, or it can be data that is already encoded in quantum states \cite{schuld2021a}.
+        Either it can be data from quantum measurements, or it can be data that is already encoded in quantum states~\autocite{schuld2021a}.
         For example, in the second sense, quantum machine learning could be used on the quantum state produced by a quantum chemical simulation.
         Inputting quantum states natively is not trivial, and daisy-chaining the data generation and data processing could lead to a deep circuit.
         QQ is therefore not of immediate interest.
