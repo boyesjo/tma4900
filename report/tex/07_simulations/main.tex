@@ -63,6 +63,17 @@ However, Thompson sampling which was not considered in~\autocite{wan2022}, is no
             ]
             table[x=turn, y=thomp_mean]{\datatable};
 
+            % random
+            \addplot[
+                mark = none,
+                color = black,
+                dashed,
+            ]
+            coordinates {
+                    (0, 0)
+                    (250000, 250000*0.005 * 0.5)
+                };
+
             \legend{UCB, QUCB, Thompson}
 
         \end{axis}
@@ -125,6 +136,18 @@ Here, QUCB beats UCB thoroughly still, both algorithms achieving similar regrets
                 ]
                 table[x=turn, y=thomp_mean]{\datatable};
 
+                % random
+                \addplot[
+                    mark = none,
+                    color = black,
+                    dashed,
+                ]
+                coordinates {
+                        (0, 0)
+                        (250000, 250000*0.005 * 0.5)
+                    };
+
+
                 \legend{UCB, QUCB, Thompson}
 
             \end{axis}
@@ -175,6 +198,18 @@ Here, QUCB beats UCB thoroughly still, both algorithms achieving similar regrets
                     color = green,
                 ]
                 table[x=turn, y=thomp_mean]{\datatable};
+
+                % random
+                \addplot[
+                    mark = none,
+                    color = black,
+                    dashed,
+                ]
+                coordinates {
+                        (0, 0)
+                        (250000, 250000*0.0005 * 0.5)
+                    };
+
 
                 \legend{UCB, QUCB, Thompson}
 
@@ -244,6 +279,18 @@ In general, QUCB provides no advantages or noteworthy changes from UCB with resp
             ]
             table[x=turn, y=thomp_mean]{\datatable};
 
+            % random
+            \addplot[
+                mark = none,
+                color = black,
+                dashed,
+            ]
+            coordinates {
+                    (0, 0)
+                    (250000, 250000*0.02)
+                };
+
+
             \legend{UCB, QUCB, Thompson}
 
         \end{axis}
@@ -292,6 +339,7 @@ Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produc
                     grid=major,
                     legend pos=north west,
                     legend cell align=left,
+                    ymax = 135,
                     x tick label style={
                             /pgf/number format/.cd,
                             fixed,
@@ -381,6 +429,7 @@ Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produc
                 ]
                 table[x=turn, y=thomp_mean]{\datatable};
 
+
                 \legend{UCB, QUCB, Thompson}
 
             \end{axis}
@@ -425,8 +474,8 @@ The prior was constructed similarly to the one in \cref{eq:challenging_prior}, b
 \begin{equation}
     \label{eq:more_challenging_prior}
     \begin{aligned}
-        \mu_1               & \sim \text{B}(2, 2),                     \\
-        \text{logit}(\mu_2) & \sim \text{N}(\text{logit}(\mu_1), 0.2),
+        \mu_1               & \sim \text{B}(2, 2),                      \\
+        \text{logit}(\mu_2) & \sim \text{N}(\text{logit}(\mu_1), 0.02),
     \end{aligned}
 \end{equation}
 
@@ -447,6 +496,7 @@ As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson s
                     grid=major,
                     legend pos=north west,
                     legend cell align=left,
+                    ymax = 400,
                     x tick label style={
                             /pgf/number format/.cd,
                             fixed,
@@ -475,6 +525,17 @@ As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson s
                     color = green,
                 ]
                 table[x=turn, y=thomp_mean]{\datatable};
+
+                \addplot[
+                    mark = none,
+                    color = black,
+                    dashed,
+                ]
+                coordinates {
+                        (0, 0)
+                        (250000, 250000*0.009964566867240768 * 0.5)
+                    };
+
                 \legend{UCB, QUCB, Thompson}
             \end{axis}
         \end{tikzpicture}
@@ -523,6 +584,16 @@ As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson s
                     color = green,
                 ]
                 table[x=turn, y=thomp_mean]{\datatable};
+
+                \addplot[
+                    mark = none,
+                    color = black,
+                    dashed,
+                ]
+                coordinates {
+                        (0, 0)
+                        (250000, 250000 * 0.00319093834230492 * 0.5)
+                    };
 
                 \legend{UCB, QUCB, Thompson}
             \end{axis}
