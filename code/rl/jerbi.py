@@ -101,6 +101,8 @@ class Reinforce:
 
         self.use_baseline = False
 
+        self.mean_episode_lengths = []
+
     def select_action(self, state: torch.Tensor) -> torch.Tensor:
         probs = self.policy(state)
         action = torch.multinomial(probs, 1)
@@ -163,7 +165,10 @@ class Reinforce:
             self.states_history.append(states)
             self.actions_history.append(actions)
             self.returns_history.append(returns)
-            logger.debug(f"episode length: {len(rewards)}")
+
+            episode_length = len(rewards)
+            self.mean_episode_lengths.append(episode_length)
+            logger.debug(f"episode length: {episode_length}")
 
     def train_batch(self, batch_size: int = 10):
         self.optimizer.zero_grad()
@@ -188,11 +193,6 @@ class Reinforce:
 
         logger.info(f"epsiode length: {int(len(returns)/batch_size):3}")
         logger.info(f"loss: {loss.item():.3f}")
-
-        # log gradients
-        for name, param in self.policy.named_parameters():
-            if param.grad is not None:
-                logger.debug(f"{name}: {param.grad}")
 
         self.optimizer.step()
 
@@ -223,40 +223,25 @@ class Reinforce:
 
 
 # %%
-env = gym.make("CartPole-v1")
-reinforce = Reinforce(env, SoftmaxPQC)
+def test_reinforce(_) -> np.ndarray:
+    env = gym.make("CartPole-v1")
+    reinforce = Reinforce(env, SoftmaxPQC)
+
+    for i in range(200):
+        logger.info(f"batch: {i}")
+        reinforce.train_batch(10)
+
+    return np.asarray(reinforce.mean_episode_lengths)
+
 
 # %%
-for i in range(200):
-    logger.info(f"batch: {i}")
-    reinforce.train_batch(10)
+if __name__ == "__main__":
+    import pandas as pd
+    import multiprocessing
 
+    N_SIMS = 10
+    with multiprocessing.Pool() as pool:
+        results = pool.map(test_reinforce, range(N_SIMS))
 
-# %%
-# play and render the game
-import matplotlib.pyplot as plt
-from IPython.display import clear_output
-import os
-
-os.environ["SDL_VIDEODRIVER"] = "dummy"
-
-
-env = gym.make("CartPole-v1")
-obs = env.reset()
-env.seed(0)
-score = 0
-
-for _ in range(1000):
-    obs, reward, done, info = env.step(env.action_space.sample())
-    score += reward
-    if done:
-        score = 0
-        obs = env.reset()
-    clear_output(wait=True)
-    plt.imshow(env.render(mode="rgb_array"))
-    plt.title(f"score: {score}")
-    plt.show()
-
-env.close()
-
-# %%
+    df = pd.DataFrame(results)
+    df.to_csv("qreinforce.csv")

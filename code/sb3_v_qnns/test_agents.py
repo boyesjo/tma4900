@@ -10,13 +10,13 @@ env = BernoulliBanditsEnv(
     min_turns=10,
     max_turns=1000,
     arms=2,
-    prior=lambda arms: np.linspace(0.5, 0.505, arms),
+    prior=lambda arms: np.linspace(0.1, 0.9, arms),
 )
 
 agents = {
-    # "A2C": sb3.A2C,
+    "A2C": sb3.A2C,
     # "PPO": sb3.PPO,
-    "DQN": sb3.DQN,
+    # "DQN": sb3.DQN,
 }
 
 total_timesteps = 250_000
@@ -52,6 +52,7 @@ for name, agent in agents.items():
 
 # %%
 plt.plot(np.cumsum(reward_counter.regret))
+# plt.savefig(list(agents.keys())[0] + ".png")
 
 # %%
 obs = env.reset()

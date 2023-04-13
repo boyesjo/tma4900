@@ -30,21 +30,36 @@ class Callback(BaseCallback):
         return self.epochs < EPOCHS
 
 
-model = sb3.A2C(
-    "MlpPolicy",
-    ENV_NAME,
-    # verbose=1,
-)
-callback = Callback()
+def train_once(alg):
+    model = alg(
+        "MlpPolicy",
+        ENV_NAME,
+        # verbose=1,
+    )
+    callback = Callback()
+
+    model.learn(
+        total_timesteps=EPOCHS * MAX_STEPS,
+        callback=callback,
+    )
+
+    sums = np.array([sum(x) for x in callback.rewards])
+    return sums[:-1]
 
 
-# train the agent and plot mean reward for each epoch
-model.learn(
-    total_timesteps=EPOCHS * MAX_STEPS,
-    callback=callback,
-)
+def main():
+    for alg, name in [
+        (sb3.DQN, "DQN"),
+        (sb3.PPO, "PPO"),
+        (sb3.A2C, "A2C"),
+    ]:
+        results = []
+        for i in range(10):
+            results.append(train_once(alg))
+        # save csv
+        df = pd.DataFrame(results)
+        df.to_csv(f"{name}.csv")
 
 
-sums = np.array([sum(x) for x in callback.rewards])
-plt.plot(sums)
-# %%
+if __name__ == "__main__":
+    main()

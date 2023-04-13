@@ -29,7 +29,7 @@ class BernoulliBanditsEnv(gym.Env):
         self.observation_space = spaces.Box(
             low=0,
             high=1,
-            shape=(arms,),  # * 2 + 1,),
+            shape=(arms * 2 + 1,),
             dtype=np.float64,
         )
         self.prior = prior
@@ -49,9 +49,9 @@ class BernoulliBanditsEnv(gym.Env):
         counts = self.times_pulled / self.times_pulled.sum()
         counts[np.isnan(counts)] = 0
 
-        turn = np.tanh(self.turn)
+        turn = np.tanh(self.turn / 1000)
 
-        return 2 * np.concatenate([means]) - 1  # , counts, [turn]]) - 1
+        return 2 * np.concatenate([means, counts, [turn]]) - 1
 
     def _regret_baseline(self) -> float:
         # upper_bound = (
