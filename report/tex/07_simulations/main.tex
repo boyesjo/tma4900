@@ -634,7 +634,6 @@ As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson s
             \addplot+[mark = none, color = red]
             table[x=episode,y=A2C]{\datatable};
 
-
             \addplot[mark = none, color = green]
             table[x=episode, y=DQN]{\datatable};
 
@@ -658,4 +657,62 @@ As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson s
         A rolling mean of 20 episodes was used to smooth the highly noisy data.
     }
     \label{fig:cartpole_training}
+\end{figure}
+
+\subsection{Bandits}
+
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+                width=0.8\textwidth,
+                height=0.6\textwidth,
+                xlabel={Turn},
+                ylabel={Regret},
+                grid=major,
+                legend pos=north west,
+                legend cell align=left,
+                x tick label style={
+                        /pgf/number format/.cd,
+                        fixed,
+                        fixed zerofill,
+                        precision=1,
+                        sci,
+                        /tikz/.cd
+                    },
+                scaled x ticks=false,
+            ]
+            \pgfplotstableread[col sep=comma]{../code/sb3_v_qnns/results/rl.dat}\datatable
+
+            \addplot+[mark = none, color = red]
+            table[x=turn,y=A2C]{\datatable};
+
+            \addplot[mark = none, color = green]
+            table[x=turn, y=DQN]{\datatable};
+
+            \addplot[ mark = none, color = orange]
+            table[x=turn, y=PPO]{\datatable};
+
+            % \addplot[mark = none, color = blue]
+            % table[x=episode, y=QNN]{\datatable};
+
+            \legend{A2C, DQN, PPO}
+
+            % random
+            \addplot[
+                mark = none,
+                color = black,
+                dashed,
+            ]
+            coordinates {
+                    (0, 0)
+                    (250000, 250000*0.005 * 0.5)
+                };
+
+        \end{axis}
+    \end{tikzpicture}
+    \caption{
+        Regret for standard reinforcement learning algorithms.
+    }
+    \label{fig:rl_bandits}
 \end{figure}
