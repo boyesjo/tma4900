@@ -693,10 +693,10 @@ As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson s
             \addplot[ mark = none, color = orange]
             table[x=turn, y=PPO]{\datatable};
 
-            % \addplot[mark = none, color = blue]
-            % table[x=episode, y=QNN]{\datatable};
+            \addplot[mark = none, color = blue]
+            table[x=turn, y=regret, col sep=comma]{../code/sb3_v_qnns/results/jerbi.dat};
 
-            \legend{A2C, DQN, PPO}
+            \legend{A2C, DQN, PPO, QNN}
 
             % random
             \addplot[
