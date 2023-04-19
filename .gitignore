@@ -641,3 +641,6 @@ Untitled.ipynb
 
 # rendered pdf
 master.pdf
+
+# quarto build files
+presentation/master_files/

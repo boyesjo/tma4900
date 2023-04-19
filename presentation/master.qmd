@@ -1,0 +1,136 @@
+---
+title: Bandittisme og kvanteagenter
+author: Boye Gravningen Sjo
+institute: Norges tekniske høiskole
+date: "2023"
+date-format: "[Masterpresentasjon] YYYY"
+format: 
+    beamer:
+        theme: Madrid
+        aspectratio: 169
+        navigation: horizontal
+lang: no-NB
+---
+
+## Banditter
+:::: {.columns align=center}
+
+::: {.column width="60%"}
+### Spillet
+
+Gitt
+:   $k$ «armer», tidshorisont $T$.
+
+Ukjent
+:   belønningsfordelinger $p_1, \dots, p_k$.
+
+Antatt
+:   $p_a$ tilhører en gitt klasse $\mathcal{P}$.
+
+Regler
+:   for hver runde $t=1, \dots, T$:\
+    velg arm $a_t \in \{1, \dots, k\}$\
+    motta belønning $X_a \sim p_a$.
+
+Mål
+:   maksimer $\mathbb{E}\left[\sum_{t=1}^T X_t\right]$.
+
+
+### Utnyttelse versus utforsking
+- Dra i den beste arm (kan være feil)
+- Prøve andre armer (kaster bort runder)
+:::
+
+::: {.column width="30%"}
+![](images/bandits.jpg){fig-align="right"}
+:::
+
+::::
+
+## Anvendelser
+:::: {.columns align=center}
+
+::: {.column width="40%"}
+- Reklame på nett
+- Kliniske tester
+- Design av nettsider
+- Investeringer
+- Anbefalingssystemer
+- Dynamisk prising
+- Oppgavedelegering
+- ...
+:::
+
+::: {.column width="60%"}
+::: {layout="[[30, -10, 20, -10, 35,-20]]" layout-valign="center"}
+![](images/netflixlogo.jpeg)
+
+![](images/amazonlogo.png)
+
+![](images/doordashlogo.png)
+
+:::
+:::
+
+::::
+
+## Klassiske strategier
+
+- Ren utforskning
+- Ren utnyttelse
+- $\epsilon$-grådig
+- UCB
+- Thompson sampling
+
+## Kvantemaskiner
+
+![](images/quantum_computer.jpg){height="80%" fig-align="center"}
+
+
+## Kvantealgoritmer
+
+Kvantealgoritme | Problem | Kompleksitet | Beste klassiske
+--- | --- | --- | ---
+Grover | Ustrukturert søk | $O(\sqrt{N})$ | $O(N)$
+Shor | Faktorisering | $O( \log(N)^3)$ | Subeksponensiell
+QFT | Fouriertransformasjon | $O(\log(N))$ | $O(N \log(N))$
+HHL | Lineære ligningssystemer | $O(\log(N)\kappa^2)$ | $O(N\kappa)$
+QMC | Estimere $\mathbb{E}[X]$ | $O(1/\epsilon)$ | $O(1/\epsilon^2)$
+
+
+## Kvante-UCB
+- Ide: bruk QMC til å estimere $\mathbb{E}[X_i]$.
+- Fordel: konfidensintervaller blir mindre
+- Resultat: $O(\log(T))$-algoritme
+
+## Simuleringer
+K
+
+\begin{tikzpicture}
+ \draw (0,0) circle (1cm);
+ \draw (0,0) circle (2cm);
+\end{tikzpicture}
+
+
+## Konklusjoner
+- Bedre i noen tilfeller
+- Juks med kvante
+- Vanskelig å anvende
+- QUCB kan videreutvikles
+- Kvantealgoritmer for andre bandittvarianter?
+
+## Vedlegg: maskinlæring og banditter
+Forsterket læring
+Hvordan uttrykke bandittproblemet som et RL-problem?
+Figur
+
+## Vedlegg: kvantoveremakt
+```{mermaid}
+flowchart LR
+    P(P) --> N(NP)
+    N --> S(PSPACE)
+    P --> B(BPP)
+    B --> Q(BQP)
+    Q --> S
+```
+
