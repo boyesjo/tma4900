@@ -1,14 +1,6 @@
 \begin{tikzpicture}
     \begin{axis}[
-            width=0.8\textwidth,
-            height=0.6\textwidth,
-            xlabel={Turn},
-            ylabel={Regret},
-            grid=major,
-            legend pos=south east,
-            mystyle,
-            largexnumbers,
-            % loglog
+            \myoptions,
             xmode=log,
             ymode=log,
         ]
@@ -33,9 +25,6 @@
             color = green,
         ]
         table[x=turn, y=thomp_mean]{\datatable};
-
-
-        \legend{UCB, QUCB, Thompson}
 
     \end{axis}
 \end{tikzpicture}

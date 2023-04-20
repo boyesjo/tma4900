@@ -1,14 +1,6 @@
 \begin{tikzpicture}
     \begin{axis}[
-            width=0.8\textwidth,
-            height=0.6\textwidth,
-            xlabel={Turn},
-            ylabel={Regret},
-            legend pos=north west,
-            legend cell align=left,
-            ymax = 135,
-            mystyle,
-            largexnumbers,
+            \myoptions,
         ]
         \pgfplotstableread[col sep=comma]{../code/wan/results/random/plot_data.dat}\datatable
         \addplot+[
@@ -32,6 +24,5 @@
         ]
         table[x=turn, y=thomp_mean]{\datatable};
 
-        \legend{UCB, QUCB, Thompson}
     \end{axis}
 \end{tikzpicture}

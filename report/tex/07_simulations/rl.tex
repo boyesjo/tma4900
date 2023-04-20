@@ -22,6 +22,16 @@ DQN appears completely futile, while both A2C and the QNN-based method of~\autoc
 
 \begin{figure}
     \centering
+    \newcommand{\myoptions}{
+        width=10cm,
+        height=8cm,
+        xlabel={Episode},
+        ylabel={Sum of rewards},
+        % legend pos=north west,
+        legend cell align=left,
+        mystyle,
+        legend entries={A2C, DQN, PPO, QNN},
+    }
     \subimport{figs}{cart_pole}
     \caption[
         Cart-pole training.
@@ -71,6 +81,17 @@ For the general RL agents to be on par with the problem-specific agents, design 
 
 \begin{figure}
     \centering
+    \newcommand{\myoptions}{
+        width=10cm,
+        height=8cm,
+        xlabel={Turn},
+        ylabel={Regret},
+        legend entries={A2C, DQN, PPO, QNN},
+        legend pos=north west,
+        legend cell align=left,
+        mystyle,
+        largexnumbers,
+    }
     \subimport{figs}{rl_bandits}
     \caption{
         Regret for standard reinforcement learning algorithms.

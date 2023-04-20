@@ -25,12 +25,35 @@ Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produc
     \centering
     \begin{subfigure}{\textwidth}
         \centering
+        \newcommand{\myoptions}{
+            width=10cm,
+            height=8cm,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend entries={UCB, QUCB, Thompson},
+            legend pos=north west,
+            legend cell align=left,
+            mystyle,
+            largexnumbers,
+            ymax = 135,
+        }
         \subimport{figs}{uniform_prior.tex}
         \caption{Linear scale.}
     \end{subfigure}
     \\[3ex]
     \begin{subfigure}{\textwidth}
         \centering
+        \newcommand{\myoptions}{
+            width=10cm,
+            height=8cm,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend entries={UCB, QUCB, Thompson},
+            legend pos=north west,
+            legend cell align=left,
+            mystyle,
+            largexnumbers,
+        }
         \subimport{figs}{uniform_prior_loglog.tex}
         \caption{Log-log scale.}
     \end{subfigure}
@@ -84,6 +107,18 @@ As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson s
     \centering
     \begin{subfigure}{\textwidth}
         \centering
+        \newcommand{\myoptions}{
+            width=10cm,
+            height=8cm,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend entries={UCB, QUCB, Thompson},
+            legend pos=north west,
+            legend cell align=left,
+            mystyle,
+            largexnumbers,
+            ymax = 400,
+        }
         \subimport{figs}{challenging_prior.tex}
         \caption{
             Prior as in \cref{eq:challenging_prior}.
@@ -93,6 +128,17 @@ As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson s
     \\[3ex]
     \begin{subfigure}{\textwidth}
         \centering
+        \newcommand{\myoptions}{
+            width=10cm,
+            height=8cm,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend entries={UCB, QUCB, Thompson},
+            legend pos=north west,
+            legend cell align=left,
+            mystyle,
+            largexnumbers,
+        }
         \subimport{figs}{more_challenging_prior.tex}
         \caption{
             Prior as in \cref{eq:more_challenging_prior}.

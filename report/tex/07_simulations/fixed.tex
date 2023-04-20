@@ -5,8 +5,26 @@ The mean of the first arm is set to $0.5$ and the mean of the second arm is set 
 The results are shown in \cref{fig:big2}, agreeing with the original paper; QUCB greatly outperforms UCB.
 However, Thompson sampling which was not considered in~\autocite{wan2022}, is not that far behind.
 
+Note the jagged and periodically completely flat behaviour of the QUCB algorithm regret.
+This is due to the long QMC periods in which its quantum advantage is gained; it must repeatedly pull the same arm for the QMC estimates to be produced.
+When the algorithm pulls the optimal arm, the change in regret is obviously zero.
+Additionally, these periods get longer as the algorithm progresses, as the QMC estimates become more accurate.
+The exponential lengthening of the QMC periods assure that such non-smooth and piecewise linear behaviour is to be expected.
+Because of these long periods, there is not as many possible trajectories as with the classical algorithms, so the jaggedness persists despite averaging over many simulations.
+
 \begin{figure}
     \centering
+    \newcommand{\myoptions}{
+        width=10cm,
+        height=8cm,
+        xlabel={Turn},
+        ylabel={Regret},
+        legend entries={UCB, QUCB, Thompson},
+        legend pos=north west,
+        legend cell align=left,
+        mystyle,
+        largexnumbers,
+    }
     \subimport{figs}{big2}
     \caption{QUCB1 regret for two arms, with mean 0.5 and 0.505.}
     \label{fig:big2}
@@ -25,6 +43,17 @@ Here, QUCB beats UCB thoroughly still, both algorithms achieving similar regrets
     \centering
     \begin{subfigure}{\textwidth}
         \centering
+        \newcommand{\myoptions}{
+            width=10cm,
+            height=8cm,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend entries={UCB, QUCB, Thompson},
+            legend pos=north west,
+            legend cell align=left,
+            mystyle,
+            largexnumbers,
+        }
         \subimport{figs}{low_prob_fix}
         \caption{Two arms, means 0.01, 0.005.}
         \label{fig:low_prob_fix}
@@ -32,6 +61,17 @@ Here, QUCB beats UCB thoroughly still, both algorithms achieving similar regrets
     \\[3ex]
     \begin{subfigure}{\textwidth}
         \centering
+        \newcommand{\myoptions}{
+            width=10cm,
+            height=8cm,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend entries={UCB, QUCB, Thompson},
+            legend pos=north west,
+            legend cell align=left,
+            mystyle,
+            largexnumbers,
+        }
         \subimport{figs}{high_prob}
         \caption{Regret for two arms, means 0.99, 0.9905.}
         \label{fig:high_prob}
@@ -56,6 +96,17 @@ In general, QUCB provides no advantages or noteworthy changes from UCB with resp
 
 \begin{figure}
     \centering
+    \newcommand{\myoptions}{
+        width=10cm,
+        height=8cm,
+        xlabel={Turn},
+        ylabel={Regret},
+        legend entries={UCB, QUCB, Thompson},
+        legend pos=north west,
+        legend cell align=left,
+        mystyle,
+        largexnumbers,
+    }
     \subimport{figs}{four_arms}
     \caption{Regret for four arms, with mean 0.5, 0.51, 0.52 and 0.53.}
     \label{fig:four_arms}

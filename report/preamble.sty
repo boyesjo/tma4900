@@ -30,7 +30,7 @@
 \AtBeginDocument{\RenewCommandCopy\qty\SI}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+% FIGURES
 % % TIKZ
 \usepackage{tikz}
 \usepackage{pgfplots}
@@ -53,31 +53,29 @@
 %     title style={font=\footnotesize},
 % }
 \pgfplotsset{
-  %every axis/.append style={font=\footnotesize},
-  every axis label/.append style={font=\footnotesize},
-  every x tick label/.append style = {font=\scriptsize},
-  every y tick label/.append style = {font=\scriptsize},
-  every axis legend/.append style={font=\footnotesize},
-  every axis title/.append style={font=\footnotesize},
+    %every axis/.append style={font=\footnotesize},
+    every axis label/.append style={font=\footnotesize},
+    every x tick label/.append style = {font=\scriptsize},
+    every y tick label/.append style = {font=\scriptsize},
+    every axis legend/.append style={font=\footnotesize},
+    every axis title/.append style={font=\footnotesize},
 }
 \pgfplotsset{
-  mystyle/.style={
-      grid = major,
-    },
+    mystyle/.style={
+            grid = major,
+        },
 }
 \pgfplotsset{
-  largexnumbers/.style={
-      x tick label style={
-          /pgf/number format/.cd,
-          fixed,
-          fixed zerofill,
-          precision=1,
-          sci,/tikz/.cd},
-      scaled x ticks=false,
-    },
+    largexnumbers/.style={
+            x tick label style={
+                    /pgf/number format/.cd,
+                    fixed,
+                    fixed zerofill,
+                    precision=1,
+                    sci,/tikz/.cd},
+            scaled x ticks=false,
+        },
 }
-
-
 \usetikzlibrary{quantikz}
 
 

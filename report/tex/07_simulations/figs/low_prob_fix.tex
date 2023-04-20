@@ -1,13 +1,6 @@
 \begin{tikzpicture}
     \begin{axis}[
-            width=0.8\textwidth,
-            height=0.6\textwidth,
-            xlabel={Turn},
-            ylabel={Regret},
-            legend pos=north west,
-            legend cell align=left,
-            mystyle,
-            largexnumbers,
+            \myoptions,
         ]
         \pgfplotstableread[col sep=comma]{../code/wan/results/low_prob_fix/plot_data.dat}\datatable
         \addplot+[
@@ -42,8 +35,6 @@
                 (250000, 250000*0.005 * 0.5)
             };
 
-
-        \legend{UCB, QUCB, Thompson}
 
     \end{axis}
 \end{tikzpicture}

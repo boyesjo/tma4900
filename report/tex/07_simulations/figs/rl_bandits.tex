@@ -1,13 +1,6 @@
 \begin{tikzpicture}
     \begin{axis}[
-            width=0.8\textwidth,
-            height=0.6\textwidth,
-            xlabel={Turn},
-            ylabel={Regret},
-            legend pos=north west,
-            legend cell align=left,
-            mystyle,
-            largexnumbers,
+            \myoptions,
         ]
         \pgfplotstableread[col sep=comma]{../code/sb3_v_qnns/results/rl.dat}\datatable
 
@@ -23,7 +16,6 @@
         \addplot[mark = none, color = blue]
         table[x=turn, y=regret, col sep=comma]{../code/sb3_v_qnns/results/jerbi.dat};
 
-        \legend{A2C, DQN, PPO, QNN}
 
         % random
         \addplot[

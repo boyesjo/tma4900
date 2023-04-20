@@ -1,12 +1,6 @@
 \begin{tikzpicture}
     \begin{axis}[
-            width=0.8\textwidth,
-            height=0.6\textwidth,
-            xlabel={Episode},
-            ylabel={Sum of rewards},
-            % legend pos=north west,
-            legend cell align=left,
-            mystyle,
+            \myoptions,
         ]
         \pgfplotstableread[col sep=comma]{../code/rl/cartpole_training/results.dat}\datatable
 
@@ -22,6 +16,5 @@
         \addplot[mark = none, color = blue]
         table[x=episode, y=QNN]{\datatable};
 
-        \legend{A2C, DQN, PPO, QNN}
     \end{axis}
 \end{tikzpicture}
