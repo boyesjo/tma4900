@@ -1,0 +1,48 @@
+\begin{tikzpicture}
+    \begin{axis}[
+            width=0.8\textwidth,
+            height=0.6\textwidth,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend pos=north west,
+            legend cell align=left,
+            mystyle,
+        ]
+        \pgfplotstableread[col sep=comma]{../code/wan/results/four_arms/plot_data.dat}\datatable
+        \addplot+[
+            mark = none,
+            color = red,
+        ]
+        table[
+                x=turn,
+                y=ucb_mean,
+            ]{\datatable};
+
+        \addplot[
+            mark = none,
+            color = blue,
+        ]
+        table[x=turn, y=qucb_mean]{\datatable};
+
+        \addplot[
+            mark = none,
+            color = green,
+        ]
+        table[x=turn, y=thomp_mean]{\datatable};
+
+        % random
+        \addplot[
+            mark = none,
+            color = black,
+            dashed,
+        ]
+        coordinates {
+                (0, 0)
+                (250000, 250000*0.02)
+            };
+
+
+        \legend{UCB, QUCB, Thompson}
+
+    \end{axis}
+\end{tikzpicture}

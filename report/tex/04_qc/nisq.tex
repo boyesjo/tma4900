@@ -1,4 +1,4 @@
-\section{Limitations of NISQ hardware}
+\section{Limitations of near-term quantum hardware}
 \label{sec:nisq}
 Quantum hardware have been physically realised and even demonstrated to outperform classical computers in very contrived situations~\autocite{arute2019, zhong2020, madsen2022}, but the hardware is still limited.
 The hardware is limited in the number of qubits, the connectivity between the qubits, and the noise and decoherence of the qubits.
@@ -85,7 +85,7 @@ Geometrically, this can be interpreted as contraction of states on the Bloch sph
         ([yshift=-2.5cm] group c2r1.north);
     \end{tikzpicture}
     \caption[
-        Illustration of applying a noisy $X$-gate on the Bloch sphere.
+        Illustration of applying a noisy gate on the Bloch sphere.
     ]{
         Illustration of applying a noisy $X$-gate on the Bloch sphere.
         The left plot shows the set of all pure states, the Bloch sphere.
@@ -117,13 +117,12 @@ When a gate like the $X$-gate is applied many times, even small errors will add 
     \centering
     \begin{tikzpicture}
         \begin{axis}[
-                width=0.75\textwidth,
-                height=0.5\textwidth,
+                width=0.8\textwidth,
+                height=0.6\textwidth,
                 xlabel = {Number of $X$-gates applied},
                 ylabel = {Correct measurements (\%)},
                 y filter/.code={\pgfmathparse{#1*100}\pgfmathresult},
-                grid = major,
-                % ytick = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1},
+                mystyle,
             ]
             \addplot[
                 color = blue,
@@ -168,7 +167,8 @@ When a gate like the $X$-gate is applied many times, even small errors will add 
         \end{axis}
     \end{tikzpicture}
     \caption[
-        Proportion of correct measurements of a qubit after applying several noisy $X$-gates.
+        % Proportion of correct measurements of a qubit after applying several noisy $X$-gates.
+        Effect of noise on the likelihood of a correct measurement.
     ]
     {
         Proportion of correct measurements of a qubit after applying several noisy $X$-gates.

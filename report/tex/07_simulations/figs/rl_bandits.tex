@@ -1,0 +1,40 @@
+\begin{tikzpicture}
+    \begin{axis}[
+            width=0.8\textwidth,
+            height=0.6\textwidth,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend pos=north west,
+            legend cell align=left,
+            mystyle,
+            largexnumbers,
+        ]
+        \pgfplotstableread[col sep=comma]{../code/sb3_v_qnns/results/rl.dat}\datatable
+
+        \addplot+[mark = none, color = red]
+        table[x=turn,y=A2C]{\datatable};
+
+        \addplot[mark = none, color = green]
+        table[x=turn, y=DQN]{\datatable};
+
+        \addplot[ mark = none, color = orange]
+        table[x=turn, y=PPO]{\datatable};
+
+        \addplot[mark = none, color = blue]
+        table[x=turn, y=regret, col sep=comma]{../code/sb3_v_qnns/results/jerbi.dat};
+
+        \legend{A2C, DQN, PPO, QNN}
+
+        % random
+        \addplot[
+            mark = none,
+            color = black,
+            dashed,
+        ]
+        coordinates {
+                (0, 0)
+                (250000, 250000*0.005 * 0.5)
+            };
+
+    \end{axis}
+\end{tikzpicture}

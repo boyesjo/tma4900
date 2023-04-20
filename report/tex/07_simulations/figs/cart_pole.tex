@@ -1,0 +1,27 @@
+\begin{tikzpicture}
+    \begin{axis}[
+            width=0.8\textwidth,
+            height=0.6\textwidth,
+            xlabel={Episode},
+            ylabel={Sum of rewards},
+            % legend pos=north west,
+            legend cell align=left,
+            mystyle,
+        ]
+        \pgfplotstableread[col sep=comma]{../code/rl/cartpole_training/results.dat}\datatable
+
+        \addplot+[mark = none, color = red]
+        table[x=episode,y=A2C]{\datatable};
+
+        \addplot[mark = none, color = green]
+        table[x=episode, y=DQN]{\datatable};
+
+        \addplot[ mark = none, color = orange]
+        table[x=episode, y=PPO]{\datatable};
+
+        \addplot[mark = none, color = blue]
+        table[x=episode, y=QNN]{\datatable};
+
+        \legend{A2C, DQN, PPO, QNN}
+    \end{axis}
+\end{tikzpicture}

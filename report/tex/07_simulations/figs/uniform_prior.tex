@@ -1,0 +1,37 @@
+\begin{tikzpicture}
+    \begin{axis}[
+            width=0.8\textwidth,
+            height=0.6\textwidth,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend pos=north west,
+            legend cell align=left,
+            ymax = 135,
+            mystyle,
+            largexnumbers,
+        ]
+        \pgfplotstableread[col sep=comma]{../code/wan/results/random/plot_data.dat}\datatable
+        \addplot+[
+            mark = none,
+            color = red,
+        ]
+        table[
+                x=turn,
+                y=ucb_mean,
+            ]{\datatable};
+
+        \addplot[
+            mark = none,
+            color = blue,
+        ]
+        table[x=turn, y=qucb_mean]{\datatable};
+
+        \addplot[
+            mark = none,
+            color = green,
+        ]
+        table[x=turn, y=thomp_mean]{\datatable};
+
+        \legend{UCB, QUCB, Thompson}
+    \end{axis}
+\end{tikzpicture}

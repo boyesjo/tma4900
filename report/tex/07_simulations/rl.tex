@@ -1,0 +1,79 @@
+\section{Reinforcement learning}
+\label{sec:sim_rl}
+
+In addition to the above considered algorithms specifically made for the bandit problem, knowledge may also be gained from considering how more general-purpose reinforcement learning algorithms perform.
+Here, three state-of-the-art algorithms are tested and on a general reinforcement learning problem and then the bandit problem.
+These algorithms are the deep Q-network (DQN), a value-based algorithm, the advantage actor critic (A2C), a mixed policy and value-based algorithm, and the proximal policy optimisation (PPO), a policy-based algorithm, all described in further detail in \cref{sec:rl_algs}
+They are all implemented in the~\autocite{sb3} library.
+Moreover, the general-purpose quantum reinforcement algorithm of~\autocite{jerbi2021} was also implemented and tested.
+
+\subsection{Cart-pole}
+\label{sec:sim_rl_cartpole}
+
+The first problem considered is the cart-pole problem.
+This was introduced in \cref{sec:cartpole}.
+All algorithms were trained for 2000 episodes, repeated ten times, and the results are rendered in \cref{fig:cartpole_training}.
+Note that most of the algorithms display very inconsistent performance, at least before completely solving the problem, so a rolling mean was used.
+This inconsistency is likely caused by both the random initialisation, which the agents do not immediately learn and handle, and by the stochastic policies.
+
+From the figure it is easily seen that the proximal policy optimisation algorithm is the only algorithm that consistently solves the problem.
+DQN appears completely futile, while both A2C and the QNN-based method of~\autocite{jerbi2021} certainly does learn and perform better than their initial random policies, but they do not achieve the same level of performance as PPO.
+
+
+\begin{figure}
+    \centering
+    \subimport{figs}{cart_pole}
+    \caption[
+        Cart-pole training.
+    ]
+    {
+        Cart-pole training.
+        Each algorithm was trained 10 times.
+        A rolling mean of 20 episodes was used to smooth the highly noisy data.
+    }
+    \label{fig:cartpole_training}
+\end{figure}
+
+\subsection{Bandits}
+Finally, the same agents as above are tested on the bandit problem.
+Note that translating the bandit problem to a reinforcement learning problem is not trivial.
+The modern algorithms rely on predicting an action given a state, and the bandit problem is in principle stateless.
+It was therefore decided to encode the empirical means of arms as the state.
+In addition, as to provide all the information, also the number of times each arm has been pulled is encoded and the current time step is also included.
+The number of times the arms were pulled was divided by the current time step to normalise the values, and the current time step was transformed by the hyperbolic tangent to normalise it to the range $[0, 1]$, ensuring that the state is always in the range $[0, 1]^{2k+1}$
+This helps the stability of the classical neural network-based algorithms and is crucial for encoding the data in the quantum neural network.
+The state was consequently a vector of length $2k+1$, where $k$ is the number of arms, given by
+\begin{equation}
+    \label{eq:rl_bandit_state}
+    S_t = \left(
+    \bar{X}_1,
+    \bar{X}_2,
+    \ldots,
+    \frac{T_1}{T},
+    \frac{T_2}{T},
+    \ldots,
+    \tanh(T)
+    \right).
+\end{equation}
+
+The same instance as in \cref{fig:big2} was used.
+It was chosen due to being difficult enough to be interesting, but not as computationally expensive as something with more arms or a Bayesian regret which warrants more parallel simulations.
+Each agent trained on the problem 100 times, from which the average results are shown in \cref{fig:rl_bandits}.
+It appears as only the A2C algorithm is able to learn something in the time horizon considered.
+
+Why these algorithms are not able to learn is not entirely clear, and could warrant a much deeper investigation than is covered here.
+It is possible that the state is not a good representation of the problem, but it is also possible that the algorithms are simply not suited for the problem.
+They can not be expected to perform as well as the problem-specific algorithms of UCB, QUCB, Thompson sampling et cetera, but it is surprising that they do not perform better than random.
+A relevant factor is that these algorithms are not designed for optimal sample-efficiency, as is inherent to the bandit algorithms, but rather for optimal final performance.
+It may be the case that for further training, the algorithms could display better performance and sublinear regret.
+Nonetheless, it is clear that the problem-specific algorithms are indeed superior to the modern general-purpose algorithms, and that the problem-specific algorithms are not simply a special case of the general-purpose algorithms.
+For the general RL agents to be on par with the problem-specific agents, design of both the state representation and reward function would be required, requiring effort which defeats the purpose of the agent's generality.
+
+\begin{figure}
+    \centering
+    \subimport{figs}{rl_bandits}
+    \caption{
+        Regret for standard reinforcement learning algorithms.
+    }
+    \label{fig:rl_bandits}
+\end{figure}
