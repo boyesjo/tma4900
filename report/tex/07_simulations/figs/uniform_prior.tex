@@ -1,5 +1,6 @@
 \begin{tikzpicture}
     \begin{axis}[
+            ymax = 135,
             \myoptions,
         ]
         \pgfplotstableread[col sep=comma]{../code/wan/results/random/plot_data.dat}\datatable
@@ -23,6 +24,17 @@
             color = green,
         ]
         table[x=turn, y=thomp_mean]{\datatable};
+
+        % random
+        \addplot[
+            mark = none,
+            color = black,
+            dashed,
+        ]
+        coordinates {
+                (0, 0)
+                (1000, 1000/6)
+            };
 
     \end{axis}
 \end{tikzpicture}

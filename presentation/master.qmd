@@ -4,12 +4,22 @@ author: Boye Gravningen Sjo
 institute: Norges tekniske høiskole
 date: "2023"
 date-format: "[Masterpresentasjon] YYYY"
+include-in-header: 
+    text: |
+        \usepackage{tikz}
+        \usepackage{pgfplots}
 format: 
     beamer:
+        pdf-engine: latexmk
+        classoption: norsk
         theme: Madrid
         aspectratio: 169
-        navigation: horizontal
-lang: no-NB
+        # navigation: horizontal
+lang: no
+language:
+    no:
+        crossref-fig-title: "Figur"
+
 ---
 
 ## Banditter
@@ -58,16 +68,22 @@ Mål
 - Anbefalingssystemer
 - Dynamisk prising
 - Oppgavedelegering
-- ...
+- &c &c &c ...
 :::
 
 ::: {.column width="60%"}
-::: {layout="[[30, -10, 20, -10, 35,-20]]" layout-valign="center"}
+::: {layout="[[30, -10, 18, -10, 35, -20], [30, -5, 22, -2, 30, -20]]" layout-valign="center"}
 ![](images/netflixlogo.jpeg)
 
 ![](images/amazonlogo.png)
 
 ![](images/doordashlogo.png)
+
+![](images/google_anal.png)
+
+![](images/metalogo.png)
+
+![](images/washingtonlogo.png)
 
 :::
 :::
@@ -103,26 +119,91 @@ QMC | Estimere $\mathbb{E}[X]$ | $O(1/\epsilon)$ | $O(1/\epsilon^2)$
 - Fordel: konfidensintervaller blir mindre
 - Resultat: $O(\log(T))$-algoritme
 
-## Simuleringer
-K
+## Simuleringer: uniform prior
 
-\begin{tikzpicture}
- \draw (0,0) circle (1cm);
- \draw (0,0) circle (2cm);
-\end{tikzpicture}
+::: {#fig-1 align=center}
+\newcommand{\myoptions}{
+    width=12cm,
+    height=8cm,
+    legend entries={UCB, Thompson, QUCB},
+    legend pos=north west,
+    ylabel={Regret},
+    xlabel={Runde},
+}
+\input{../report/tex/07_simulations/figs/uniform_prior}
+
+_
+:::
+
+
+## Simuleringer: korrelert prior
+::: {#fig-2 align=center}
+\newcommand{\myoptions}{
+    width=12cm,
+    height=8cm,
+    legend entries={UCB, Thompson, QUCB},
+    legend pos=north west,
+    ylabel={Regret},
+    xlabel={Runde},
+}
+\input{../report/tex/07_simulations/figs/challenging_prior}
+
+_
+:::
+
+## Simuleringer: meget korrelert prior
+::: {#fig-3 align=center}
+\newcommand{\myoptions}{
+    width=12cm,
+    height=8cm,
+    legend entries={UCB, Thompson, QUCB},
+    legend pos=north west,
+    ylabel={Regret},
+    xlabel={Runde},
+}
+\input{../report/tex/07_simulations/figs/more_challenging_prior}
+
+_
+:::
 
 
 ## Konklusjoner
-- Bedre i noen tilfeller
+- Bedre i *noen* tilfeller
 - Juks med kvante
 - Vanskelig å anvende
 - QUCB kan videreutvikles
 - Kvantealgoritmer for andre bandittvarianter?
 
 ## Vedlegg: maskinlæring og banditter
-Forsterket læring
-Hvordan uttrykke bandittproblemet som et RL-problem?
-Figur
+:::: {.columns align=center}
+
+<!-- ::: {layout-ncol=2} -->
+
+::: {.column width=40%}
+- Forsterket læring
+- Hvordan uttrykke bandittproblemet som et RL-problem?
+- Fungerer kanskje, men krever i så fall anpassing
+
+:::
+
+
+::: {.column width=60%}
+\newcommand{\myoptions}{
+    width=8cm,
+    height=6cm,
+    legend entries={A2C, DQN, PPO, Quantum},
+    legend pos=north west,
+    ylabel={Regret},
+    xlabel={Runde},
+}
+\input{../report/tex/07_simulations/figs/rl_bandits.tex}
+:::
+
+
+<!-- ::: -->
+
+::::
+
 
 ## Vedlegg: kvantoveremakt
 ```{mermaid}
