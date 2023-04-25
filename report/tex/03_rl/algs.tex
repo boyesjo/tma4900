@@ -33,7 +33,7 @@ The Proximal Policy Optimisation (PPO) algorithm~\autocite{schulman2017} has bee
 It is based on the idea of clipping the policy update, which helps to prevent large policy updates that could destabilise the training process, and was designed to require little hyperparameter tuning.
 The algorithm uses a surrogate objective function that combines the clipped policy objective and the value function objective, and updates the policy and value function parameters using a combination of stochastic gradient descent and trust region optimisation.
 It has become a popular baseline for reinforcement learning problems thanks to its performance, ease of implementation and being simple to tune~\autocite{schulman2017}.
-What is more, PPO has been able to beat the world champions in the video game of \textit{Dota~2}~\autocite{brockman2018,openai2019}.
+What is more, PPO has been able to beat the \textit{Dota~2}~\autocite{dota} world champions~\autocite{brockman2018,openai2019}.
 
 \subsection{Actor-critic methods}
 Actor-critic methods are a type of reinforcement learning algorithms that combine ideas from both value-based and policy-based methods.
@@ -47,4 +47,4 @@ The policy update is based on the policy gradient, while the value function upda
 
 A major advantage is that actor-critic methods can improve the stability and convergence of the training process by using the value function to guide the policy updates.
 This is because the value function provides a baseline estimate of the expected return, which reduces the variance of the policy gradient estimates.
-Actor-critic methods have been shown to be effective in a wide range of reinforcement learning problems, exempli gratia achieving top 0.15\% performance in the video game of \textit{Starcraft~II}~\autocite{vinyals2019}.
+Actor-critic methods have been shown to be effective in a wide range of reinforcement learning problems, exempli gratia, among all players of the video game of \textit{Starcraft~II}~\autocite{starcraft}, achieving top 0.15\% performance~\autocite{vinyals2019}.

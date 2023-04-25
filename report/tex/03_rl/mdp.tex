@@ -219,7 +219,7 @@ There are three main categories of reinforcement learning algorithms:
 \end{description}
 
 It is primarily the model-free, latter two methods (or combinations thereof) that have seen the most success in recent years, and these that will be discussed further in \cref{sec:rl_algs}.
-But also model-based algorithms have seen some commendable results recently, for example being able to find diamonds in \textit{Minecraft}~\autocite{hafner2023}.
+But also model-based algorithms have seen some commendable results recently, for example, in \textit{Minecraft}~\autocite{minecraft}, being able to find diamonds~\autocite{hafner2023}.
 
 
 \subsection{Difficulties}
@@ -238,7 +238,7 @@ However, poorly designed rewards can lead to slow or intractable learning, as th
 A classic example thereof is pausing the game in \textit{Tetris} as to not lose the game~\autocite{murphy2013}.
 
 Specialised rewards that provide more detailed feedback and guidance can improve learning, but they also make it harder to generalise to new situations.
-For instance, the Atari game \textit{Montezuma's Revenge} is nigh impossible to solve with off-the-shelf methods and without specialising the rewards~\autocite{salimans2018}.
+For instance, the Atari game \textit{Montezuma's Revenge}~\autocite{montezuma} is nigh impossible to solve with off-the-shelf methods and without specialising the rewards~\autocite{salimans2018}.
 While the suite of Atari games is mostly solvable with the same algorithms, the lack of immediate rewards leaves agents clueless as how to progress.
 Implementing the necessary guidance is can not only be demanding, but it also looses the general applicability that is so central to RL.
 
