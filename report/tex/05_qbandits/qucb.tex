@@ -1,4 +1,4 @@
-\section{Oracles as bandit arms}
+\section{Quantum upper confidence bounds}
 \label{sec:wan2022}
 A way to quantise the bandit problem is to assign to each arm a quantum oracle.
 For each arm $a \in \mathcal{A}$, a bandit oracle can be defined as
@@ -201,10 +201,10 @@ With this, setting $\delta = 1/T$, it is obtained that
 \end{equation}
 as desired.
 
-\section{Implementing quantum upper confidence bounds}
+\subsection{Implementing quantum upper confidence bounds}
 To translate \cref{alg:qucb1} into something that can be either run on a quantum computer or simulated on a classical computer, the arm-oracles need to be made available and QMC needs to be implemented.
 
-\subsection{Arm-oracles}
+\subsubsection{Arm-oracles}
 The oracles of \cref{eq:wan_oracle} can be implemented as quantum gates by first constructing their matrix representation.
 With Bernoulli variables and considering the simplest case of $\Omega = \{0, 1\}$ and associating only $0 \in \Omega$ with the reward, the first row of the matrix representation of the oracle is
 \begin{equation}
@@ -229,7 +229,7 @@ In result, the oracle initialisation can be implemented as is listed in \cref{al
     \label{alg:qucb_oracle}
 \end{algorithm}
 
-\subsection{QMC}
+\subsubsection{QMC}
 Thankfully, amplitude estimation is a well-studied problem in quantum computing, and there are several implementations available.
 For example, in the Qiskit library, the \texttt{AmplitudeEstimation} class can be used to perform amplitude estimation on a quantum circuit with a given number of qubits.
 It assumes a \texttt{EstimationProblem} object is initialised with the quantum algorithm to be estimated and the objective qubit(s).
@@ -257,7 +257,7 @@ In total, the QMC subroutine is implemented as in \cref{alg:qucb_qmc}.
     \label{alg:qucb_qmc}
 \end{algorithm}
 
-\subsection{QUCB1}
+\subsubsection{QUCB1 simulation}
 Oracles and QMC being available, the QUCB1 algorithm can be implemented easily.
 First, a set of oracles is initialised for each arm, and the algorithm is run for a given number of iterations.
 The number of oracle calls is tracked, and the algorithm is stopped when the number of oracle calls exceeds the number of iterations.

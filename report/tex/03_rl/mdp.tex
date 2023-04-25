@@ -31,10 +31,112 @@ Note that policies will in general depend on the whole history of states, action
 
 \begin{figure}
     \centering
-    %placeholder image
-    \includegraphics[width=\textwidth]{example-image-a}
+    \begin{tikzpicture}[scale = 1.5]
+        \tikzset{
+        state/.style={
+                rectangle,
+                % rounded corners,
+                draw=black,
+                minimum height=1.5em,
+                inner sep=2pt,
+                text centered,
+                % text width=2.5cm,
+                fill=white
+            },
+        action/.style={
+                circle,
+                draw=black,
+                % minimum height=2em,
+                inner sep=2pt,
+                text centered,
+                % text width=2.5cm,
+                fill=white
+            },
+        action_arrow/.style={
+        -{Latex[length=2mm]},
+        shorten <=1pt,
+        shorten >=1pt,
+        thick,
+        },
+        win_arrow/.style={
+        -{Latex[length=2mm]},
+        shorten <=1pt,
+        shorten >=1pt,
+        thick,
+        % dotted,
+        },
+        lose_arrow/.style={
+        -{Latex[length=2mm]},
+        shorten <=1pt,
+        shorten >=1pt,,
+        thick,
+        red,
+        },
+        cash_arrow/.style={
+        -{Latex[length=2mm]},
+        shorten <=1pt,
+        shorten >=1pt,
+        thick,
+        blue,
+        },
+        }
 
-    \caption{A simple Markov decision process.}
+        \tikzset{
+            between/.style args={#1 and #2}{
+                    at = ($(#1)!0.5!(#2)$)
+                }
+        }
+
+        \node[state, at = {(0, 0)}] (s1) {$s_1$};
+        \node[state, at = {(0, 4)}] (s2) {$s_2$};
+        \node[at = {(4, 4)}] (si) {\dots};
+        \node[state, at = {(6, 4)}] (s14) {$s_{14}$};
+
+        \node[state, at = {(3.5, 0)}] (end) {End};
+
+        \node[action, between=s1 and s2] (a11) {$a_1$};
+        \node[action, between=s1 and end] (a12) {$a_2$};
+        \node[action, between=s2 and si] (a21) {$a_1$};
+        \node[action, between=s2 and end] (a22) {$a_2$};
+        \node[action, at = {(6, 1)}] (a31) {$a_1$};
+        \node[action, between=s14 and end] (a32) {$a_2$};
+
+        \draw[action_arrow] (s1) -- (a11);
+        \draw[action_arrow] (s1) -- (a12);
+        \draw[action_arrow] (s2) -- (a21);
+        \draw[action_arrow] (s2) -- (a22);
+        \draw[action_arrow] (s14) -- (a31);
+        \draw[action_arrow] (s14) -- (a32);
+
+        \draw[win_arrow] (a11) -- (s2);
+        \draw[win_arrow] (a21) -- (si);
+        \draw[win_arrow] (si) -- (s14);
+        \draw[cash_arrow] (a31) to [bend left=20] (end);
+
+        \draw[lose_arrow] (a11) -- (end);
+        \draw[lose_arrow] (a21) -- (end);
+        \draw[lose_arrow] (a31) -- (end);
+
+        \draw[cash_arrow] (a12) -- (end);
+        \draw[cash_arrow] (a22) -- (end);
+        \draw[cash_arrow] (a32) -- (end);
+
+
+
+    \end{tikzpicture}
+    \vspace{1cm}
+
+    \caption[
+        Example of a Markov decision process (MDP) graph.
+    ]
+    {
+        A Markov decision process (MDP) graph based on the game-show \textit{Who Wants to be a Millionaire?}
+        The states are how many questions the contestant has answered correctly, stating with one, and the actions are whether to go to the next question, $a_1$, or to cash out $a_2$.
+        Cashing out proceeds to the terminal end state with certainty, yielding a reward depending on the number of questions answered correctly.
+        Betting and going to the next question may either result in a loss and end of the game, with a low reward, or in proceeding to the next question with no immediate reward.
+        The probabilities of answering a question correctly is not known, so whether continuing or cashing out is the best action is not known a priori.
+        Moreover, with rewards being delayed until cashing out or answering the final question correctly (highlighted in blue), and losing transitions (shown in red) having the same reward of 0 as transitions to new questions, it is not completely trivial to determine the quality of an action.
+    }
     \label{fig:mdp}
 \end{figure}
 

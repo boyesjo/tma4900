@@ -1,24 +1,16 @@
-\chapter{Simulations}
-\label{sec:simulations}
+\chapter{Simulation results}
+\label{chap:simulations}
 
-While the upper bound shown in \cref{sec:wan2022} implies QUCB1 advantage, it does not necessarily mean it is supreme in all cases or even on average.
-It is therefore of much interest to test it on a variety of problems and compare its average performance to other algorithms — not only with the classical UCB1 to which it is compared in the original paper, but also with the more performant Thompson sampling algorithm.
-
-All algorithms were implemented in Python 3~\autocite{python} with quantum computing support provided by IBM's Qiskit library~\autocite{qiskit}.
+All algorithms were implemented in Python 3~\autocite{python} with quantum computing support provided by IBM's Qiskit library~\autocite{qiskit} for the QUCB algorithm and PennyLane for the quantum neural network policy agent.
 The experiments were run on an external computation server with an Intel Xeon E5-2690 v4 CPU and 768 GB of RAM, permitting 28 concurrent simulations.
-For fixed bandit instances, 100 simulations were run for each algorithm.
-
-To limit the scope and computational resources required, only Bernoulli rewards were considered.
-As noted in~\autocite{wan2022}, setting the confidence parameter to a higher value than the theoretically desirable $1/T$ leads to better performance.
-It was thus set to $0.01$ for all experiments.
-Moreover, the constant $C_1$ which was only defined existentially was arbitrarily set to $2$ across all experiments, as it was not clear how to choose it in a principled manner, and this value seemed able to reproduce the results of~\autocite{wan2022}.
 
 
-\subimport{}{fixed}
+
+\subimport{}{bandits}
 \clearpage
 
 
-\subimport{}{bayesian}
-\clearpage
+% \subimport{}{bayesian}
+% \clearpage
 
 \subimport{}{rl}

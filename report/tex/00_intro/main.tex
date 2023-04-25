@@ -1,2 +1,93 @@
 \chapter{Introduction}
-\enquote{The problem is a  classic one; it was formulated during the war, and efforts to solve it so sapped the energies and minds of Allied analysts that the suggestion was made that the problem be dropped over Germany, as the ultimate instrument of intellectual sabotage.}~\autocite{whittle1979}.
+In the world of decision-making, the multi-armed bandit problem stands as a persistent and fascinating challenge.
+At its core, this problem asks: how should you optimise your choices when presented with a set of options, each with its own uncertain reward?
+The metaphor of the bandit refers to the idea that each option is like a slot machine, where you must decide how much to invest in each one in order to maximise your winnings over time.
+One might imagine that the best strategy would be to invest heavily in the option with the highest expected reward.
+But what if that option is not immediately clear?
+Or what if the rewards are highly variable, such that it is difficult to predict which option will ultimately be the most lucrative?
+These are the kinds of questions that make the multi-armed bandit problem so intriguing.
+
+Historically, the problem has arisen in a variety of contexts.
+In the world of clinical trials, researchers may want to test multiple treatments simultaneously in order to find the most effective one.
+Despite test conclusions being statistically significant, there is always a chance of a false positive, which is how bandit algorithms can provide better long-term results than the classical approach of using a fixed sample size.
+In the realm of online advertising, companies must decide how to allocate their budget across a range of marketing channels, each with its own level of risk and potential payoff.
+And in the world of finance, investors must decide how to allocate their resources across different stocks or other assets, each with its own level of volatility and expected return.
+As computers automate ever more of people's lives, using the bandit problem to model the decision-making process and teach computers how to learn becomes increasingly relevant.
+
+Some of the many real-world settings in which the multi-armed bandit problem is applicable are listed in \cref{tab:mab_applications}.
+Despite being a simple problem, its countless variants and applications make it not only a useful tool for a plethora of real-world problems.
+Netflix uses bandit theory to recommend movies~\autocite{kawale2018}, Amazon for its website layout~\autocite{hill2017}, Facebook for video compression~\autocite{daulton2019} and Doordash to identify responsive deliverymen~\autocite{sharma2022}.
+The problem and its variations are still being studied with several results in what follows being recent.
+Bandits theory has also been applied to other problems, such as the problem of choosing the best hyperparameters or models~\autocite{gagliolo2010}, where algorithms discussed in this thesis have shown success~\autocite{wang2014,bouneffouf2017}.
+
+\begin{table}
+    \centering
+    \captionabove[
+        Applications of the multi-armed bandit problem.
+    ]{
+        Some applications of the multi-armed bandit problem.
+        Arms correspond to the different actions that an agent can take, initially with unknown outcomes.
+        The reward is the probabilistic outcome of the action, which the agent tries to maximise over time.
+    }
+    \label{tab:mab_applications}
+    \begin{tblr}{
+            width=\linewidth,
+            colspec={X[l] X[r] X[r]}
+        }
+        \toprule
+        Application            & Arms                 & Reward            \\
+        \midrule
+        Medical trials         & Drugs                & Patient health    \\
+        Online advertising     & Ad placements        & Number of clicks  \\
+        Website design         & Layouts/fonts \&c.   & Number of clicks  \\
+        Recommendation systems & Items                & Number of clicks  \\
+        Dynamic pricing        & Prices               & Profit            \\
+        Networking             & Routes, settings     & Ping              \\
+        Lossy compression      & Compression settings & Quality preserved \\
+        Tasking employees      & Which employee       & Productivity      \\
+        Finance                & Investment options   & Profit            \\
+        \bottomrule
+    \end{tblr}
+
+\end{table}
+
+Despite the diversity of contexts, the essential challenge remains the same: how to balance the competing demands of exploration and exploitation.
+On the one hand, you want to gather as much information as possible about the potential rewards of each option, so that we can make an informed decision.
+On the other hand, you want to invest our resources in the most promising option as quickly as possible, so that the returns are maximised.
+Having to deal with both random reward and random decisions based on said rewards makes the problem virtually impossible to solve optimally.
+\enquote{The problem is a  classic one; it was formulated during the war, and efforts to solve it so sapped the energies and minds of Allied analysts that the suggestion was made that the problem be dropped over Germany, as the ultimate instrument of intellectual sabotage}~\autocite{whittle1979}.
+Luckily, since then, algorithms have been developed that can solve the problem with certain optimality guarantees.
+
+Machine learning and reinforcement learning in particular have in recent years become a popular tool for solving problems of all kinds.
+Their mathematical formulations and implementations are much more intricate than the bandit problem, but the basic idea is the same: to learn from experience and make decisions that lead to the best possible outcome.
+Modern methods based on neural-networks have reached superhuman performance in many domains, such as Go and modern e-sport video games.
+These problems are too hard to solve anywhere near optimally, neither for humans nor for computers, so the bar for success is lower than for the bandit problem.
+Still, one might expect these modern and advanced methods to be able to do well on the classic bandit problem.
+
+The field of quantum computing has emerged as a promising new area of research with the potential to solve problems intractable for classical hardware.
+Their first conception goes back to the early 80s, often being accredited to Richard Feynman's 1982 paper \cite{feynman1982}, with the goal of simulating difficult quantum mechanical problems.
+It was however only really with the discovery of Shor's algorithm in 1994 \cite{shor1994} that the potential of quantum computers gained widespread attention.
+Since then the search for other quantum algorithms has been on, with the field of quantum machine learning being a noteworthy example.
+
+How actually to construct a quantum computer is still an open question.
+There are several types of hardware being developed and researched, such as superconducting circuits used by IBM, Google among others, trapped ions used by IonQ and Honeywell, photonic quantum computers developed by Xanadu and Psi Quantum in addition to many other types.
+Although some of these have already claimed quantum supremacy, that is they have solved a problem believed to be intractable for even the best classical (super-) computers, supremacy has only been shown in very particular settings with no practical use.
+Common for all current approaches are difficulties with noise and decoherence.
+Theoretically, with computers of great enough scale, errors can be corrected, but in the near future, the systematic errors of quantum computers will be a limiting factor and something to be taken into account when designing algorithms.
+
+When it comes to bandit problems and reinforcement learning in general, quantum computing may offer a number of potential benefits.
+The quantum upper confidence bound algorithm introduced in~\autocite{wan2022}, a main focus of this thesis, is one such example.
+In it, a quantum Monte Carlo method is used to produce better estimates of the bandit rewards than classical methods can ever do.
+Thereby it promises to achieve asymptotically better performance than any classical algorithms.
+While quantum machine learning has received its fair share of attention, quantum reinforcement learning is still a relatively unexplored field.
+Still, some algorithms have been proposed, and some indications of quantum advantage have been noticed.
+
+This thesis is structured as follows.
+\Cref{chap:bandits} introduces the multi-armed bandit problem formally and presents what theoretical guarantees can be made about the performance of algorithms.
+Several classical algorithms are then presented, including the classical upper confidence bound algorithm, which is the basis for the quantum algorithm, and Thompson sampling, a Bayesian method that tends to perform best.
+Thereafter, the more general field of reinforcement learning and its mathematical formulation as Markov decision processes are introduced, along with several state-of-the-art algorithms.
+Next, in \cref{chap:qc}, quantum computing is explained, including the quantum circuit model and several quantum algorithms, such as Grover's and quantum Monte Carlo.
+In \cref{chap:qbandits}, quantum computing is applied to the bandit problem, leading to the quantum upper confidence bound algorithm, whose theoretically supreme performance is proved.
+\Cref{chap:qml} described more general methods for quantum reinforcement learning and quantum agents.
+The quantum upper confidence algorithm is implemented and tested against classical methods on a suite of bandit problems in \cref{chap:simulations}, wherein also general agents of both classical and quantum kinds are tried on the bandit problem.
+Finally, \cref{chap:final} concludes the thesis and discusses future work.

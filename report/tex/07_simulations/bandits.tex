@@ -1,0 +1,282 @@
+\section{Quantum bandits}
+While the upper bound shown in \cref{sec:wan2022} implies QUCB1 advantage, it does not necessarily mean it is supreme in all cases or even on average.
+It is therefore of much interest to test it on a variety of problems and compare its average performance to other algorithms — not only with the classical UCB1 to which it is compared in the original paper, but also with the more performant Thompson sampling algorithm.
+
+For fixed bandit instances, 100 simulations were run for each algorithm, while for Bayesian regrets 1000 parallels were run.
+To limit the scope and computational resources required, only Bernoulli rewards were considered.
+As noted in~\autocite{wan2022}, setting the confidence parameter to a higher value than the theoretically desirable $1/T$ leads to better performance.
+It was thus set to $0.01$ for all experiments.
+Moreover, the constant $C_1$ which was only defined existentially was arbitrarily set to $2$ across all experiments, as it was not clear how to choose it in a principled manner, and this value seemed able to reproduce the results of~\autocite{wan2022}.
+
+\subsection{Fixed arms}
+\label{sec:sim_fixed_arms}
+First, the algorithms are tested on fixed bandit instances with two arms.
+The mean of the first arm is set to $0.5$ and the mean of the second arm is set to $0.505$, an instance also tested in~\autocite{wan2022}.
+The results are shown in \cref{fig:big2}, agreeing with the original paper; QUCB greatly outperforms UCB.
+However, Thompson sampling which was not considered in~\autocite{wan2022}, is not that far behind.
+
+Note the jagged and periodically completely flat behaviour of the QUCB algorithm regret.
+This is due to the long QMC periods in which its quantum advantage is gained; it must repeatedly pull the same arm for the QMC estimates to be produced.
+When the algorithm pulls the optimal arm, the change in regret is obviously zero.
+Additionally, these periods get longer as the algorithm progresses, as the QMC estimates become more accurate.
+The exponential lengthening of the QMC periods assure that such non-smooth and piecewise linear behaviour is to be expected.
+Because of these long periods, there is not as many possible trajectories as with the classical algorithms, so the jaggedness persists despite averaging over many simulations.
+
+\begin{figure}
+    \centering
+    \newcommand{\myoptions}{
+        width=10cm,
+        height=8cm,
+        xlabel={Turn},
+        ylabel={Regret},
+        legend entries={UCB, QUCB, Thompson},
+        legend pos=north west,
+        legend cell align=left,
+        mystyle,
+        largexnumbers,
+    }
+    \subimport{figs}{big2}
+    \caption{QUCB1 regret for two arms, with mean 0.5 and 0.505.}
+    \label{fig:big2}
+\end{figure}
+
+\subsubsection{Low and high probabilities}
+Next, mean more extreme mean values of $0.01$ and $0.005$
+with a reward gap of $0.005$ equal to the above, are tested.
+\Cref{fig:low_prob_fix} contains the results.
+Here, QUCB beats UCB thoroughly still, both algorithms achieving similar regrets as in \cref{fig:big2}, but now Thompson sampling is clearly superior.
+
+
+
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \newcommand{\myoptions}{
+            width=10cm,
+            height=8cm,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend entries={UCB, QUCB, Thompson},
+            legend pos=north west,
+            legend cell align=left,
+            mystyle,
+            largexnumbers,
+        }
+        \subimport{figs}{low_prob_fix}
+        \caption{Two arms, means 0.01, 0.005.}
+        \label{fig:low_prob_fix}
+    \end{subfigure}
+    \\[3ex]
+    \begin{subfigure}{\textwidth}
+        \centering
+        \newcommand{\myoptions}{
+            width=10cm,
+            height=8cm,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend entries={UCB, QUCB, Thompson},
+            legend pos=north west,
+            legend cell align=left,
+            mystyle,
+            largexnumbers,
+        }
+        \subimport{figs}{high_prob}
+        \caption{Regret for two arms, means 0.99, 0.9905.}
+        \label{fig:high_prob}
+    \end{subfigure}
+    \caption{QUCB1 regret for especially high and low means.}
+    \label{fig:low_high_prob}
+\end{figure}
+
+At these extreme values, it seems the gap must shrink for QUCB to be able to outperform Thompson sampling.
+This is shown in \cref{fig:high_prob}, where the gap is reduced to $0.0005$,
+Even so, the QUCB advantage is not as pronounced as in \cref{fig:big2}.
+
+
+
+\subsubsection{Four arms}
+As a final test, the number of arms is increased to four.
+The results are plotted in \cref{fig:four_arms}.
+Only cases with two arms were tested in the original paper, so this is a new test, further validating the correctness of the algorithm and its implementation.
+The results are similar to the two-arm case, with QUCB outperforming UCB.
+At these particular reward means, Thompson sampling performs very similarly to QUCB.
+In general, QUCB provides no advantages or noteworthy changes from UCB with respect to the number of arms, so its behaviour should be expected to be similar as UCB when the number of arms is increased.
+
+\begin{figure}
+    \centering
+    \newcommand{\myoptions}{
+        width=10cm,
+        height=8cm,
+        xlabel={Turn},
+        ylabel={Regret},
+        legend entries={UCB, QUCB, Thompson},
+        legend pos=north west,
+        legend cell align=left,
+        mystyle,
+        largexnumbers,
+    }
+    \subimport{figs}{four_arms}
+    \caption{Regret for four arms, with mean 0.5, 0.51, 0.52 and 0.53.}
+    \label{fig:four_arms}
+\end{figure}
+
+\clearpage
+\subsection{Bayesian regret}
+\label{sec:results_bayesian}
+As described in \cref{sec:bayesian-optimality}, the Bayesian regret is the average regret over some set prior.
+What priors to choose is a topic for discussion, which will not be covered deeply here.
+In any case, it provides a measure of robustness, measuring the performance over a range of possible instances.
+
+\subsubsection{Uniform prior}
+First, the simple case of two arms, whose means are independently drawn from a uniform distribution on the interval $[0, 1]$ will be considered.
+The Bayesian regret for this case is on display in \cref{fig:random}.
+All three were run on 294 instances sampled from the prior\footnotemark, and the results are averaged over these instances.
+
+\footnotetext{
+    During the 295th run, the program crashed due issues relating to disk usage permissions.
+}
+
+It is obvious that the Thompson sampling algorithm performs best.
+QUCB does outperform UCB, but not by as much as the previously considered cases and only after some time.
+
+The lack of any quantum advantage is probably due to this prior generally yielding \enquote{easy} problems, where the optimal arm can be quickly identified.
+In such cases, the initial overhead of the quantum algorithm appears not to be worth the effort.
+Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produce a very flat regret curse; when looking at the log-log-plot in \cref{fig:random}, it may seem like the QUCB regret will be lower than even Thompson sampling for some great and admittedly unrealistic number of turns.
+
+
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \newcommand{\myoptions}{
+            width=10cm,
+            height=8cm,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend entries={UCB, QUCB, Thompson},
+            legend pos=north west,
+            legend cell align=left,
+            mystyle,
+            largexnumbers,
+            ymax = 135,
+        }
+        \subimport{figs}{uniform_prior.tex}
+        \caption{Linear scale.}
+    \end{subfigure}
+    \\[3ex]
+    \begin{subfigure}{\textwidth}
+        \centering
+        \newcommand{\myoptions}{
+            width=10cm,
+            height=8cm,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend entries={UCB, QUCB, Thompson},
+            legend pos=north west,
+            legend cell align=left,
+            mystyle,
+            largexnumbers,
+        }
+        \subimport{figs}{uniform_prior_loglog.tex}
+        \caption{Log-log scale.}
+    \end{subfigure}
+    \caption[
+        Bayesian regret for two arms, independent and uniform priors.
+    ]
+    {
+        Bayesian regret for two arms, independent and uniform priors.
+        While Thompson sampling performs best, the log-log plot may indicate that QUCB could be better with a very large number of turns.
+        Thompson sampling performs best, but it can appear as QUCB would be best at unreasonably great time horizons.
+    }
+    \label{fig:random}
+\end{figure}
+
+
+\subsubsection{Challenging prior}
+One might argue that the uniform prior is too easy, and that the quantum advantage should be more apparent in a more challenging prior.
+Firstly, for real-world Bernoulli bandits, there are reasons to believe that the means would lie closer to the endpoints 0 and 1 than in the middle.
+Secondly, for the problem to be interesting and warrant the use of clever quantum algorithms or even just any bandit theory, the means should be close to each other.
+Thus, the following prior was chosen:
+\begin{equation}
+    \label{eq:challenging_prior}
+    \begin{aligned}
+        \mu_1               & \sim \text{B}(0.5, 0.5),                 \\
+        \text{logit}(\mu_2) & \sim \text{N}(\text{logit}(\mu_1), 0.1),
+    \end{aligned}
+\end{equation}
+where $\text{logit}(\mu) = \log(\mu/(1-\mu))$.
+
+Running a successful 1000 simulations with this prior, the regrets visualised in \cref{fig:random2} were obtained.
+At the final 250,000th turn, the QUCB and Thompson sampling algorithms have virtually equal regrets.
+QUCB lags behind in the beginning, but its regret curve appears flatter towards the end, and it is likely that it would beat Thompson sampling in the long run.
+The UCB algorithm, on the other hand, is as before clearly outperformed by both QUCB and Thompson sampling.
+
+\subsubsection{More challenging prior}
+As the above prior proved to still too easy to demonstrate quantum advantage, a third was chosen, catering even more to QUCB's strengths discovered in \cref{sec:sim_fixed_arms}, id est having close means and means centred around one half.
+The prior was constructed similarly to the one in \cref{eq:challenging_prior}, but with different parameters, namely:
+\begin{equation}
+    \label{eq:more_challenging_prior}
+    \begin{aligned}
+        \mu_1               & \sim \text{B}(2, 2),                      \\
+        \text{logit}(\mu_2) & \sim \text{N}(\text{logit}(\mu_1), 0.02),
+    \end{aligned}
+\end{equation}
+
+This simulation was run for 966 parallels before the computation server got tired.
+As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson sampling still clearly outperforms UCB.
+
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \newcommand{\myoptions}{
+            width=10cm,
+            height=8cm,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend entries={UCB, QUCB, Thompson},
+            legend pos=north west,
+            legend cell align=left,
+            mystyle,
+            largexnumbers,
+            ymax = 400,
+        }
+        \subimport{figs}{challenging_prior.tex}
+        \caption{
+            Prior as in \cref{eq:challenging_prior}.
+        }
+        \label{fig:random2}
+    \end{subfigure}
+    \\[3ex]
+    \begin{subfigure}{\textwidth}
+        \centering
+        \newcommand{\myoptions}{
+            width=10cm,
+            height=8cm,
+            xlabel={Turn},
+            ylabel={Regret},
+            legend entries={UCB, QUCB, Thompson},
+            legend pos=north west,
+            legend cell align=left,
+            mystyle,
+            largexnumbers,
+        }
+        \subimport{figs}{more_challenging_prior.tex}
+        \caption{
+            Prior as in \cref{eq:more_challenging_prior}.
+        }
+        \label{fig:random3}
+    \end{subfigure}
+    \caption[
+        Bayesian regret for two arms, challenging priors.
+    ]
+    {
+        Bayesian regret for two arms, challenging priors,
+        The lower figure has the means closer to the $1/2$ and even higher correlation between the means, which is more favourable to QUCB.
+    }
+    \label{fig:random_challenging}
+\end{figure}

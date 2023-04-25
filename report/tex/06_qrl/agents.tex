@@ -25,3 +25,195 @@ Furthermore, by designing quantum environments particularly suited for the quant
 
 By letting the agent communicate over a quantum channel,~\autocite{saggio2021} show that the learning of an agent can be accelerated.
 Somewhat similarly, in~\autocite{hamann2022}, hybrid agents are shown to learn quadratically faster than purely classical agents.
+
+\subsection{Implementing a quantum agent}
+\label{sec:qrl_impl}
+
+The quantum model as proposed in~\autocite{jerbi2021a} consists of alternating variational and encoding blocks with as many qubits as there are state features.
+It is of linear depth with respect to the number of state features, and it is therefore tractable to implement and simulate classically.
+Interestingly, the model does not begin with data encoding, but with a variational block.
+Overall, the network appears as
+\begin{equation}
+    \begin{quantikz}[column sep=0.5em]
+        \lstick{$\ket{0}$}
+        &
+        \gate{H}
+        &
+        \gate[wires=4, nwires=3]{U_\text{Var}(\phi^{(1)})}
+        &
+        \gate[wires=4, nwires=3]{U_\text{Enc}(s, \lambda^{(1)})}
+        &
+        \gate[wires=4, nwires=3]{U_\text{Var}(\phi^{(2)})}
+        &
+        \meter{}
+        \\
+        \lstick{$\ket{0}$}
+        &
+        \gate{H}
+        &
+        &
+        &
+        &
+        \meter{}
+        \\
+        \lstick{\vdots} & \vdots & & & & \vdots
+        \\
+        \lstick{$\ket{0}$}
+        &
+        \gate{H}
+        &
+        &
+        &
+        &
+        \meter{}
+        \\
+    \end{quantikz}
+\end{equation}
+where the variational blocks take in parameters ${\phi}$ while the encoding block depends on both its parameters ${\lambda}$ and the input state $\ket{s}$.
+For more expressibility, further repetitions of the variational and encoding blocks may be appended pre measurement.
+The variational blocks are given by
+\begin{equation}
+    \begin{quantikz}[column sep=0.5em]
+        \qw
+        &
+        \gate[wires=4, nwires=3]{U_\text{Var}(\phi)}
+        &
+        \qw
+        \midstick[4,brackets=none]{=}
+        &
+        \gate{R_Z(\phi_1)}
+        &
+        \gate{R_Y(\phi_2)}
+        &
+        \ctrl{1}
+        &
+        \ctrl{3}
+        &
+        \qw
+        &
+        \qw
+        \\
+        \qw
+        &
+        &
+        \qw
+        &
+        \gate{R_Z(\phi_3)}
+        &
+        \gate{R_Y(\phi_4)}
+        &
+        \control{}
+        &
+        \qw
+        &
+        \ctrl{2}
+        &
+        \qw
+        \\
+        \lstick{\vdots} & \rstick{\vdots} & & \vdots & \vdots & & & & & &
+        \\
+        \qw
+        &
+        &
+        \qw
+        &
+        \gate{R_Z(\phi_{2N-1})}
+        &
+        \gate{R_Y(\phi_{2N})}
+        &
+        \qw
+        &
+        \control{}
+        &
+        \control{}
+        &
+        \qw
+        \\
+    \end{quantikz}
+\end{equation}
+where the rightmost CZ-gates are applied pairwise on all qubits.
+The encoding blocks appear as
+\begin{equation}
+    \begin{quantikz}[column sep=0.5em]
+        \qw
+        &
+        \gate[wires=4, nwires=3]{U_\text{Enc}(s, \lambda)}
+        &
+        \qw
+        \midstick[4,brackets=none]{=}
+        &
+        \gate{R_Y(\lambda_1 s_1)}
+        &
+        \gate{R_Z(\lambda_2 s_1)}
+        &
+        \qw
+        \\
+        \qw
+        &
+        &
+        \qw
+        &
+        \gate{R_Y(\lambda_3 s_2)}
+        &
+        \gate{R_Z(\lambda_4 s_2)}
+        &
+        \qw
+        \\
+        \lstick{\vdots} & \rstick{\vdots} & & \vdots & \vdots
+        \\
+        \qw
+        &
+        &
+        \qw
+        &
+        \gate{R_Y(\lambda_{2N-1} s_N)}
+        &
+        \gate{R_Z(\lambda_{2N} s_N)}
+        &
+        \qw
+        \\
+    \end{quantikz}
+\end{equation}
+such that the $\lambda$-parameters simply scale the input state features.
+Note that these blocks do not produce any intra-qubit actions and so no entanglement; for that the variational blocks are used.
+
+To define a policy hence, a set of measurements, $\{O_a : a \in \mathcal{A}\}$ is used whereby each element corresponds to an action $a$.
+So,
+\begin{equation}
+    \pi(a|s) = \frac{\exp\left(\langle O_a \rangle\right)}{\sum_{a' \in \mathcal{A}} \exp\left(\langle O_{a'} \rangle\right)},
+\end{equation}
+where $\langle O_a \rangle$ is the expectation value of the observable $O_a$.
+For all experiments, the measurement was taken to be the parity when measuring all qubits in the $Z$-basis with a trainable weight $w$, id est $O_a = \pm w \prod_{i=1}^N Z_i$.
+
+All this is easily done using the PennyLane library~\autocite{pennylane} in Python.
+In it, the circuits as described above are implemented procedurally as functions, which in Python are first-class objects, such that they are easily composable.
+The circuits are then compiled to the desired backend, which is this case was its built-in \texttt{default.qubit} simulator.
+What is more, the library provides seamless integration with PyTorch~\autocite{pytorch}, such that gradients can be computed easily with automatic differentiation and optimised using standard machine learning tools and optimisers.
+
+The quantum policy was trained using the REINFORCE algorithm with the Adam optimiser, as listed in \cref{alg:reinforce}.
+For the Adam optimiser, learning rates of $0.01$ was used for the variational parameters $\phi$ and $0.1$ for the encoding parameter $\lambda$ and observable weight $w$.
+
+\begin{algorithm}
+    \SetAlgoLined
+    \KwIn{Initial policy $\pi$,
+        batch size $N$,
+    }
+    \While {Some stopping criterion is yet to be met}{
+    \For {$i=1,2,\ldots,\text{Batch size}$}{
+        \While {Episode is not finished}{
+            Sample action $a \sim \pi(a|s)$\;
+            Perform action $a$\;
+            Observe reward $r$\;
+            Observe next state $s'$\;
+            $s \gets s'$\;
+        }
+        Compute expected return $G_t = \sum_{k=t}^{T-1} \gamma^{k-t} r_k$\;
+        Store history ${(s_0, a_0, G_0), (s_1, a_1, G_1), \ldots, (s_{T-1}, a_{T-1}, G_{T-1})}$\;
+    }
+    Compute loss $L=\frac{1}{N} \sum_{i=0}^{N} \sum_{t=0}^{T-1} \log \pi(a_t^{(i)}|s_t^{(i)}) G_t^{(i)}$\;
+    Compute gradient $\nabla_{(\phi, \lambda, w)} L$ using automatic differentiation\;
+    Update $(\phi, \lambda, w)$ using the Adam optimiser\;
+    }
+    \caption{REINFORCE algorithm for a quantum policy.}
+    \label{alg:reinforce}
+\end{algorithm}

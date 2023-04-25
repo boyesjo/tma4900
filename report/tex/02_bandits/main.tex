@@ -9,45 +9,8 @@ Although the bandit term was not coined before 1952~\autocite{robbins1952}, its 
 The problem of choosing between two treatments for patients was considered: to what degree should the most successful treatment be used versus testing the other to ensure that the truly best is indeed used?
 What strategy is most likely maximise the number of patients treated with the best treatment in the long run?
 
-Some of the many real-world setting where the multi-armed bandit problem is applicable are listed in \cref{tab:mab_applications}.
-Despite being a simple problem, its countless variants and applications make it not only a useful tool for a plethora of real-world problems.
-Netflix uses MAB theory to recommend movies~\autocite{kawale2018}, Amazon for its website layout~\autocite{hill2017}, Facebook for video compression~\autocite{daulton2019} and Doordash to identify responsive deliverymen~\autocite{sharma2022}.
-The problem and its variations are still being studied with several results in what follows being recent.
-Bandits theory has also been applied to other problems, such as the problem of choosing the best hyperparameters or models~\autocite{gagliolo2010}, where algorithms discussed in this chapter have shown success~\autocite{wang2014,bouneffouf2017}.
-
-
 This chapter and its notation will mostly follow the work textbook~\autocite{lattimore2020}, to which the interested reader is referred for more details on the bandit problem, its variants, applications and history.
 
-\begin{table}
-    \centering
-    \captionabove[
-        Applications of the multi-armed bandit problem.
-    ]{
-        Some applications of the multi-armed bandit problem.
-        Arms correspond to the different actions that an agent can take, initially with unknown outcomes.
-        The reward is the probabilistic outcome of the action, which the agent tries to maximise over time.
-    }
-    \label{tab:mab_applications}
-    \begin{tblr}{
-            width=\linewidth,
-            colspec={X[l] X[r] X[r]}
-        }
-        \toprule
-        Application            & Arms                 & Reward            \\
-        \midrule
-        Medical trials         & Drugs                & Patient health    \\
-        Online advertising     & Ad placements        & Number of clicks  \\
-        Website design         & Layouts/fonts \&c.   & Number of clicks  \\
-        Recommendation systems & Items                & Number of clicks  \\
-        Dynamic pricing        & Prices               & Profit            \\
-        Networking             & Routes, settings     & Ping              \\
-        Lossy compression      & Compression settings & Quality preserved \\
-        Tasking employees      & Which employee       & Productivity      \\
-        Finance                & Investment options   & Profit            \\
-        \bottomrule
-    \end{tblr}
-
-\end{table}
 
 
 \subimport{}{definition}
