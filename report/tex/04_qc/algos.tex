@@ -1,19 +1,17 @@
 \section{Quantum algorithms}
 \subsection{Computational complexity and quantum supremacy}
 Quantum computers allure stem from their ability to solve certain problems more efficiently, exponentially so, than classical computers can.
-Most (in-) famous of these problems are integer factorisation and discrete logarithms, which could be used to break effectively all public-key cryptography.
-Encrypted data is already being hoarded~\autocite{NEEDED}, and the research and development of quantum computers is already well underway.
-
-There are still several more problems for which quantum computers are believed to offer great advantages.
+Most (in-) famous of these problems are integer factorisation and discrete logarithms, which could be used to break effectively all public-key cryptography, but there are still several more problems for which quantum computers are believed to offer great advantages.
 It is proven that the class of problems quantum computers can solve in polynomial time (with high probability), $\BQP$, contains the complexity class $\P$~\autocite{nielsen2012} and $\BPP$, the class of problems that can be solved in polynomial time with a classical probabilistic algorithm~\autocite{nielsen2012}.
-This follows from the fact than quantum computers can efficiently run any efficient classical algorithm and reproduce any classical randomness by performing quantum measurements.
+This follows from the fact that quantum computers can efficiently run any efficient classical algorithm and reproduce any classical randomness by performing quantum measurements.
+To produce a sample from a desired probability distribution, a corresponding superposition can be prepared and measured.
 
-The Deutsch-Jozsa algorithm~\autocite{deutsch1992}, while of no practical use, is proved to be exponentially faster than any deterministic classical algorithm\footnotemark~\autocite{NEEDED}.
+The Deutsch-Jozsa algorithm~\autocite{deutsch1992}, while of no practical use, is proved to be exponentially faster than any deterministic classical algorithm\footnotemark~\autocite{simon1994}.
 Since quantum computers can solve problems like integer factorisation and discrete logarithms efficiently, it is believed that $\BQP$ is strictly greater than $\P$ by containing elements of $\NP \setminus \P$, but as whether $\P = \NP$ is unknown, these problems could turn out actually to be in $\P$.
-In a similar vein, $\NP$-complete problems are believed to lie outside $\BQP$, but this is not proven~\autocite{NEEDED}.
+In a similar vein, $\NP$-complete problems are believed to lie outside $\BQP$, such neither $\BQP$ nor $\NP$ contains the other, but this is again unproven~\autocite{aaronson2010}.
 
 \footnotetext{
-    The provable exponential speed-up does not prove $\P \neq \BQP$, as the algorithm requires an oracle~\autocite{NEEDED}.
+    The provable exponential speed-up does not prove $\P \neq \BQP$, as the algorithm requires an oracle~\autocite{johansson2017}.
     Oracle separations, a weaker notion than true inequality, have been found not only between $\P$ and $\BQP$, but also between $\BQP$ and $\BPP$ with Simon's algorithm~\autocite{simon1994}.
 }
 
@@ -312,7 +310,7 @@ Generalising amplitude estimation, in~\autocite{montanaro2015}, a \enquote{near-
 Given an algorithm $\mathcal{O}$ whose measurement outputs are assigned real values such that $v(\mathcal{A})$ is a random variable with mean $\mu$ and variance $\sigma^2$, it is proved that approximating $\mu$ with an additive error of $\epsilon$ can be achieved with only $\tilde{O}(\sigma/\epsilon)$ calls to $\mathcal{A}$ and its inverse, which is a near-quadratic speed-up over the classical case\footnotemark{}.
 
 \footnotetext{
-    The $\tilde{O}$ notation ignores logarithmic factors.
+    The $\tilde{O}$ notation is the same as regular big-O notation, but with (poly-) logarithmic factors omitted, e.g., $n^2 \log(n)^2 = \tilde{O}(n^2)$.
 }
 
 The simpler version on which the general builds, $v(\mathcal{A})$ is assumed to lie in the interval $[0,1]$.

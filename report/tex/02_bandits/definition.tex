@@ -2,7 +2,7 @@
 In the multi-armed bandit problem the agent (the player or decision-maker) has knowledge of the set of available actions $\mathcal{A}=\{1, \dots, k\}$, but not the reward distributions $\nu = \{P_a : a \in \mathcal{A}\}$.
 For each time step $t=1, \dots, T$, the agent selects an arm $a_t \in \mathcal{A}$ and receives a reward $X_t \sim P_{a_t}$, independent of previous rewards and actions.
 The time horizon $T$ is usually assumed finite and given, but for many applications, knowledge of it unreasonable, motivating algorithms that can work with infinite time horizons, known as being anytime.
-Nonetheless, it will be assumed greater than $k$, such that all arms may be pulled at least once.
+Nonetheless, it will be assumed greater than $k$, such that all arms may be pulled at least once, ensuring that empirical means and whatnot are well-defined.
 The goal of the agent is to maximise its cumulative rewards.
 
 \subsection{Further assumptions}
@@ -17,6 +17,7 @@ Note than some classes are parametric, like Bernoulli and Gaussian bandits, whil
 Only cases void of any inter-arm structure are considered; knowledge of the mean of one arm should never be useful to infer the mean of another.
 
 It is assumed to be only one optimal arm, which is the arm with the highest mean reward.
+This is rarely a crucial property, but still useful to avoid unnecessary complications and verbosity in the arguments and proofs that follow.
 
 
 \begin{table}

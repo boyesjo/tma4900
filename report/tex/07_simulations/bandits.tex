@@ -41,12 +41,9 @@ Because of these long periods, there is not as many possible trajectories as wit
 \end{figure}
 
 \subsubsection{Low and high probabilities}
-Next, mean more extreme mean values of $0.01$ and $0.005$
-with a reward gap of $0.005$ equal to the above, are tested.
-\Cref{fig:low_prob_fix} contains the results.
-Here, QUCB beats UCB thoroughly still, both algorithms achieving similar regrets as in \cref{fig:big2}, but now Thompson sampling is clearly superior.
-
-
+Next, more extreme mean values of $0.01$ and $0.005$ with a reward gap of $0.005$ equal to the above, are tested.
+\Cref{fig:low_prob_fix} contains the results for these simulations.
+There, it can be seen that QUCB beats UCB thoroughly still, as both algorithms achieving similar regrets as in \cref{fig:big2}, but now Thompson sampling is clearly superior.
 
 
 \begin{figure}
@@ -93,8 +90,6 @@ Here, QUCB beats UCB thoroughly still, both algorithms achieving similar regrets
 At these extreme values, it seems the gap must shrink for QUCB to be able to outperform Thompson sampling.
 This is shown in \cref{fig:high_prob}, where the gap is reduced to $0.0005$,
 Even so, the QUCB advantage is not as pronounced as in \cref{fig:big2}.
-
-
 
 \subsubsection{Four arms}
 As a final test, the number of arms is increased to four.

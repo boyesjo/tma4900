@@ -13,7 +13,7 @@ See \cref{sec:qrl_impl} for more details on the implementation of the quantum po
 
 The first problem considered is the cart-pole problem.
 This was introduced in \cref{sec:cartpole}.
-All algorithms were trained for 2000 episodes, repeated ten times, and the results are rendered in \cref{fig:cartpole_training}.
+All algorithms were trained for 2,000 episodes, repeated ten times, and the results are rendered in \cref{fig:cartpole_training}.
 Note that most of the algorithms display very inconsistent performance, at least before completely solving the problem, so a rolling mean was used.
 This inconsistency is likely caused by both the random initialisation, which the agents do not immediately learn and handle, and by the stochastic policies.
 
@@ -35,12 +35,13 @@ DQN appears completely futile, while both A2C and the QNN-based method of~\autoc
     }
     \subimport{figs}{cart_pole}
     \caption[
-        Cart-pole training.
+        Accumulated rewards during cart-pole training.
     ]
     {
-        Cart-pole training.
-        Each algorithm was trained 10 times.
-        A rolling mean of 20 episodes was used to smooth the highly noisy data.
+        Accumulated rewards during cart-pole training.
+        Each algorithm was trained 10 times, and the average is shown.
+        Thereupon a rolling mean of 20 episodes was used to smooth the still highly noisy data.
+        In the cart-pole environment, rewards are given at each time step, so the sum of rewards equal the number of frames the pole was balanced.
     }
     \label{fig:cartpole_training}
 \end{figure}
@@ -53,7 +54,7 @@ It was therefore decided to encode the empirical means of arms as the state.
 In addition, as to provide all the information, also the number of times each arm has been pulled is encoded and the current time step is also included.
 The number of times the arms were pulled was divided by the current time step to normalise the values, and the current time step was transformed by the hyperbolic tangent to normalise it to the range $[0, 1]$, ensuring that the state is always in the range $[0, 1]^{2k+1}$
 This helps the stability of the classical neural network-based algorithms and is crucial for encoding the data in the quantum neural network.
-The state was consequently a vector of length $2k+1$, where $k$ is the number of arms, given by
+The state was consequently a vector of length $2k+1$, $k$ being the number of arms, given by
 \begin{equation}
     \label{eq:rl_bandit_state}
     S_t = \left(
@@ -94,8 +95,14 @@ For the general RL agents to be on par with the problem-specific agents, design 
         largexnumbers,
     }
     \subimport{figs}{rl_bandits}
-    \caption{
+    \caption[
         Regret for standard reinforcement learning algorithms.
+    ]
+    {
+        Regret for standard reinforcement learning algorithms.
+        Each was \enquote{trained} on the bandit problem from which the average regrets are shown.
+        There were two Bernoulli arms with means $0.5$ and $0.505$, the same as in \cref{fig:big2}.
+        Only the A2C algorithm is able to learn something in the time horizon considered.
     }
     \label{fig:rl_bandits}
 \end{figure}

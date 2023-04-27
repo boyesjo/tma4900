@@ -103,7 +103,7 @@ It is worth noting, however, that the optimal decay rate depends on the specific
 
 
 \subsection{Upper confidence bounds}
-The upper confidence bound (UCB) algorithm is a family of more sophisticated algorithm based on estimating an upper bound for the mean of each arm, and they are commonly used in practice~\autocite{NEEDED}.
+The upper confidence bound (UCB) algorithm is a family of more sophisticated algorithm based on estimating an upper bound for the mean of each arm, and they are a common baseline for more advanced algorithms tackling more complicated bandit variants~\autocite{li2010}.
 One always chooses the arm whose upper confidence bound is highest, a principle known as \enquote{optimism in the face of uncertainty}.
 This should make sense, as if the wrong arm appears best, it will be pulled more often and the empirical mean will be corrected, while the true best arm with its larger bound will eventually become highest and so pulled.
 When exploiting the actual best arm, the agent can trust it to be the best, as the confidence bound will remain above those of all the other arms.
