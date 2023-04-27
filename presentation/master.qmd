@@ -92,11 +92,43 @@ Mål
 
 ## Klassiske strategier
 
+<!-- :::: {.columns align=center}
+
+::: {.column width=40%}
 - Ren utforskning
 - Ren utnyttelse
 - $\epsilon$-grådig
 - UCB
 - Thompson sampling
+:::
+
+
+::: {.column width=60%} -->
+
+\begin{tikzpicture}
+    \begin{axis}[
+        width=10cm,
+        height=8cm,
+        legend entries={Ren utforskning, Grådig, $\epsilon$-grådig, UCB, Thompson},
+        legend style={at={(-0.2,0.5)},anchor=east},
+        ylabel={Regret},
+        xlabel={Runde},
+    ]
+        \pgfplotstableread[col sep=comma]{../code/MAB/comparison.dat}\datatable
+
+        \addplot[color=black, mark=none, dashed] table [x=turn, y=Random]{\datatable};
+        \addplot[color=black, mark=none] table [x=turn, y=Greedy]{\datatable};
+        \addplot[color=black, mark=none, dotted] table [x=turn, y=EpsilonGreedy]{\datatable};
+        \addplot[color=red, mark=none] table [x=turn, y=UCB]{\datatable};
+        \addplot[color=green, mark=none] table [x=turn, y=ThompsonBernoulli]{\datatable};
+
+    \end{axis}
+\end{tikzpicture}
+<!-- :::
+
+
+:::: -->
+
 
 ## Kvantemaskiner
 

@@ -16,13 +16,20 @@ class UCB(Agent):
         self.alpha = alpha
 
     def _select_arm(self) -> int:
-
-        return np.argmax(
-            self.arm_means
-            * np.sqrt(
-                2
-                * self.alpha
-                * np.log(self.turns + 1)
-                / (1 + np.array(self.arm_counts))
-            )
+        coeff = np.sqrt(
+            2
+            * self.alpha
+            * np.log(self.turns + 1)
+            / (1 + np.array(self.arm_counts))
         )
+        return np.argmax(self.arm_means + coeff)  # type: ignore
+
+        # return np.argmax(
+        #     self.arm_means
+        #     * np.sqrt(
+        #         2
+        #         * self.alpha
+        #         * np.log(self.turns + 1)
+        #         / (1 + np.array(self.arm_counts))
+        #     )
+        # )
