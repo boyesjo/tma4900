@@ -5,16 +5,18 @@
 This thesis has explored the multi-armed bandit problem and the application of quantum computing to solve it.
 Moreover, the application of modern reinforcement learning has also been explored, with the aim of solving the bandit problem using general reinforcement learning algorithms of both classical and quantum nature.
 The bandit problem is a widely applicable and useful problem that has been studied for many decades.
-As discussed in the introduction, it is indeed useful to real-world problems, and with computers automating yet more tasks, informed decision-making is becoming increasingly important.
+As discussed in the introduction, it is indeed useful to real-world problems, and with computers automating yet more tasks, ensuring these are well-informed is pertinent.
 Despite its simplicity, the bandit problem remains intractable to solve optimally in most cases.
 In fact, defining precisely what an \enquote{optimal} policy is for the bandit problem is a non-trivial task, and three main definitions are discussed in this thesis, namely minimax-optimality, instance-optimality and Bayesian optimality with respect to some prior distribution.
-Still, classical algorithms exist that achieve optimal performance with respect to either of these, and research is ongoing in this area.
+Still, classical algorithms that achieve optimal performance with respect to either of these, though often only asymptotically, do exist.
+Research is ongoing in this area.
 
 Quantum computing has the potential to solve certain problem that are intractable to solve classically.
 Based on quantum Monte Carlo methods to estimate random variables, the quantum upper bound algorithm has been proposed and shown to achieve logarithmic minimax regret, something which is provably impossible classically.
-However, simulations done here show that the algorithm is only effective on what can be considered \enquote{hard} instances of the bandit problem, id est those in which reward means are close and many samples will be needed to thoroughly distinguish between them.
-For easy instances, the algorithm effectively waste rounds, and is significantly outperformed by the classical Thompson sampling algorithm.
-This is not surprising, as the algorithm relies on exponentially many consecutive samples to achieve its superior predictive performance, and in the easy instances, one must eliminate arms much earlier.
+However, simulations done for this project show that the algorithm is only effective on what can be considered \enquote{hard} instances of the bandit problem, id est those in which reward means are close and many samples will be needed to thoroughly distinguish between them.
+For easy instances, the algorithm is in essence wasting turns on sampling and producing unnecessarily accurate estimates of the reward means.
+It is subsequently significantly outperformed by the classical Thompson sampling algorithm.
+This is not surprising, as the algorithm relies on exponentially many consecutive samples to achieve its superior predictive performance, and in the easy instances, one must eliminate arms much earlier to achieve the lowest reasonable regret.
 
 While the quantum upper bound algorithm may be useful for certain problems, it can not be applied to any bandit problem.
 It relies on the rewards being observed as quantum mechanical superpositions corresponding to the reward distributions.
@@ -23,8 +25,8 @@ This does not mean that the QUCB algorithm is purely an academic curiosity, howe
 Were quantum computing and quantum communication to advance to the point where it is possible to observe quantum superpositions, the quantum bandit algorithms could be used to enhance quantum computing-based algorithms in the same way classical bandit algorithms are used classically.
 
 Modern reinforcement learning has shown the ability to solve some problems better than humans can.
-With neural networks and increasingly powerful computers, state-of-the-art methods can beat even the best humans at games such as Go and video games like \textit{Starcraft~II} and \textit{Dota~2}.
-Combining quantum computing with reinforcement learning has to elevate the performance of RL algorithms to a new level, with recent results showing signs of variational quantum algorithms showing certain advantages over classical algorithms.
+With neural networks and increasingly powerful computers, state-of-the-art methods can beat even the best humans at board games such as Go and video games like \textit{Starcraft~II} and \textit{Dota~2}.
+Combining quantum computing with reinforcement learning has the goal of elevating the performance of RL algorithms to a new level, and recent results have indeed shown some signs of variational quantum algorithms having certain advantages over classical algorithms.
 This is particularly true for problems with inherent quantum properties.
 
 Attempts to solve the bandit problem with both classical reinforcement learning and quantum reinforcement learning left lacklustre results.
@@ -33,7 +35,7 @@ Nonetheless, it shows that bandit-specific algorithms are much better suited tha
 
 In conclusion, this thesis has shown that the multi-armed bandit problem is a challenging and important problem that has been studied for many years. The application of quantum computing and reinforcement learning to bandit problems has shown promise, but more research is needed to determine their effectiveness in practice. The development of purpose-designed algorithms is crucial to achieving optimal performance in real-world applications.
 
-Future research could explore the use of other quantum algorithms and techniques, as well as the development of hybrid classical-quantum algorithms. Additionally, more research is needed to determine the practical effectiveness of quantum reinforcement learning in solving real-world problems. Overall, the study of multi-armed bandits and their application to quantum computing and reinforcement learning represents a fascinating and promising area of research with many exciting possibilities for the future.
+% Future research could explore the use of other quantum algorithms and techniques, as well as the development of hybrid classical-quantum algorithms. Additionally, more research is needed to determine the practical effectiveness of quantum reinforcement learning in solving real-world problems. Overall, the study of multi-armed bandits and their application to quantum computing and reinforcement learning represents a fascinating and promising area of research with many exciting possibilities for the future.
 
 \section{Outlook}
 The pursuit of optimal policies for the multi-armed bandit problem remains a perennial subject of research.
