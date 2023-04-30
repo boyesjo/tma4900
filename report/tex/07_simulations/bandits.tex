@@ -121,23 +121,22 @@ In general, QUCB provides no advantages or noteworthy changes from UCB with resp
 \subsection{Bayesian regret}
 \label{sec:results_bayesian}
 As described in \cref{sec:bayesian-optimality}, the Bayesian regret is the average regret over some set prior.
-What priors to choose is a topic for discussion, which will not be covered deeply here.
+What priors to choose is a topic for discussion, which will not be covered deeply in this section nor thesis in general.
+It may not be the most relevant measure for which to optimise policies, as explained in \cref{sec:optimality}.
 In any case, it provides a measure of robustness, measuring the performance over a range of possible instances.
 
 \subsubsection{Uniform prior}
 First, the simple case of two arms, whose means are independently drawn from a uniform distribution on the interval $[0, 1]$ will be considered.
 The Bayesian regret for this case is on display in \cref{fig:random}.
-All three were run on 294 instances sampled from the prior\footnotemark, and the results are averaged over these instances.
-
-\footnotetext{
-    During the 295th run, the program crashed due issues relating to disk usage permissions.
-}
+All three were run on 1,000 instances sampled from the prior.
+The results shown are the averages over these instances.
 
 It is obvious that the Thompson sampling algorithm performs best.
-QUCB does outperform UCB, but not by as much as the previously considered cases and only after some time.
+QUCB does outperform UCB, but not by as much as the previously considered cases and not in the first $\approx 30,000$ turns.
 
 The lack of any quantum advantage is probably due to this prior generally yielding \enquote{easy} problems, where the optimal arm can be quickly identified.
 In such cases, the initial overhead of the quantum algorithm appears not to be worth the effort.
+QUCB with its current QMC implementation relies on a large number of initial samples to produce it supreme estimates, but with the uniform prior and only two arms, the expected difference of means is a third, so the optimal arm can often be identified after only a few turns with high certainty.
 Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produce a very flat regret curse; when looking at the log-log-plot in \cref{fig:random}, it may seem like the QUCB regret will be lower than even Thompson sampling for some great and admittedly unrealistic number of turns.
 
 
@@ -156,7 +155,7 @@ Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produc
             legend cell align=left,
             mystyle,
             largexnumbers,
-            ymax = 135,
+            ymax = 150,
         }
         \subimport{figs}{uniform_prior.tex}
         \caption{Linear scale.}
@@ -192,9 +191,9 @@ Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produc
 
 \subsubsection{Challenging prior}
 One might argue that the uniform prior is too easy, and that the quantum advantage should be more apparent in a more challenging prior.
-Firstly, for real-world Bernoulli bandits, there are reasons to believe that the means would lie closer to the endpoints 0 and 1 than in the middle.
-Secondly, for the problem to be interesting and warrant the use of clever quantum algorithms or even just any bandit theory, the means should be close to each other.
-Thus, the following prior was chosen:
+Firstly, for real-world Bernoulli bandits, there may be reasons to believe that the means would lie closer to the endpoints 0 and 1 than in the middle.
+Secondly, for the problem to be interesting and warrant the use of clever quantum algorithms or even just any bandit theory, the means should be assumed close to each other.
+Thus, to consider a more challenging prior, the following was chosen:
 \begin{equation}
     \label{eq:challenging_prior}
     \begin{aligned}
@@ -202,9 +201,16 @@ Thus, the following prior was chosen:
         \text{logit}(\mu_2) & \sim \text{N}(\text{logit}(\mu_1), 0.1),
     \end{aligned}
 \end{equation}
-where $\text{logit}(\mu) = \log(\mu/(1-\mu))$.
+where the logit is given by
+\begin{equation}
+    \label{eq:logit}
+    \text{logit}(\mu) = \log(\mu/(1-\mu)).
+\end{equation}
+The logit is used to ensure that the means are in the interval $[0, 1]$.
+It is particularly well-suited for interpreting the means of Bernoulli bandits due to its ability to capture meaningful differences between probabilities. For example, on the logit scale, the distance between 0.001 and 0.101 is much greater than that between 0.4 and 0.5.
+Its symmetry around zero and coverage of the entire real number line allow for a comprehensive representation of the reward means.
 
-Running a successful 1000 simulations with this prior, the regrets visualised in \cref{fig:random2} were obtained.
+Running a successful 1,000 simulations with this prior, the regrets visualised in \cref{fig:random2} were obtained.
 At the final 250,000th turn, the QUCB and Thompson sampling algorithms have virtually equal regrets.
 QUCB lags behind in the beginning, but its regret curve appears flatter towards the end, and it is likely that it would beat Thompson sampling in the long run.
 The UCB algorithm, on the other hand, is as before clearly outperformed by both QUCB and Thompson sampling.
