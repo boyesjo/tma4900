@@ -1,5 +1,28 @@
 \section{Other quantum bandit advances}
 
+\subsection{Heavy-tailed bandits}
+The more difficult problem of reward distributions with heavy tails is considered in~\autocite{wu2023}.
+Using a similar upper confidence bound approach as QUCB, their algorithm shows quantum advantage for bandits where the assumption of bounded $(1 + \epsilon)$-moments for some $0<\epsilon \leq 1$ is made, a weaker assumption than the bounded value or bounded variance assumptions made in~\autocite{wan2022}.
+Specifically, a polynomially improved regret is achieved, and the improvement is verified with experimental simulations.
+
+\subsection{Quantum contextual bandits}
+Variational methods are used in~\autocite{hu2019} to study the problem of quantum contextual bandits.
+There it is noted how quantum computers naturally encode continuous variables, and how this may be used to improve the performance of bandit algorithms.
+No quantum benefits are shown, but the potential is made clear.
+
+In~\autocite{brahmachari2023}, contextual linear bandits with quantum data studied.
+A \enquote{quantum context} is observed, from which a recommender system is designed.
+Similarly to the above QUCB algorithm, the rewards are assumed to come from quantum measurements.
+
+
+\subsection{Learning quantum states}
+The bandit framework is in~\autocite{lumbreras2022} used to study the problem of learning quantum states efficiently.
+There, the set of arms are some observables and the bandits are some fixed quantum state.
+Thence a copy of the state is prepared and measured with the observable corresponding to the arm pulled, from with the measurement is interpreted as a reward.
+Several classical algorithms are considered for this problem, including UCB, and classical bounds are similarly proved for the regret.
+Because the quantum state is measured at each step, something like QMC is not possible, so quantum speed-ups are not possible.
+
+
 \subsection{Best arm identification}
 In~\autocite{casale2020}, an algorithm based on amplitude amplification is proposed and is shown to find the optimal arm with quadratically fewer queries than the best classical algorithm for classical bandits in the case of Bernoulli rewards.
 There is albeit a significant drawback: the probability of the correct arm being suggested can not be set arbitrarily high, but is instead given by the ratio of the best arm's mean to the sum of the means of all arms.

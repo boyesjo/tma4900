@@ -34,9 +34,9 @@ def run_qucb1(
 
 
 def gen_p_list():
-    a = 0.5
-    b = 0.5
-    sigma = 0.1
+    a = 2
+    b = 2
+    sigma = 0.02
     p1 = beta.rvs(a, b)
     logit_p1 = np.log(p1 / (1 - p1))
     logit_p2 = logit_p1 + norm.rvs(scale=sigma)
@@ -69,7 +69,6 @@ def run_all(
 
 
 if __name__ == "__main__":
-
     folder = Path("results") / settings["folder"]
     folder.mkdir(parents=True, exist_ok=True)
 
@@ -88,7 +87,45 @@ if __name__ == "__main__":
         folder / "p_list.parquet", index=False, compression="brotli"
     )
 
-    tasks = np.arange(settings["n_simulations"])
+    # tasks = np.arange(settings["n_simulations"])
+    tasks = np.array(
+        [
+            206,
+            234,
+            235,
+            236,
+            237,
+            238,
+            239,
+            240,
+            241,
+            242,
+            290,
+            291,
+            292,
+            293,
+            294,
+            295,
+            296,
+            398,
+            399,
+            400,
+            401,
+            402,
+            403,
+            404,
+            547,
+            548,
+            885,
+            886,
+            887,
+            888,
+            889,
+            890,
+            979,
+            980,
+        ]
+    )
     with multiprocessing.Pool() as pool:
         pool.starmap(
             run_all,

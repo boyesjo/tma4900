@@ -147,9 +147,24 @@ QMC | Estimere $\mathbb{E}[X]$ | $O(1/\epsilon)$ | $O(1/\epsilon^2)$
 
 
 ## Kvante-UCB
+
+:::: {.columns align=center}
+
+::: {.column width=40%}
+
 - Ide: bruk QMC til å estimere $\mathbb{E}[X_i]$.
 - Fordel: konfidensintervaller blir mindre
 - Resultat: $O(\log(T))$-algoritme
+
+:::
+
+::: {.column width=60%} 
+![](images/qubit.png)
+
+:::
+
+
+::::
 
 ## Simuleringer: uniform prior
 
