@@ -232,7 +232,7 @@ In result, the oracle initialisation can be implemented as is listed in \cref{al
 \subsubsection{QMC}
 Thankfully, amplitude estimation is a well-studied problem in quantum computing, and there are several implementations available.
 For example, in the Qiskit library, the \texttt{AmplitudeEstimation} class can be used to perform amplitude estimation on a quantum circuit with a given number of qubits.
-It assumes a \texttt{EstimationProblem} object is initialised with the quantum algorithm to be estimated and the objective qubit(s).
+It assumes a \texttt{EstimationProblem} object is initialised with the quantum algorithm to be estimated and the objective qubit(s) specified.
 
 What is more, with binary rewards encoded in the final qubit, QMC can be implemented without the extra qubit that is described in \cref{sec:qmc}.
 Instead, amplitude estimation can be performed directly on the oracles as they are implemented in \cref{alg:qucb_oracle}.

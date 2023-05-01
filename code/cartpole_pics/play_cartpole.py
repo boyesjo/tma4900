@@ -1,7 +1,7 @@
 import gym
 import time
 import sys
-import select
+import keyboard
 
 env = gym.make("CartPole-v0")
 env.reset()
@@ -15,12 +15,8 @@ while True:
         env.render()
 
         # if space is pressed action 1 else 0
-        if sys.stdin in select.select([sys.stdin], [], [], TIMEOUT)[0]:
-            line = sys.stdin.readline()
-            if line == " ":
-                action = 1
-            else:
-                action = 0
+        if keyboard.is_pressed("space"):
+            action = 1
         else:
             action = 0
 
