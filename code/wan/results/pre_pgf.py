@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-FOLDER = Path() / "low_prob_fix2"
+FOLDER = Path() / "random3"
 
 # %%
 df_qucb = pd.read_parquet(FOLDER / "qucb.parquet").set_index("turn")
