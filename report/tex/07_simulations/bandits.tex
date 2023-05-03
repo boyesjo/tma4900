@@ -3,7 +3,14 @@ While the upper bound shown in \cref{sec:wan2022} implies QUCB1 advantage, it do
 It is therefore of much interest to test it on a variety of problems and compare its average performance to other algorithms — not only with the classical UCB1 to which it is compared in the original paper, but also with the more performant Thompson sampling algorithm.
 
 For fixed bandit instances, 100 simulations were run for each algorithm, while for Bayesian regrets 1000 parallels were run.
-To limit the scope and computational resources required, only Bernoulli rewards were considered.
+To limit the scope and computational resources required, only Bernoulli rewards were considered, and in all cases but one only two arms.
+How the algorithm handles more arms may be of some interest, but its main advantage is its better dependence on the time horizon $T$, and it handles multiple arms the same was as the classical UCB algorithm.
+
+Across all bandit simulations, a time horizon of $T=250,000$ was used.
+This is indeed a large number, but still merely a quarter of what was tested in~\autocite{wan2022}.
+The quantum algorithm presents no immediate advantage for smaller time horizons, so  a time horizon of some substance must be chosen to see its effects.
+Specifically, due to its exponentially long quantum Monte Carlo periods, the horizon must be large enough for the greater accuracy of the QMC estimates to outweigh the cost of the long periods.
+
 As noted in~\autocite{wan2022}, setting the confidence parameter to a higher value than the theoretically desirable $1/T$ leads to better performance.
 It was thus set to $0.01$ for all experiments.
 Moreover, the constant $C_1$ which was only defined existentially was arbitrarily set to $2$ across all experiments, as it was not clear how to choose it in a principled manner, and this value seemed able to reproduce the results of~\autocite{wan2022}.
@@ -83,8 +90,8 @@ There, it can be seen that QUCB beats UCB thoroughly still, as both algorithms a
         \caption{Regret for two arms, means 0.99, 0.9905.}
         \label{fig:high_prob}
     \end{subfigure}
-    \caption{QUCB1 regret for especially high and low means.}
     \label{fig:low_high_prob}
+    \caption{QUCB1 regret for especially high and low means.}
 \end{figure}
 
 At these extreme values, it seems the gap must shrink for QUCB to be able to outperform Thompson sampling.
@@ -226,8 +233,9 @@ The prior was constructed similarly to the one in \cref{eq:challenging_prior}, b
     \end{aligned}
 \end{equation}
 
-This simulation was run for 966 parallels before the computation server got tired.
+This simulation was also run for 1,000 parallels.
 As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson sampling still clearly outperforms UCB.
+It is clear that this prior produces so challenging instances, that the advantage over pure exploration is not as apparent as in the previous priors, but more akin to the first considered fixed instances in \cref{sec:sim_fixed_arms}, where the QUCB advantage was initially observed\footnote{Viz. \cref{fig:big2} and \cref{fig:high_prob}.}.
 
 
 \begin{figure}
