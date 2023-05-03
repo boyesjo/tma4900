@@ -1,13 +1,14 @@
 ---
 title: Bandittisme og kvanteagenter
 author: Boye Gravningen Sjo
-institute: Norges tekniske høiskole
+institute: NTNU
 date: "2023"
 date-format: "[Masterpresentasjon] YYYY"
 include-in-header: 
     text: |
         \usepackage{tikz}
         \usepackage{pgfplots}
+
 format: 
     beamer:
         pdf-engine: latexmk
@@ -139,10 +140,10 @@ Mål
 
 Kvantealgoritme | Problem | Kompleksitet | Beste klassiske
 --- | --- | --- | ---
-Grover | Ustrukturert søk | $O(\sqrt{N})$ | $O(N)$
-Shor | Faktorisering | $O( \log(N)^3)$ | Subeksponensiell
 QFT | Fouriertransformasjon | $O(\log(N))$ | $O(N \log(N))$
+Shor | Faktorisering | $O( \log(N)^3)$ | Subeksponensiell
 HHL | Lineære ligningssystemer | $O(\log(N)\kappa^2)$ | $O(N\kappa)$
+Grover | Ustrukturert søk | $O(\sqrt{N})$ | $O(N)$
 QMC | Estimere $\mathbb{E}[X]$ | $O(1/\epsilon)$ | $O(1/\epsilon^2)$
 
 
@@ -150,7 +151,7 @@ QMC | Estimere $\mathbb{E}[X]$ | $O(1/\epsilon)$ | $O(1/\epsilon^2)$
 
 :::: {.columns align=center}
 
-::: {.column width=40%}
+::: {.column width=50%}
 
 - Ide: bruk QMC til å estimere $\mathbb{E}[X_i]$.
 - Fordel: konfidensintervaller blir mindre
@@ -158,8 +159,33 @@ QMC | Estimere $\mathbb{E}[X]$ | $O(1/\epsilon)$ | $O(1/\epsilon^2)$
 
 :::
 
-::: {.column width=60%} 
-![](images/qubit.png)
+::: {.column width=50%} 
+\begin{tikzpicture}
+    \begin{axis}[
+            width=0.8\textwidth,
+            height=0.8\textwidth,
+            xlabel=Arm,
+            ylabel=Estimat,
+            grid=major,
+            xtick=data,
+        ]
+        \pgfplotstableread[col sep=comma]{../code/bandit_figs/ucb/ucb_1000.dat}\datatable
+        \addplot+[
+            only marks,
+            error bars/.cd,
+            y dir=plus,
+            y explicit
+        ] table[
+                x=arm,
+                y=estimate,
+                y error=ucb,
+                col sep=comma,
+            ] {\datatable};
+        \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.8, 0.2) (1.2, 0.2)};
+        \addplot+[dashed, mark=none, black, forget plot] coordinates {(1.8, 0.4) (2.2, 0.4)};
+        \addplot+[dashed, mark=none, black, forget plot] coordinates {(2.8, 0.7) (3.2, 0.7)};
+    \end{axis}
+\end{tikzpicture}
 
 :::
 
