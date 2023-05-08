@@ -196,13 +196,14 @@ With this, setting $\delta = 1/T$, it is obtained that
         (8(k-1)C_1 + k) \log_2 T
         \\
          & =
-        O(k \log T)
+        O(k \log T).
     \end{aligned}
 \end{equation}
-as desired.
+Quod erat demonstrandum.
 
 \subsection{Implementing quantum upper confidence bounds}
-To translate \cref{alg:qucb1} into something that can be either run on a quantum computer or simulated on a classical computer, the arm-oracles need to be made available and QMC needs to be implemented.
+\label{sec:qucb-implementation}
+To translate \cref{alg:qucb1} into something that can be either run on a quantum computer or simulated on a classical computer, the arm-oracles need to be made available and QMC needs to be implemented, building on amplitude estimation\footnote{Qq.v. \cref{sec:amplitude-estimation,sec:qmc}}.
 
 \subsubsection{Arm-oracles}
 The oracles of \cref{eq:wan_oracle} can be implemented as quantum gates by first constructing their matrix representation.

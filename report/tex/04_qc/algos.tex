@@ -1,6 +1,6 @@
 \section{Quantum algorithms}
 \subsection{Computational complexity and quantum supremacy}
-Quantum computers allure stem from their ability to solve certain problems more efficiently, exponentially so, than classical computers can.
+Quantum computers allure stems from their ability to solve certain problems more efficiently, exponentially so, than classical computers can.
 Most (in-) famous of these problems are integer factorisation and discrete logarithms, which could be used to break effectively all public-key cryptography, but there are still several more problems for which quantum computers are believed to offer great advantages.
 It is proven that the class of problems quantum computers can solve in polynomial time (with high probability), $\BQP$, contains the complexity class $\P$~\autocite{nielsen2012} and $\BPP$, the class of problems that can be solved in polynomial time with a classical probabilistic algorithm~\autocite{nielsen2012}.
 This follows from the fact that quantum computers can efficiently run any efficient classical algorithm and reproduce any classical randomness by performing quantum measurements.
@@ -25,26 +25,30 @@ The complexity hierarchy can be expressed thus:
         \node at (6,0) (pspace) {\PSPACE};
         \node at (3,1) (np) {\NP};
 
-        \draw[->] (p) -- (bpp);
-        \draw[->] (bpp) -- (bqp);
-        \draw[->] (bqp) -- (pspace);
+        \draw[->] (p) -- (bpp); % node[midway,above] {$\subseteq$};
+        \draw[->] (bpp) -- (bqp); % node[midway,above] {$\subseteq$};
+        \draw[->] (bqp) -- (pspace); % node[midway,above] {$\subseteq$};
 
-        \draw[->] (p) -- (np);
-        \draw[->] (np) -- (pspace);
+        \draw[->] (p) -- (np); % node[midway,above] {$\subseteq$};;
+        \draw[->] (np) -- (pspace); % node[midway,above] {$\subseteq$};;
+
+        % \draw[<->, dashed] (np) -- (bqp) node[midway,above] {?};
+        % \draw[<->, dashed] (np) -- (bpp) node[midway,above] {?};
 
     \end{tikzpicture}
 
 \end{center}
-It is widely conjectured that the containments are strict, but this is not proven.
-As disproving $\P = \PSPACE$ remains elusive, proving that $\BQP$ is strictly greater than P must be even harder.
+Other than $\P \stackrel{?}{=} \BPP$, it is widely conjectured that the containments are strict, but this is not proven.
+As disproving $\P = \PSPACE$ remains elusive, proving that $\BQP$ is strictly greater than $\P$ must be even harder.
+It is therefore hard to say anything definite about quantum supremacy and being able to solve problems exponentially faster than can be done classically.
 
-Exponential speed-ups do not come for free.
+The exponential speed-ups that are discovered have not come easily.
 Although the states spaces are exponentially large, with only a limited set of operations available, states can not be created and manipulated arbitrarily without exponentially many steps.
-What is more, recapturing all the information in a general state can not be done without negating any exponential gains.
+What is more, recapturing all the information in a general state can not be done without exponentially many measurements, negating any exponential gains.
 The problem must have some structure to be exploited for a speed-up to be possible.
-Quantum computers do only solve certain problems more efficiently than classical computers, and finding the algorithms to do so is not trivial.
-Shor's algorithm has time complexity $O((\log N)^3)$ while the most efficient known classical algorithm, the general number field sieve, is sub-exponential with a time complexity on the form $\Omega(k^{\frac{1}{3}}\log^{2/3}k)$, where $k=O(2^N)$~\autocite{dervovic2018}.
-To solve linear system, there is the HHL algorithm with time complexity $O(\log(N)\kappa^2)$, where $\kappa$ is the condition number.
+Quantum computers have only been shown to solve certain problems exponentially faster than classical computers, and finding the algorithms to do so is not trivial.
+Shor's algorithm has time complexity $O((\log N)^3)$, while the most efficient known classical algorithm, the general number field sieve, is \enquote{sub-exponential} with a time complexity on the form $\Omega(k^{\frac{1}{3}}\log^{2/3}k)$, where $k=O(2^N)$~\autocite{dervovic2018}.
+To solve linear systems, there is the HHL algorithm with time complexity $O(\log(N)\kappa^2)$, where $\kappa$ is the condition number.
 This is an exponential speed-up over the fastest known classical algorithm\footnotemark{}, which has time complexity $O(N \kappa)$.
 Still, these are non-trivial algorithms, not yet usable in practice and that were not easily found.
 
@@ -54,24 +58,24 @@ Still, these are non-trivial algorithms, not yet usable in practice and that wer
     Cf.~\autocite{aaronson2015}.
 }
 
-Polynomial speed-ups are perhaps more easily found.
+Polynomial speed-ups are more easily found.
 For example, the Grover algorithm which is used to search for an element in an unsorted list has time complexity $O(\sqrt{N})$~\autocite{grover1996}.
 Classically, this can not be done in less than $O(N)$ time.
 It can be proven that the Grover algorithm is optimal~\autocite{zalka1999}, so for this problem, an exponential speed-up is impossible.
 This algorithm and the more general amplitude amplification on which it builds solves very general problems and are often used subroutines to achieve quadratic speed-ups in other algorithms.
 Being only a quadratic speed-up, it is not as impressive as the exponential speed-ups, and achieving quantum supremacy in that manner would require larger quantum computers than if the speed-up were exponential.
 
-
 \subsection{Grover's algorithm}
 The quantum search algorithm of Grover~\autocite{grover1996} is a quantum algorithm that finds an element in an unstructured list with high probability.
 While such a problem necessarily requires $O(N)$ time in a classical setting, needing on average $N/2$ steps to find the element and in the worst case $N$, Grover's algorithm finds the element in $O(\sqrt{N})$ steps.
 This is a quadratic speed-up.
 
-Grover's algorithm is provably optimal; no quantum algorithm can perform such general searches faster~\autocite{zalka1999}.
+Grover's algorithm is provably optimal; no quantum algorithm can perform such general, unstructured searches any faster~\autocite{zalka1999}.
 This should not be surprising.
 If an exponential speed-up were possible, Grover search could be used to find the solution to NP-hard problems fast.
 
 For Grover's algorithm to work, assume there is a function $f$ that maps the index of an element to $1$ if it is the one desired and $0$ otherwise.
+(Assume for now that there is only one such element.)
 Then, one assumes access to a quantum oracle, $\mathcal{O}_f$
 (effectively a black box subroutine) that implements $f$ thus:
 \begin{equation}
@@ -79,11 +83,12 @@ Then, one assumes access to a quantum oracle, $\mathcal{O}_f$
     \mathcal{O}_f \ket{x} = (-1)^{f(x)} \ket{x}.
 \end{equation}
 A single application of this oracle is not enough to find the desired element, as the square of the amplitude of the desired element remains unchanged.
+The measurement probabilities are not immediately affected.
 Central to Grover's algorithm is the idea of amplifying the amplitude of the desired element.
-This is done by applying a sequence of operations that is repeated until the amplitude of the desired element is large enough for it is most likely to be measured, while the amplitudes of the other elements are reduced.
+This is done by applying a sequence of operations that is repeated until the amplitude of the desired element is large enough for it to be most likely to be measured, while the other elements have their amplitudes reduced.
 
 Let the state $\ket{w}$ which be the winner state, a state with amplitude $1$ for the desired element and $0$ for all others.
-Then consider the state $\ket{s}$, which is a uniform superposition state, a state with equal amplitudes for all elements.
+Then consider the state $\ket{s}$, which is a uniform superposition state, a state with equal amplitudes for all elements, trivially constructed by applying a Hadamard gate to each qubit in the canonical starting state $\ket{0}$.
 Define the state $\ket{s'}$ by subtracting the projection of $\ket{w}$ onto $\ket{s}$ from $\ket{s}$:
 \begin{equation}
     \label{eq:grover_s'}
@@ -91,8 +96,7 @@ Define the state $\ket{s'}$ by subtracting the projection of $\ket{w}$ onto $\ke
 \end{equation}
 These two orthogonal states form a basis of a two-dimensional subspace of the greater Hilbert space.
 This permits a perspicuous visualisation of the algorithm, as in \cref{fig:grover}.
-The uniform superposition state $\ket{s}$ serves as a starting point for the algorithm, and is achieved by applying Hadamard gates to all qubits.
-It is expressible as
+The uniform superposition state $\ket{s}$ serves as the starting point for the algorithm, and is expressible as
 \begin{equation}
     \ket{s} = \cos(\theta)\ket{s'} + \sin{(\theta)}\ket{w},
 \end{equation}
@@ -115,7 +119,7 @@ Measuring the correct state has probability $\sin^2((2k+1)\theta)$.
 Therefore, $k \approx {\pi}/{4\theta}$ iterations should be completed.
 Assuming large $N$, for a short list would not warrant the use of Grover's algorithm, $\theta = \arcsin{({1}/{\sqrt{N}})} \approx 1/\sqrt{N}$, and so $k \approx \pi\sqrt{N}/4$.
 
-For lists with more than a single desired element, a similar reasoning will lead to the same algorithm, but instead with $k\approx\pi/4\sqrt{N/M}$, where $M$ is the number solutions to $f(x)=1$~\autocite{nielsen2012}.
+For lists with more than a single desired element, a similar reasoning will lead to the same algorithm, but instead with $k\approx\pi/4 \cdot \sqrt{N/M}$, where $M$ is the amount of solutions to $f(x)=1$~\autocite{nielsen2012}.
 
 
 \begin{figure}

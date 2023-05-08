@@ -1,6 +1,7 @@
 \section{Quantum bandits}
 While the upper bound shown in \cref{sec:wan2022} implies QUCB1 advantage, it does not necessarily mean it is supreme in all cases or even on average.
 It is therefore of much interest to test it on a variety of problems and compare its average performance to other algorithms — not only with the classical UCB1 to which it is compared in the original paper, but also with the more performant Thompson sampling algorithm.
+The UCB1 algorithm and Thompson algorithms were trivially implemented per the descriptions in \cref{sec:ucb,sec:thompson}, while the (simulation of the) QUCB algorithm was implemented as in explained in \cref{sec:qucb-implementation}.
 
 For fixed bandit instances, 100 simulations were run for each algorithm, while for Bayesian regrets 1000 parallels were run.
 To limit the scope and computational resources required, only Bernoulli rewards were considered, and in all cases but one only two arms.
@@ -13,7 +14,7 @@ Specifically, due to its exponentially long quantum Monte Carlo periods, the hor
 
 As noted in~\autocite{wan2022}, setting the confidence parameter to a higher value than the theoretically desirable $1/T$ leads to better performance.
 It was thus set to $0.01$ for all experiments.
-Moreover, the constant $C_1$ which was only defined existentially was arbitrarily set to $2$ across all experiments, as it was not clear how to choose it in a principled manner, and this value seemed able to reproduce the results of~\autocite{wan2022}.
+Moreover, the constant $C_1$, which is only defined existentially, was arbitrarily set to $2$ across all experiments, as it was not clear how to choose it in a principled manner, and this value seemed able to reproduce the results of~\autocite{wan2022}.
 
 \subsection{Fixed arms}
 \label{sec:sim_fixed_arms}
@@ -43,7 +44,13 @@ Because of these long periods, there is not as many possible trajectories as wit
         largexnumbers,
     }
     \subimport{figs}{big2}
-    \caption{QUCB1 regret for two arms, with mean 0.5 and 0.505.}
+    \caption[
+        Regrets for two Bernoulli arms, with means 0.5 and 0.505.
+    ]{
+        Regrets for two Bernoulli arms, with means 0.5 and 0.505.
+        The QUCB algorithm is clearly superior to UCB, but Thompson sampling is not far behind.
+        A great time horizon of 250,000 turns is used.
+    }
     \label{fig:big2}
 \end{figure}
 
@@ -69,7 +76,7 @@ There, it can be seen that QUCB beats UCB thoroughly still, as both algorithms a
             largexnumbers,
         }
         \subimport{figs}{low_prob_fix}
-        \caption{Two arms, means 0.01, 0.005.}
+        \caption{Two Bernoulli arms, means 0.01, 0.005.}
         \label{fig:low_prob_fix}
     \end{subfigure}
     \\[3ex]
@@ -87,11 +94,19 @@ There, it can be seen that QUCB beats UCB thoroughly still, as both algorithms a
             largexnumbers,
         }
         \subimport{figs}{high_prob}
-        \caption{Regret for two arms, means 0.99, 0.9905.}
+        \caption{Two Bernoulli arms, means 0.99, 0.9905.}
         \label{fig:high_prob}
     \end{subfigure}
     \label{fig:low_high_prob}
-    \caption{QUCB1 regret for especially high and low means.}
+    \caption[
+        Regrets for two Bernoulli arms with more extreme means.
+    ]{
+        Regrets for two Bernoulli arms with more extreme means.
+        While having the same reward gap as in \cref{fig:big2}, the experiment in (\protect\subref{fig:low_prob_fix}) demonstrates worse performance for (Q-) UCB relative to the Thompson sampling algorithm.
+        The upper-bound algorithms appear dependent only on the mean difference, while Thompson sampling seems more able to exploit the extremities.
+        In (\protect\subref{fig:high_prob}), the reward gap is reduced to $0.0005$, making the problem so difficult that the classical UCB algorithm hardly outperforms random guessing.
+        In this harder case, QUCB is again able to beat Thompson sampling.
+    }
 \end{figure}
 
 At these extreme values, it seems the gap must shrink for QUCB to be able to outperform Thompson sampling.
@@ -120,7 +135,15 @@ In general, QUCB provides no advantages or noteworthy changes from UCB with resp
         largexnumbers,
     }
     \subimport{figs}{four_arms}
-    \caption{Regret for four arms, with mean 0.5, 0.51, 0.52 and 0.53.}
+    \caption[
+        Regrets for four arms, with means 0.5, 0.51, 0.52 and 0.53.
+    ]
+    {
+        Regrets for four arms, with means 0.5, 0.51, 0.52 and 0.53.
+        The QUCB algorithm is also here superior to UCB, but its regret appears to be similar to that of Thompson sampling.
+        QUCB offers no advantages over UCB or classical algorithms overall when the number of arms is increased.
+        Instead, this experiment serves as a validation of the correctness of the implementation and the algorithm.
+    }
     \label{fig:four_arms}
 \end{figure}
 
@@ -235,7 +258,7 @@ The prior was constructed similarly to the one in \cref{eq:challenging_prior}, b
 
 This simulation was also run for 1,000 parallels.
 As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson sampling still clearly outperforms UCB.
-It is clear that this prior produces so challenging instances, that the advantage over pure exploration is not as apparent as in the previous priors, but more akin to the first considered fixed instances in \cref{sec:sim_fixed_arms}, where the QUCB advantage was initially observed\footnote{Viz. \cref{fig:big2} and \cref{fig:high_prob}.}.
+It is clear that this prior produces so challenging instances, that the advantage over pure exploration is not as apparent as in the previous priors, but more akin to the first considered fixed instances in \cref{sec:sim_fixed_arms}, where the QUCB advantage was initially observed\footnote{Viz. \cref{fig:big2,fig:high_prob}.}.
 
 
 \begin{figure}

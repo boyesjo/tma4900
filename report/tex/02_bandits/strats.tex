@@ -103,6 +103,7 @@ It is worth noting, however, that the optimal decay rate depends on the specific
 
 
 \subsection{Upper confidence bounds}
+\label{sec:ucb}
 The upper confidence bound (UCB) algorithm is a family of more sophisticated algorithm based on estimating an upper bound for the mean of each arm, and they are a common baseline for more advanced algorithms tackling more complicated bandit variants~\autocite{li2010}.
 One always chooses the arm whose upper confidence bound is highest, a principle known as \enquote{optimism in the face of uncertainty}.
 This should make sense, as if the wrong arm appears best, it will be pulled more often and the empirical mean will be corrected, while the true best arm with its larger bound will eventually become highest and so pulled.
@@ -209,6 +210,7 @@ Further, incorporating estimates of second moments improve performance in some c
 
 
 \subsection{Thompson sampling}
+\label{sec:thompson}
 Thompson sampling is a Bayesian approach to the multi-armed bandit problem, being the original approach to the problem~\autocite{thompson1933} in 1933, though only in the case of two arms and Bernoulli rewards and without any theoretical guarantees.
 This method is noteworthy for its ability to incorporate Bayesian modelling concepts into the fundamentally frequentist problem of multi-armed banditry.
 
