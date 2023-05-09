@@ -2,8 +2,10 @@
 \label{sec:optimality}
 In the realm of multi-armed banditry, expressing optimality is fraught with difficulties.
 Any precise formulation is contingent upon not only the assumptions made, but also the particular instance, namely actual means and distributions overall.
-Usually, no hyper-distributions are placed on the bandit classes $\mathcal{E}$, so no average regret over all instances can be defined.
+Usually, in the literature, no hyper-distributions are placed on the bandit classes $\mathcal{E}$, so no average regret over all instances can be defined.
 Lower bounds resort then to either determine what a reasonable policy can achieve on a given instance, or to describing its worst performance over all instances in the class.
+However, by defining some weighted average over all instances, an exact performance measure can be defined, such that optimality is well-defined.
+This is rarely done in the literature, but is included here to provide a more complete and practical measure of performance.
 
 \subsection{Instance-dependent lower bound}
 In order to meaningfully define a lower bound, it is imperative to assume a reasonable algorithm.
@@ -79,7 +81,10 @@ Surprisingly, minimax optimality does not negate instance optimality, and recent
 \subsection{Bayesian optimality}
 \label{sec:bayesian-optimality}
 If a prior distribution were to be placed on the reward distributions, a notion of average or Bayesian regret can be defined.
-For some bandit class $\mathcal{E}$, one simply includes the distribution of the reward distributions in the expectation taken to define the regret,
+Alternatively, this can be thought of as having some weighing of the particular instances and averaging over them.
+Following the notation of~\autocite{lattimore2020}, the Bayesian interpretation is what is presented here.
+
+For some bandit class $\mathcal{E}$, one simply includes the prior distribution of the reward distributions in the expectation taken to define the Bayesian regret,
 \begin{equation}
     \text{BR}_T(Q, \pi)
     = \mathbb{E}_{\pi, \nu, Q} \left[ \sum_{a \in \mathcal{A}} \Delta_a T_a \right]
@@ -94,3 +99,4 @@ Furthermore, calculating the optimal policy is generally intractable for any hor
 In simpler cases, dynamic programming can be fruitful.
 With Bernoulli bandits and clever implementations, optimal strategies can indeed be found~\autocite{pilarski2021}.
 For longer horizons, discounting, namely reducing the weight of future rewards, can be used to make the problem tractable or at least easier to approximate well.
+Still, direct optimisation is restrained to the regimes of small horizons and simple reward distributions, and for more complicated problems, heuristic methods are required.
