@@ -4,6 +4,7 @@ It is therefore of much interest to test it on a variety of problems and compare
 The UCB1 algorithm and Thompson algorithms were trivially implemented per the descriptions in \cref{sec:ucb,sec:thompson}, while the (simulation of the) QUCB algorithm was implemented as in explained in \cref{sec:qucb-implementation}.
 
 For fixed bandit instances, 100 simulations were run for each algorithm, while for Bayesian regrets 1000 parallels were run.
+Simulating quantum algorithms is computationally expensive, in general exponentially hard, such that much higher numbers of simulations were not feasible for the QUCB algorithm and the time horizons considered.
 To limit the scope and computational resources required, only Bernoulli rewards were considered, and in all cases but one only two arms.
 How the algorithm handles more arms may be of some interest, but its main advantage is its better dependence on the time horizon $T$, and it handles multiple arms the same was as the classical UCB algorithm.
 
@@ -150,7 +151,7 @@ In general, QUCB provides no advantages or noteworthy changes from UCB with resp
 \clearpage
 \subsection{Bayesian regret}
 \label{sec:results_bayesian}
-As described in \cref{sec:bayesian-optimality}, the Bayesian regret is the average regret over some set prior.
+As described in \cref{sec:bayesian-optimality}, the Bayesian regret is the average regret over some prior.
 What priors to choose is a topic for discussion, which will not be covered deeply in this section nor thesis in general.
 It may not be the most relevant measure for which to optimise policies, as explained in \cref{sec:optimality}.
 In any case, it provides a measure of robustness, measuring the performance over a range of possible instances.
@@ -159,6 +160,7 @@ In any case, it provides a measure of robustness, measuring the performance over
 First, the simple case of two arms, whose means are independently drawn from a uniform distribution on the interval $[0, 1]$ will be considered.
 The Bayesian regret for this case is on display in \cref{fig:random}.
 All three were run on 1,000 instances sampled from the prior.
+Having randomness also in the bandit instances motivated the use of a larger number of simulations than in the previous experiments.
 The results shown are the averages over these instances.
 
 It is obvious that the Thompson sampling algorithm performs best.
@@ -236,9 +238,75 @@ where the logit is given by
     \label{eq:logit}
     \text{logit}(\mu) = \log(\mu/(1-\mu)).
 \end{equation}
+This prior is displayed in \cref{fig:challenging_prior}.
+
 The logit is used to ensure that the means are in the interval $[0, 1]$.
 It is particularly well-suited for interpreting the means of Bernoulli bandits due to its ability to capture meaningful differences between probabilities. For example, on the logit scale, the distance between 0.001 and 0.101 is much greater than that between 0.4 and 0.5.
 Its symmetry around zero and coverage of the entire real number line allow for a comprehensive representation of the reward means.
+
+\begin{figure}
+    \newcommand{\myoptions}{
+        width=10cm,
+        height=8cm,
+        enlargelimits=false,
+        axis on top,
+        xlabel={Arm 1 mean},
+        ylabel={Difference between means},
+        yticklabel style={
+                /pgf/number format/fixed,
+                /pgf/number format/precision=3
+            },
+        scaled y ticks=false,
+    }
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \centering
+            \begin{axis}[
+                    \myoptions,
+                ]
+                \addplot graphics [
+                        xmin=0,
+                        xmax=1,
+                        ymin=-0.1,
+                        ymax=0.1,
+                    ] {figs/priors/prior1};
+            \end{axis}
+        \end{tikzpicture}
+        \label{fig:challenging_prior}
+        \caption{\Cref{eq:challenging_prior}.}
+    \end{subfigure}
+    \begin{subfigure}{\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \centering
+            \begin{axis}[
+                    \myoptions,
+                ]
+                \addplot graphics [
+                        xmin=0,
+                        xmax=1,
+                        ymin=-0.02,
+                        ymax=0.02,
+                    ] {figs/priors/prior2};
+            \end{axis}
+        \end{tikzpicture}
+        \label{fig:more_challenging_prior}
+        \caption{\Cref{eq:more_challenging_prior}.}
+    \end{subfigure}
+    \label{fig:priors}
+    \caption[
+        Priors used in the Bayesian regret experiments.
+    ]
+    {
+        Priors used in the Bayesian regret experiments.
+        The joint distribution of the first arm and the difference between the means is shown.
+        At these close arm means, any asymmetry differences are imperceptible; were the standard deviation greater, the difference would tend more upwards at low values for arm 1 and vice versa.
+    }
+\end{figure}
+
+
 
 Running a successful 1,000 simulations with this prior, the regrets visualised in \cref{fig:random2} were obtained.
 At the final 250,000th turn, the QUCB and Thompson sampling algorithms have virtually equal regrets.
@@ -255,6 +323,7 @@ The prior was constructed similarly to the one in \cref{eq:challenging_prior}, b
         \text{logit}(\mu_2) & \sim \text{N}(\text{logit}(\mu_1), 0.02),
     \end{aligned}
 \end{equation}
+as is rendered in \cref{fig:more_challenging_prior}.
 
 This simulation was also run for 1,000 parallels.
 As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson sampling still clearly outperforms UCB.

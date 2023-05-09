@@ -1,8 +1,17 @@
-\chapter{Simulation results}
+\chapter{Results}
 \label{chap:simulations}
+
+This chapter presents empirical evaluations of the quantum upper bound confidence bound algorithm's performance as it is described in~\cref{chap:qbandits} and its original proposal paper~\autocite{wan2022}.
+Despite the algorithm's theoretical guarantees, promising asymptomatically lower regret bounds than any classical algorithm can achieve, how it performs in practice has not been extensively studied.
+In~\autocite{wan2022}, some simulations were done to show its supreme performance versus the classical UCB algorithm, but only for certain fixed bandit instances.
+Here, the algorithm is compared also with the overall better Thompson sampling algorithm, and by considering more bandit instances and Bayesian regrets, it is shown that the algorithm is only superior in some cases.
+
+Furthermore, in \cref{sec:sim_rl}, modern reinforcement learning algorithms are tested on the bandit problem, including a novel quantum neural network policy agent.
+Such an approach has not been attempted before, and it appears that this is for good reason.
 
 All algorithms were implemented in Python 3~\autocite{python} with quantum computing support provided by IBM's Qiskit library~\autocite{qiskit} for the QUCB algorithm and PennyLane for the quantum neural network policy agent.
 The experiments were run on an external computation server with an Intel Xeon E5-2690 v4 CPU and 768 GB of RAM, permitting 28 concurrent simulations.
+Approximately 25,000 CPU hours were used.
 The source code for the simulations presented here is available on GitHub\footnote{
     Cf. \url{https://www.github.com/boyesjo/tma4900/}.
 }.
