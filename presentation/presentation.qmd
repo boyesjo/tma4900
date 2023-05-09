@@ -1,0 +1,290 @@
+---
+title: Bandittisme og kvanteagenter
+author: Boye Gravningen Sjo
+institute: NTNU
+date: "2023"
+date-format: "[Masterpresentasjon] YYYY"
+include-in-header: 
+    text: |
+        \usepackage{tikz}
+        \usepackage{pgfplots}
+
+format: 
+    beamer:
+        pdf-engine: latexmk
+        classoption: norsk
+        theme: Madrid
+        aspectratio: 169
+        # navigation: horizontal
+lang: no
+language:
+    no:
+        crossref-fig-title: "Figur"
+
+---
+
+## Banditter
+:::: {.columns align=center}
+
+::: {.column width="60%"}
+### Spillet
+
+Gitt
+:   $k$ «armer», tidshorisont $T$.
+
+Ukjent
+:   belønningsfordelinger $p_1, \dots, p_k$.
+
+Antatt
+:   $p_a$ tilhører en gitt klasse $\mathcal{P}$.
+
+Regler
+:   for hver runde $t=1, \dots, T$:\
+    velg arm $a_t \in \{1, \dots, k\}$\
+    motta belønning $X_a \sim p_a$.
+
+Mål
+:   maksimer $\mathbb{E}\left[\sum_{t=1}^T X_t\right]$.
+
+
+### Utnyttelse versus utforsking
+- Dra i den beste arm (kan være feil)
+- Prøve andre armer (kaster bort runder)
+:::
+
+::: {.column width="30%"}
+![](images/bandits.jpg){fig-align="right"}
+:::
+
+::::
+
+## Anvendelser
+:::: {.columns align=center}
+
+::: {.column width="40%"}
+- Reklame på nett
+- Kliniske tester
+- Design av nettsider
+- Investeringer
+- Anbefalingssystemer
+- Dynamisk prising
+- Oppgavedelegering
+- &c &c &c ...
+:::
+
+::: {.column width="60%"}
+::: {layout="[[30, -10, 18, -10, 35, -20], [30, -5, 22, -2, 30, -20]]" layout-valign="center"}
+![](images/netflixlogo.jpeg)
+
+![](images/amazonlogo.png)
+
+![](images/doordashlogo.png)
+
+![](images/google_anal.png)
+
+![](images/metalogo.png)
+
+![](images/washingtonlogo.png)
+
+:::
+:::
+
+::::
+
+## Klassiske strategier
+
+<!-- :::: {.columns align=center}
+
+::: {.column width=40%}
+- Ren utforskning
+- Ren utnyttelse
+- $\epsilon$-grådig
+- UCB
+- Thompson sampling
+:::
+
+
+::: {.column width=60%} -->
+
+\begin{tikzpicture}
+    \begin{axis}[
+        width=10cm,
+        height=8cm,
+        legend entries={Ren utforskning, Grådig, $\epsilon$-grådig, UCB, Thompson},
+        legend style={at={(-0.2,0.5)},anchor=east},
+        ylabel={Regret},
+        xlabel={Runde},
+    ]
+        \pgfplotstableread[col sep=comma]{../code/MAB/comparison.dat}\datatable
+
+        \addplot[color=black, mark=none, dashed] table [x=turn, y=Random]{\datatable};
+        \addplot[color=black, mark=none] table [x=turn, y=Greedy]{\datatable};
+        \addplot[color=black, mark=none, dotted] table [x=turn, y=EpsilonGreedy]{\datatable};
+        \addplot[color=red, mark=none] table [x=turn, y=UCB]{\datatable};
+        \addplot[color=green, mark=none] table [x=turn, y=ThompsonBernoulli]{\datatable};
+
+    \end{axis}
+\end{tikzpicture}
+<!-- :::
+
+
+:::: -->
+
+
+## Kvantemaskiner
+
+![](images/quantum_computer.jpg){height="80%" fig-align="center"}
+
+
+## Kvantealgoritmer
+
+Kvantealgoritme | Problem | Kompleksitet | Beste klassiske
+--- | --- | --- | ---
+QFT | Fouriertransformasjon | $O(\log(N))$ | $O(N \log(N))$
+Shor | Faktorisering | $O( \log(N)^3)$ | Subeksponensiell
+HHL | Lineære ligningssystemer | $O(\log(N)\kappa^2)$ | $O(N\kappa)$
+Grover | Ustrukturert søk | $O(\sqrt{N})$ | $O(N)$
+QMC | Estimere $\mathbb{E}[X]$ | $O(1/\epsilon)$ | $O(1/\epsilon^2)$
+
+
+## Kvante-UCB
+
+:::: {.columns align=center}
+
+::: {.column width=50%}
+
+- Ide: bruk QMC til å estimere $\mathbb{E}[X_i]$.
+- Fordel: konfidensintervaller blir mindre
+- Resultat: $O(\log(T))$-algoritme
+
+:::
+
+::: {.column width=50%} 
+\begin{tikzpicture}
+    \begin{axis}[
+            width=0.8\textwidth,
+            height=0.8\textwidth,
+            xlabel=Arm,
+            ylabel=Estimat,
+            grid=major,
+            xtick=data,
+        ]
+        \pgfplotstableread[col sep=comma]{../code/bandit_figs/ucb/ucb_1000.dat}\datatable
+        \addplot+[
+            only marks,
+            error bars/.cd,
+            y dir=plus,
+            y explicit
+        ] table[
+                x=arm,
+                y=estimate,
+                y error=ucb,
+                col sep=comma,
+            ] {\datatable};
+        \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.8, 0.2) (1.2, 0.2)};
+        \addplot+[dashed, mark=none, black, forget plot] coordinates {(1.8, 0.4) (2.2, 0.4)};
+        \addplot+[dashed, mark=none, black, forget plot] coordinates {(2.8, 0.7) (3.2, 0.7)};
+    \end{axis}
+\end{tikzpicture}
+
+:::
+
+
+::::
+
+## Simuleringer: uniform prior
+
+::: {#fig-1 align=center}
+\newcommand{\myoptions}{
+    width=12cm,
+    height=8cm,
+    legend entries={UCB, QUCB, Thompson},
+    legend pos=north west,
+    ylabel={Regret},
+    xlabel={Runde},
+}
+\input{../report/tex/07_simulations/figs/uniform_prior}
+
+_
+:::
+
+
+## Simuleringer: korrelert prior
+::: {#fig-2 align=center}
+\newcommand{\myoptions}{
+    width=12cm,
+    height=8cm,
+    legend entries={UCB, QUCB, Thompson},
+    legend pos=north west,
+    ylabel={Regret},
+    xlabel={Runde},
+}
+\input{../report/tex/07_simulations/figs/challenging_prior}
+
+_
+:::
+
+## Simuleringer: meget korrelert prior
+::: {#fig-3 align=center}
+\newcommand{\myoptions}{
+    width=12cm,
+    height=8cm,
+    legend entries={UCB, QUCB, Thompson},
+    legend pos=north west,
+    ylabel={Regret},
+    xlabel={Runde},
+}
+\input{../report/tex/07_simulations/figs/more_challenging_prior}
+
+_
+:::
+
+
+## Konklusjoner
+- Bedre i *noen* tilfeller
+- Juks med kvante
+- Vanskelig å anvende
+- QUCB kan videreutvikles
+- Kvantealgoritmer for andre bandittvarianter?
+
+## Vedlegg: maskinlæring og banditter
+:::: {.columns align=center}
+
+<!-- ::: {layout-ncol=2} -->
+
+::: {.column width=40%}
+- Forsterket læring
+- Hvordan uttrykke bandittproblemet som et RL-problem?
+- Fungerer kanskje, men krever i så fall anpassing
+
+:::
+
+
+::: {.column width=60%}
+\newcommand{\myoptions}{
+    width=8cm,
+    height=6cm,
+    legend entries={A2C, DQN, PPO, Quantum},
+    legend pos=north west,
+    ylabel={Regret},
+    xlabel={Runde},
+}
+\input{../report/tex/07_simulations/figs/rl_bandits.tex}
+:::
+
+
+<!-- ::: -->
+
+::::
+
+
+## Vedlegg: kvantovermakt
+```{mermaid}
+flowchart LR
+    P(P) --> N(NP)
+    N --> S(PSPACE)
+    P --> B(BPP)
+    B --> Q(BQP)
+    Q --> S
+```
+
