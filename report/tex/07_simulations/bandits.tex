@@ -36,13 +36,12 @@ Because of these long periods, there is not as many possible trajectories as wit
     \newcommand{\myoptions}{
         width=10cm,
         height=8cm,
-        xlabel={Turn},
+        xlabel={Kiloturn},
         ylabel={Regret},
         legend entries={UCB, QUCB, Thompson},
         legend pos=north west,
         legend cell align=left,
         mystyle,
-        largexnumbers,
     }
     \subimport{figs}{big2}
     \caption[
@@ -68,13 +67,12 @@ There, it can be seen that QUCB beats UCB thoroughly still, as both algorithms a
         \newcommand{\myoptions}{
             width=10cm,
             height=8cm,
-            xlabel={Turn},
+            xlabel={Kiloturn},
             ylabel={Regret},
             legend entries={UCB, QUCB, Thompson},
             legend pos=north west,
             legend cell align=left,
             mystyle,
-            largexnumbers,
         }
         \subimport{figs}{low_prob_fix}
         \caption{Two Bernoulli arms, means 0.01, 0.005.}
@@ -86,13 +84,12 @@ There, it can be seen that QUCB beats UCB thoroughly still, as both algorithms a
         \newcommand{\myoptions}{
             width=10cm,
             height=8cm,
-            xlabel={Turn},
+            xlabel={Kiloturn},
             ylabel={Regret},
             legend entries={UCB, QUCB, Thompson},
             legend pos=north west,
             legend cell align=left,
             mystyle,
-            largexnumbers,
         }
         \subimport{figs}{high_prob}
         \caption{Two Bernoulli arms, means 0.99, 0.9905.}
@@ -127,13 +124,12 @@ In general, QUCB provides no advantages or noteworthy changes from UCB with resp
     \newcommand{\myoptions}{
         width=10cm,
         height=8cm,
-        xlabel={Turn},
+        xlabel={Kiloturn},
         ylabel={Regret},
         legend entries={UCB, QUCB, Thompson},
         legend pos=north west,
         legend cell align=left,
         mystyle,
-        largexnumbers,
     }
     \subimport{figs}{four_arms}
     \caption[
@@ -180,13 +176,12 @@ Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produc
         \newcommand{\myoptions}{
             width=10cm,
             height=8cm,
-            xlabel={Turn},
+            xlabel={Kiloturn},
             ylabel={Regret},
             legend entries={UCB, QUCB, Thompson},
             legend pos=north west,
             legend cell align=left,
             mystyle,
-            largexnumbers,
             ymax = 150,
         }
         \subimport{figs}{uniform_prior.tex}
@@ -204,7 +199,6 @@ Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produc
             legend pos=north west,
             legend cell align=left,
             mystyle,
-            largexnumbers,
         }
         \subimport{figs}{uniform_prior_loglog.tex}
         \caption{Log-log scale.}
@@ -337,13 +331,12 @@ It is clear that this prior produces so challenging instances, that the advantag
         \newcommand{\myoptions}{
             width=10cm,
             height=8cm,
-            xlabel={Turn},
+            xlabel={Kiloturn},
             ylabel={Regret},
             legend entries={UCB, QUCB, Thompson},
             legend pos=north west,
             legend cell align=left,
             mystyle,
-            largexnumbers,
             ymax = 400,
         }
         \subimport{figs}{challenging_prior.tex}
@@ -358,13 +351,12 @@ It is clear that this prior produces so challenging instances, that the advantag
         \newcommand{\myoptions}{
             width=10cm,
             height=8cm,
-            xlabel={Turn},
+            xlabel={Kiloturn},
             ylabel={Regret},
             legend entries={UCB, QUCB, Thompson},
             legend pos=north west,
             legend cell align=left,
             mystyle,
-            largexnumbers,
         }
         \subimport{figs}{more_challenging_prior.tex}
         \caption{

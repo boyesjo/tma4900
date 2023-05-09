@@ -34,6 +34,7 @@
 % % TIKZ
 \usepackage{tikz}
 \usepackage{pgfplots}
+\usepackage{pgfplotstable}
 \usepgfplotslibrary{groupplots,dateplot}
 \usetikzlibrary{patterns,shapes.arrows}
 \usetikzlibrary{quotes,angles}
@@ -65,17 +66,17 @@
             grid = major,
         },
 }
-\pgfplotsset{
-    largexnumbers/.style={
-            x tick label style={
-                    /pgf/number format/.cd,
-                    fixed,
-                    fixed zerofill,
-                    precision=1,
-                    sci,/tikz/.cd},
-            scaled x ticks=false,
-        },
-}
+% \pgfplotsset{
+%     largexnumbers/.style={
+%             x tick label style={
+%                     /pgf/number format/.cd,
+%                     fixed,
+%                     fixed zerofill,
+%                     precision=1,
+%                     sci,/tikz/.cd},
+%             scaled x ticks=false,
+%         },
+% }
 \usetikzlibrary{quantikz}
 
 

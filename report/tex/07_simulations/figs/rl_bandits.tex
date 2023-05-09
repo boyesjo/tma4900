@@ -5,16 +5,16 @@
         \pgfplotstableread[col sep=comma]{../code/sb3_v_qnns/results/rl.dat}\datatable
 
         \addplot+[mark = none, color = red]
-        table[x=turn,y=A2C]{\datatable};
+        table[x expr=\thisrow{turn} * 0.001,y=A2C]{\datatable};
 
         \addplot[mark = none, color = green]
-        table[x=turn, y=DQN]{\datatable};
+        table[x expr=\thisrow{turn} * 0.001, y=DQN]{\datatable};
 
         \addplot[ mark = none, color = orange]
-        table[x=turn, y=PPO]{\datatable};
+        table[x expr=\thisrow{turn} * 0.001, y=PPO]{\datatable};
 
         \addplot[mark = none, color = blue]
-        table[x=turn, y=regret, col sep=comma]{../code/sb3_v_qnns/results/jerbi.dat};
+        table[x expr=\thisrow{turn} * 0.001, y=regret, col sep=comma]{../code/sb3_v_qnns/results/jerbi.dat};
 
 
         % random
@@ -25,7 +25,7 @@
         ]
         coordinates {
                 (0, 0)
-                (250000, 250000*0.005 * 0.5)
+                (250, 250000*0.005 * 0.5)
             };
 
     \end{axis}

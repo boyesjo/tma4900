@@ -10,7 +10,7 @@
             color = red,
         ]
         table[
-                x=turn,
+                x expr=\thisrow{turn} * 0.001,
                 y=ucb_mean,
             ]{\datatable};
 
@@ -18,13 +18,13 @@
             mark = none,
             color = blue,
         ]
-        table[x=turn, y=qucb_mean]{\datatable};
+        table[x expr=\thisrow{turn} * 0.001, y=qucb_mean]{\datatable};
 
         \addplot[
             mark = none,
             color = green,
         ]
-        table[x=turn, y=thomp_mean]{\datatable};
+        table[x expr=\thisrow{turn} * 0.001, y=thomp_mean]{\datatable};
 
         \addplot[
             mark = none,
@@ -33,7 +33,7 @@
         ]
         coordinates {
                 (0, 0)
-                (250000, 250000*0.009964566867240768 * 0.5)
+                (250, 250000*0.009964566867240768 * 0.5)
             };
     \end{axis}
 \end{tikzpicture}
