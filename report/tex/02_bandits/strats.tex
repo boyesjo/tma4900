@@ -137,15 +137,6 @@ In~\autocite{auer2002}, it is shown that UCB1 achieves
 which misses instance-dependent optimality only by some constant factor.
 Nor is UCB1 truly minimax-optimal, as its instance-independent upper bound is $O(\sqrt{kT \log T})$~\autocite{bubeck2012}.
 
-Regardless of the assumptions made and the bandit class, the procedure for UCB strageies follows as in \cref{alg:ucb}.
-For few arms, the process is easily visualised, as is done in \cref{fig:ucb}.
-There it is made clear how the confidence bound based strategy naturally exploits the best arm and how the poorer arms are not explored more than needed.
-
-Many variants of the algorithm exist; different assumptions about the distributions change the confidence bounds.
-While the choice of $p$ is arbitrary, it is less of nuisance than the choice of $\epsilon$ in the epsilon-greedy algorithm, with specific choices of $p$, such as the UCB1-algorithm, being well-studied and known to perform well.
-For example, MOSS, a modification of UCB1, has be shown to minimax-optimal for $\mathcal{E}_{[0,1]}^k$~\autocite{audibert2009}.
-Further, incorporating estimates of second moments improve performance in some cases~\autocite{audibert2009a}, while incorporating the whole empirical distributions of observed rewards appears be the most effective approach~\autocite{maillard2011}.
-
 \begin{algorithm}
     \caption{UCB arm selection}
     \label{alg:ucb}
@@ -157,8 +148,20 @@ Further, incorporating estimates of second moments improve performance in some c
     }
 \end{algorithm}
 
-\begin{figure}
+
+Regardless of the assumptions made and the bandit class, the procedure for UCB strategies follows as in \cref{alg:ucb}.
+For few arms, the process is easily visualised, as is done in \cref{fig:ucb}.
+There it is made clear how the confidence bound based strategy naturally exploits the best arm and how the poorer arms are not explored more than needed.
+
+Many variants of the algorithm exist; different assumptions about the distributions change the confidence bounds.
+While the choice of $p$ is arbitrary, it is less of nuisance than the choice of $\epsilon$ in the epsilon-greedy algorithm, with specific choices of $p$, such as the UCB1-algorithm, being well-studied and known to perform well.
+For example, MOSS, a modification of UCB1, has be shown to minimax-optimal for $\mathcal{E}_{[0,1]}^k$~\autocite{audibert2009}.
+Further, incorporating estimates of second moments improve performance in some cases~\autocite{audibert2009a}, while incorporating the whole empirical distributions of observed rewards appears be the most effective approach~\autocite{maillard2011}.
+
+
+\begin{figure}[p]
     \centering
+    \vspace{1 cm}
     \foreach \turn in {10, 100, 1000, 10000} {
             \begin{subfigure}{0.4\textwidth}
                 \centering
@@ -204,6 +207,7 @@ Further, incorporating estimates of second moments improve performance in some c
         The dots represent the estimates of the means of the arms, while the error bars represent the upper confidence bounds and the dashed lines represent the true means.
         As the number of turns increases, the estimate of the highest mean converge quickly to the true mean, while the estimates of the suboptimal arms remain bad.
     }
+    \vspace{2 cm}
 \end{figure}
 
 
