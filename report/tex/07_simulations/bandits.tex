@@ -1,7 +1,8 @@
 \section{Quantum bandits}
-While the upper bound shown in \cref{sec:wan2022} implies QUCB1 advantage, it does not necessarily mean it is supreme in all cases or even on average.
-It is therefore of much interest to test it on a variety of problems and compare its average performance to other algorithms — not only with the classical UCB1 to which it is compared in the original paper, but also with the more performant Thompson sampling algorithm.
-The UCB1 algorithm and Thompson algorithms were trivially implemented per the descriptions in \cref{sec:ucb,sec:thompson}, while the (simulation of the) QUCB algorithm was implemented as in explained in \cref{sec:qucb-implementation}.
+By producing better predictions of the rewards of the arms, the QUCB algorithm promises to outperform classical algorithms in the multi-armed bandit problem.
+While the upper bound shown in \cref{sec:wan2022} implies QUCB advantage, it does not necessarily mean it is supreme in all cases or even on average.
+It is therefore of much interest to test it on a variety of problems and compare its average performance to other algorithms — not only with the classical UCB to which it is compared in the original paper, but also with the more performant Thompson sampling algorithm.
+The UCB algorithm and Thompson algorithms were trivially implemented per the descriptions in \cref{sec:ucb,sec:thompson}, while the (simulation of the) QUCB algorithm was implemented as in explained in \cref{sec:qucb-implementation}.
 
 For fixed bandit instances, 100 simulations were run for each algorithm, while for Bayesian regrets 1000 parallels were run.
 Simulating quantum algorithms is computationally expensive, in general exponentially hard, such that much higher numbers of simulations were not feasible for the QUCB algorithm and the time horizons considered.
@@ -165,7 +166,7 @@ QUCB does outperform UCB, but not by as much as the previously considered cases 
 The lack of any quantum advantage is probably due to this prior generally yielding \enquote{easy} problems, where the optimal arm can be quickly identified.
 In such cases, the initial overhead of the quantum algorithm appears not to be worth the effort.
 QUCB with its current QMC implementation relies on a large number of initial samples to produce it supreme estimates, but with the uniform prior and only two arms, the expected difference of means is a third, so the optimal arm can often be identified after only a few turns with high certainty.
-Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produce a very flat regret curse; when looking at the log-log-plot in \cref{fig:random}, it may seem like the QUCB regret will be lower than even Thompson sampling for some great and admittedly unrealistic number of turns.
+Nonetheless, after the rather wasteful inaugural period, QUCB does indeed produce a very flat regret curve; inspecting the log-log-plot in \cref{fig:random}, it may seem like the QUCB regret curve would lie below even Thompson sampling at some great and admittedly unrealistic number of turns, perhaps something around the order of $10^{9}$.
 
 
 
@@ -239,26 +240,23 @@ It is particularly well-suited for interpreting the means of Bernoulli bandits d
 Its symmetry around zero and coverage of the entire real number line allow for a comprehensive representation of the reward means.
 
 \begin{figure}
-    \newcommand{\myoptions}{
-        width=10cm,
-        height=8cm,
-        enlargelimits=false,
-        axis on top,
-        xlabel={Arm 1 mean},
-        ylabel={Difference between means},
-        yticklabel style={
-                /pgf/number format/fixed,
-                /pgf/number format/precision=3
-            },
-        scaled y ticks=false,
-    }
     \centering
     \begin{subfigure}{\textwidth}
         \centering
         \begin{tikzpicture}
             \centering
             \begin{axis}[
-                    \myoptions,
+                    width=10cm,
+                    height=8cm,
+                    enlargelimits=false,
+                    axis on top,
+                    xlabel={$\mu_1$},
+                    ylabel={$\mu_2 - \mu_1$},
+                    yticklabel style={
+                            /pgf/number format/fixed,
+                            /pgf/number format/precision=3
+                        },
+                    scaled y ticks=false,
                 ]
                 \addplot graphics [
                         xmin=0,
@@ -276,7 +274,17 @@ Its symmetry around zero and coverage of the entire real number line allow for a
         \begin{tikzpicture}
             \centering
             \begin{axis}[
-                    \myoptions,
+                    width=10cm,
+                    height=8cm,
+                    enlargelimits=false,
+                    axis on top,
+                    xlabel={$\mu_1$},
+                    ylabel={$\mu_2 - \mu_1$},
+                    yticklabel style={
+                            /pgf/number format/fixed,
+                            /pgf/number format/precision=3
+                        },
+                    scaled y ticks=false,
                 ]
                 \addplot graphics [
                         xmin=0,
@@ -373,3 +381,134 @@ It is clear that this prior produces so challenging instances, that the advantag
     }
     \label{fig:random_challenging}
 \end{figure}
+
+\subsubsection{Regret distributions}
+In \cref{fig:histograms_random}, the regrets at the final turn for the three algorithms are shown for the three priors that were tested.
+The distributions are clearly wide, but with 1,000 samples, the conclusions drawn in the previous sections are nevertheless significant.
+
+For the uniform prior, Thompson sampling is unquestionably supreme, while for the prior of \cref{eq:challenging_prior}, QUCB and Thompson achieve a similar average regret, but with QUCB's distribution being more concentrated.
+It seems that even the classical UCB algorithm has a better mode than QUCB, but with its heavy tail it is still outperformed by QUCB on average.
+Across all three histograms, it appears as QUCB is more consistent in its performance, being less dependent on the random instances that are generated, while Thompson sampling, though better on many instances, suffers from outliers with very high regret.
+QUCB seemingly produces equal regrets independent of the prior, while the two classical algorithms perform worse on the more challenging priors.
+This could perhaps be explained with its logarithmic instance-independent regret bound as shown in \cref{sec:wan_proof}.
+Classically, such bounds are at best proportional to the square root of the Horizon.
+With its early and expensive exploration period, the QUCB algorithm is able to identify the best arm within the horizons considered here, seemingly independent of the difficulty of the instance.
+
+The classical UCB algorithm appears to have even more spread in its regret distribution than Thompson sampling, and simply worse performance overall.
+This is to be expected, as it does not achieve the same guarantees as Thompson sampling, as discussed in \cref{chap:bandits}.
+
+
+\begin{figure}
+    \centering
+    \begin{subfigure}{\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    width=10 cm,
+                    height=5 cm,
+                    ybar,
+                    xlabel={Regret},
+                    ylabel={\# of occurrences},
+                    xmin = 0,
+                    xmax = 400,
+                    ymin = 0,
+                    grid = major,
+                ]
+                \pgfplotstableread[col sep=comma]{../code/wan/results/random/final_turn_regerts.dat}\datatable
+                \addplot+ [hist={bins=60}, red, opacity=0.5]
+                table [y index=2, col sep=comma]
+                \datatable;
+
+                \addplot+ [hist={bins=60}, blue, opacity=0.5]
+                table [y index=0, col sep=comma]
+                \datatable;
+
+                \addplot+ [hist={bins=60}, green, opacity=0.5]
+                table [y index=1, col sep=comma]
+                \datatable;
+
+                \legend{UCB, QUCB, Thompson};
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Uniform prior.}
+    \end{subfigure}
+
+    \begin{subfigure}{\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    width=10 cm,
+                    height=5 cm,
+                    ybar,
+                    xlabel={Regret},
+                    ylabel={\# of occurrences},
+                    xmin = 0,
+                    xmax = 600,
+                    ymin = 0,
+                    grid = major,
+                ]
+                \pgfplotstableread[col sep=comma]{../code/wan/results/random2/final_turn_regerts.dat}\datatable
+                \addplot+ [hist={bins=60}, red, opacity=0.5]
+                table [y index=2, col sep=comma]
+                \datatable;
+
+                \addplot+ [hist={bins=60}, blue, opacity=0.5]
+                table [y index=0, col sep=comma]
+                \datatable;
+
+                \addplot+ [hist={bins=60}, green, opacity=0.5]
+                table [y index=1, col sep=comma]
+                \datatable;
+
+                \legend{UCB, QUCB, Thompson};
+
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Prior as in \cref{eq:challenging_prior}.}
+    \end{subfigure}
+
+
+    \begin{subfigure}{\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \begin{axis}[
+                    width=10 cm,
+                    height=5 cm,
+                    ybar,
+                    xlabel={Regret},
+                    ylabel={\# of occurrences},
+                    xmin = 0,
+                    xmax = 600,
+                    ymin = 0,
+                    grid = major,
+                ]
+                \pgfplotstableread[col sep=comma]{../code/wan/results/random3/final_turn_regerts.dat}\datatable
+                \addplot+ [hist={bins=60}, red, opacity=0.5]
+                table [y index=2, col sep=comma]
+                \datatable;
+
+                \addplot+ [hist={bins=60}, blue, opacity=0.5]
+                table [y index=0, col sep=comma]
+                \datatable;
+
+                \addplot+ [hist={bins=60}, green, opacity=0.5]
+                table [y index=1, col sep=comma]
+                \datatable;
+
+                \legend{UCB, QUCB, Thompson};
+
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Prior as in \cref{eq:more_challenging_prior}.}
+    \end{subfigure}
+
+    \label{fig:histograms_random}
+    \caption[
+        Histograms of final turn regret for the three priors considered.
+    ]
+    {
+        Histograms of final turn regret for the three priors considered.
+        Note that the rightmost bin is open-ended, including all values greater than the highest regret value plotted.
+    }
+\end{figure}
+

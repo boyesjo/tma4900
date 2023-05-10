@@ -21,7 +21,7 @@ Thus, the state of a qubit can be expressed as
     \label{eq:qubit}
 \end{equation}
 where $\alpha, \beta \in \mathbb{C}$.
-The only requirement is that the state is normalised, $\vert\alpha\vert^2 + \vert\beta\vert^2 = 1$.
+The only requirement is that the state be normalised, $\vert\alpha\vert^2 + \vert\beta\vert^2 = 1$.
 Normalisation is required due to the Born rule, as the absolute square of the coefficients is the probability of measuring the qubit in the corresponding basis state.
 
 \subsection{The Bloch sphere}
@@ -60,7 +60,11 @@ The state $\ket{0}$ is typically thought of as the north pole of this sphere and
 It is not only the superpositions of states that are important in quantum computing, but also the mixed states, states that are statistical ensembles of pure states.
 Pure states are those expressible as a single ket like \cref{eq:qubit}, while mixed states arise when the preparation the system is not perfectly known or when the system interacts with the environment.
 For the description of mixed states, the formalism of density operators is more useful than the state vector formalism.
-If there are no classical uncertainties, the state is pure, and the density operator can be expressed a single ket-bra, $\rho = \ketbra{\psi}{\psi}$.
+If there are no classical uncertainties, the state is pure, and the density operator can be expressed a single ket-bra,
+\begin{equation}
+    \rho = \ketbra{\psi}{\psi}.
+    \label{eq:pure_density}
+\end{equation}
 In a mixed state, however, some classical probabilities $p_i$ are associated with the different pure states $\ket{\psi_i}$, and the state of the system is described by the density operator
 \begin{equation}
     \rho = \sum_{i=1}^n p_i \ketbra{\psi_i}{\psi_i}
