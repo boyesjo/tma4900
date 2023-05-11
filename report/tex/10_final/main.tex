@@ -13,7 +13,7 @@ Research is ongoing in this area.
 
 Quantum computing has the potential to solve certain problem that are intractable to solve classically.
 Based on quantum Monte Carlo methods to estimate random variables, the quantum upper bound algorithm proposed in~\autocite{wan2022} that is shown to achieve logarithmic minimax regret, something which is provably impossible classically, has been explained, implemented and studied.
-However, the simulations done for this project show that the algorithm is only effective on what can be considered \enquote{hard} instances of the bandit problem, id est those in which reward means are close for which many samples will be needed to thoroughly distinguish between them.
+However, the simulations done for this project show that the algorithm is only effective on what can be considered \enquote{hard} instances of the bandit problem, id est, those in which reward means are close, causing many samples to be needed to thoroughly distinguish between the arms.
 For easy instances, the algorithm is in essence wasting turns on sampling and producing unnecessarily accurate estimates of the reward means.
 It is subsequently significantly outperformed by the classical Thompson sampling algorithm, against which it had not been compared in the original paper.
 The algorithm's difficulty-dependent performance should not be entirely unexpected, as the algorithm relies on exponentially many consecutive samples to achieve its superior predictive performance, and in the easy instances, arms must be eliminated much earlier to achieve the lowest reasonable regret.
@@ -50,6 +50,8 @@ The fundamental, but basic stochastic bandit case is but the tip of the iceberg,
 By introducing superposition as a permissible mode of querying the arms, it is obvious that advantages will be gained.
 However, it is clear that there exist lower bounds which constrain the accomplishments attainable through these quantum bandit formulations.
 It may thus be an interesting pursuit to investigate the nature of these quantum lower-bounds, both for minimax- and instance-optimality.
+The QUCB algorithm appears as an ad-hoc solution to the problem of quantum bandits, as a classical method is simply updated with an advantageous quantum subroutine.
+It would be interesting to investigate whether a more principled approach could be taken to the problem, perhaps by designing a quantum algorithm from the ground up, rather than simply modifying a classical one.
 
 Furthermore, being limited to arms that provide superpositional rewards, it is a daunting task to apply the algorithms uncovered.
 As such, it would be of great interest to ascertain the explicit scenarios wherein these algorithms could proffer some palpable edge.

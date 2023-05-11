@@ -149,7 +149,7 @@ In this physically two-dimensional environment, a pole is attached to a cart tha
 The objective is to keep the pole from falling over for as long as possible by applying appropriate forces to the cart.
 At each time, the agent must either apply a set constant force to the either right or to the left — it can not idle.
 The state observed is a vector of four real numbers: the position and velocity of the cart, and the angle and angular velocity of the pole.
-For each time step where the pole remains upright, the agent receives a constant reward of $+1$, while the episode ends if the pole angle exceeds $12^\circ$ or if the cart moves out of frame, id est too far from the centre.
+For each time step where the pole remains upright, the agent receives a constant reward of $+1$, while the episode ends if the pole angle exceeds $12^\circ$ or if the cart moves out of frame, id est, too far from the centre.
 Internally, the environment evolves according to the explicit Euler method, with a time step of $0.02$ seconds\footnotemark, which, disregarding technicalities with respect to floating point arithmetic, presents an infinite state-space.
 It is nonetheless far too complicated to be visualised as the toy example in \cref{fig:mdp}.
 

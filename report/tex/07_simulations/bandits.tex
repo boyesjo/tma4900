@@ -1,4 +1,4 @@
-\section{Quantum bandits}
+\section{Algorithms for the multi-armed bandit problem}
 By producing better predictions of the rewards of the arms, the QUCB algorithm promises to outperform classical algorithms in the multi-armed bandit problem.
 While the upper bound shown in \cref{sec:wan2022} implies QUCB advantage, it does not necessarily mean it is supreme in all cases or even on average.
 It is therefore of much interest to test it on a variety of problems and compare its average performance to other algorithms — not only with the classical UCB to which it is compared in the original paper, but also with the more performant Thompson sampling algorithm.
@@ -316,7 +316,7 @@ QUCB lags behind in the beginning, but its regret curve appears flatter towards 
 The UCB algorithm, on the other hand, is as before clearly outperformed by both QUCB and Thompson sampling.
 
 \subsubsection{More challenging prior}
-As the above prior proved to still too easy to demonstrate quantum advantage, a third was chosen, catering even more to QUCB's strengths discovered in \cref{sec:sim_fixed_arms}, id est having close means and means centred around one half.
+As the above prior proved to still too easy to demonstrate quantum advantage, a third was chosen, catering even more to QUCB's strengths discovered in \cref{sec:sim_fixed_arms}, id est, where the arm means are close, and their means are centred around one half.
 The prior was constructed similarly to the one in \cref{eq:challenging_prior}, but with different parameters, namely:
 \begin{equation}
     \label{eq:more_challenging_prior}
