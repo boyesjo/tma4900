@@ -1,0 +1,40 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\definecolor{blue}{HTML}{b01b81}
+
+\begin{document}
+
+
+\begin{tikzpicture}
+    \begin{axis}[
+            width=7 cm,
+            height=7 cm,
+            hide axis,
+        ]
+        \addplot+[
+            only marks,
+            error bars/.cd,
+            y dir=plus,
+            y explicit
+        ] coordinates {
+                (1, 0.2) +- (0, 0.5)
+                (2, 0.4) +- (0, 0.3)
+                (3, 0.6) +- (0, 0.1)
+                (4, 0.5) +- (0, 0.2)
+                (5, 0.65) +- (0, 0.05)
+                (6, 0.35) +- (0, 0.35)
+            };
+        \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.8, 0.3) (1.2, 0.3)};
+        \addplot+[dashed, mark=none, black, forget plot] coordinates {(1.8, 0.35) (2.2, 0.35)};
+        \addplot+[dashed, mark=none, black, forget plot] coordinates {(2.8, 0.57) (3.2, 0.57)};
+        \addplot+[dashed, mark=none, black, forget plot] coordinates {(3.8, 0.45) (4.2, 0.45)};
+        \addplot+[dashed, mark=none, black, forget plot] coordinates {(4.8, 0.67) (5.2, 0.67)};
+        \addplot+[dashed, mark=none, black, forget plot] coordinates {(5.8, 0.4) (6.2, 0.4)};
+
+    \end{axis}
+\end{tikzpicture}
+
+
+\end{document}

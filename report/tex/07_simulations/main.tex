@@ -28,15 +28,19 @@ The source code for the simulations presented here is available on GitHub\footno
 \subimport{}{rl}
 
 \clearpage
-\section{Interpretation}
+% \section{Interpretation}
 % \section{Implications}
-% \section{Discussion}
+\section{Discussion}
 % \section{Significance}
 % \section{Takeaways}
-It is evident that the QUCB algorithm indeed has the potential to outperform classical algorithms in the bandit problem.
+From the experiments conducted, it is evident that the QUCB algorithm indeed has the potential to outperform classical algorithms in the bandit problem.
 As seen in \cref{fig:big2,fig:high_prob}, the algorithm does not only outperform the classical UCB algorithm, but for these particular instances, also the better Thompson sampling algorithm.
-However, as seen in \cref{fig:low_prob_fix,fig:random}, settings wherein quantum advantage is not achieved are also present.
-While still performing better than classical UCB, the algorithm is outperformed by Thompson sampling for these \enquote{easier} bandits.
+However, as seen in \cref{fig:low_prob_fix,fig:random}, settings wherein quantum advantage is not achieved are also arise.
+While still performing better than classical UCB, the algorithm is outperformed by Thompson sampling for these \enquote{easier} scenarios.
+
+\Cref{fig:histograms_random} indicate that the QUCB regret distribution is more concentrated around the mean and is less affected by the bandit instance, but the regret curves in \cref{fig:random,fig:random2,fig:random3} show that it does actually matter which bandit instance is used.
+It is likely the asymptomatic properties of the QUCB algorithm, namely the logarithmic upper bound, that enables its regret to flatten out as the number of rounds increases, achieving on occasion better final regrets at the time horizons that were attempted.
+For truly great time horizons, it may be that the QUCB algorithm would always outperform the classical algorithms.
 
 Reinforcement learning algorithms do not seem to be well suited for the bandit problem.
 They do offer great power and flexibility, but only for problems correctly designed for them.
