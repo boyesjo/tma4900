@@ -1,18 +1,23 @@
 \section{Algorithms for the multi-armed bandit problem}
 By producing better predictions of the rewards of the arms, the QUCB algorithm promises to outperform classical algorithms in the multi-armed bandit problem.
 While the upper bound shown in \cref{sec:wan2022} implies QUCB advantage, it does not necessarily mean it is supreme in all cases or even on average.
-It is therefore of much interest to test it on a variety of problems and compare its average performance to other algorithms — not only with the classical UCB to which it is compared in the original paper, but also with the more performant Thompson sampling algorithm.
-The UCB algorithm and Thompson algorithms were trivially implemented per the descriptions in \cref{sec:ucb,sec:thompson}, while the (simulation of the) QUCB algorithm was implemented as in explained in \cref{sec:qucb-implementation}.
+It is therefore of much interest to test it on a variety of problems and compare its average performance to other algorithms — not only with the classical UCB to which it is compared in the original paper, but also with the more performant Thompson sampling algorithm\footnote{Q.v. \cref{chap:bandits}.}.
+The UCB algorithm and Thompson algorithms were implemented in a straight-forward manner per the descriptions in \cref{sec:ucb,sec:thompson}, relying primarily on the NumPy~\autocite{numpy} and SciPy libraries~\autocite{scipy}, while the (simulation of the) QUCB algorithm was implemented as in explained in \cref{sec:qucb-implementation}, with the Qiskit library~\autocite{qiskit} for quantum computing support.
+
+Remark that it is specifically the UCB1 of \textcite{auer2002} that is implemented and that the digit is here omitted from the notation for brevity.
+Similarly, what here is simply called QUCB is in the original paper called $\text{QUCB}_1$.
+The Thompson sampling algorithm that is implemented follows the original paper of \textcite{thompson1933}, with its uniform prior and Beta posterior distributions.
+
 
 For fixed bandit instances, 100 simulations were run for each algorithm, while for Bayesian regrets 1000 parallels were run.
 Simulating quantum algorithms is computationally expensive, in general exponentially hard, such that much higher numbers of simulations were not feasible for the QUCB algorithm and the time horizons considered.
-To limit the scope and computational resources required, only Bernoulli rewards were considered, and in all cases but one only two arms.
-How the algorithm handles more arms may be of some interest, but its main advantage is its better dependence on the time horizon $T$, and it handles multiple arms the same was as the classical UCB algorithm.
+To limit the scope and computational resources required, only Bernoulli rewards were considered, and in every case except one, only two arms were used.
+How the algorithm handles more arms may be of some interest, but its principal advantage is its better dependence on the time horizon $T$, and it handles multiple arms the same was as the classical UCB algorithm, so there is no reason to expect any regret improvements as the number of arms increases.
 
 Across all bandit simulations, a time horizon of $T=250,000$ was used.
 This is indeed a large number, but still merely a quarter of what was tested in~\autocite{wan2022}.
 The quantum algorithm presents no immediate advantage for smaller time horizons, so  a time horizon of some substance must be chosen to see its effects.
-Specifically, due to its exponentially long quantum Monte Carlo periods, the horizon must be large enough for the greater accuracy of the QMC estimates to outweigh the cost of the long periods.
+Specifically, due to its exponentially long quantum Monte Carlo periods, as seen in \cref{sec:wan2022}, the horizon must be large enough for the greater accuracy of the QMC estimates to outweigh the cost of the long periods.
 
 As noted in~\autocite{wan2022}, setting the confidence parameter to a higher value than the theoretically desirable $1/T$ leads to better performance.
 It was thus set to $0.01$ for all experiments.
@@ -101,10 +106,6 @@ There, it can be seen that QUCB beats UCB thoroughly still, as both algorithms a
         Regrets for two Bernoulli arms with more extreme means.
     ]{
         Regrets for two Bernoulli arms with more extreme means.
-        While having the same reward gap as in \cref{fig:big2}, the experiment in (\protect\subref{fig:low_prob_fix}) demonstrates worse performance for (Q-) UCB relative to the Thompson sampling algorithm.
-        The upper-bound algorithms appear dependent only on the mean difference, while Thompson sampling seems more able to exploit the extremities.
-        In (\protect\subref{fig:high_prob}), the reward gap is reduced to $0.0005$, making the problem so difficult that the classical UCB algorithm hardly outperforms random guessing.
-        In this harder case, QUCB is again able to beat Thompson sampling.
     }
 \end{figure}
 
@@ -138,9 +139,6 @@ In general, QUCB provides no advantages or noteworthy changes from UCB with resp
     ]
     {
         Regrets for four arms, with means 0.5, 0.51, 0.52 and 0.53.
-        The QUCB algorithm is also here superior to UCB, but its regret appears to be similar to that of Thompson sampling.
-        QUCB offers no advantages over UCB or classical algorithms overall when the number of arms is increased.
-        Instead, this experiment serves as a validation of the correctness of the implementation and the algorithm.
     }
     \label{fig:four_arms}
 \end{figure}
@@ -267,7 +265,13 @@ Its symmetry around zero and coverage of the entire real number line allow for a
             \end{axis}
         \end{tikzpicture}
         \label{fig:challenging_prior}
-        \caption{\Cref{eq:challenging_prior}.}
+        \caption[
+            \Cref{eq:challenging_prior}.
+        ]
+        {
+            \Cref{eq:challenging_prior}.
+            Note that the density diverges at $(\mu_1, \mu_2) = (0, 0)$ and $(1, 1)$.
+        }
     \end{subfigure}
     \begin{subfigure}{\textwidth}
         \centering
@@ -303,7 +307,7 @@ Its symmetry around zero and coverage of the entire real number line allow for a
     ]
     {
         Priors used in the Bayesian regret experiments.
-        The joint distribution of the first arm and the difference between the means is shown.
+        The joint distribution of the first arm and the difference between the means is shown, with brighter shades indicating higher density.
         At these close arm means, any asymmetry differences are imperceptible; were the standard deviation greater, the difference would tend more upwards at low values for arm 1 and vice versa.
     }
 \end{figure}

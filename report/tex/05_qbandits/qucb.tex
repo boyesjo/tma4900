@@ -20,37 +20,23 @@ As with classical arms, the agent decides for each step in the bandit problem wh
 \end{equation}
 In~\autocite{wan2022}, an algorithm for bounded-value arms achieving $O(n \log T)$ regret was proposed, $n$ being the number of arms.
 For bounded variances, the regret is $O(n \ \text{poly}(\log T))$, which is still substantially better than $\Omega(\sqrt{nT})$ minimax regret for classical bandits.
+Only the bounded-value variant of the algorithm is described here for its simplicity and easier simulation.
+What is here denoted simply as QUCB is in~\autocite{wan2022} called $\text{QUCB}_1$, while the variant for bounded variances is denoted by $\text{QUCB}_2$.
 
-The algorithm proposed is essentially a UCB-like algorithm, where QMC (as described in \cref{sec:qmc}) is used to estimate means more efficiently.
+The algorithm proposed is essentially a UCB-like algorithm\footnotemark, where QMC (as described in \cref{sec:qmc}) is used to estimate means more efficiently.
 Because QMC estimates are only produced after a set number of quantum queries, the algorithm must cleverly decide for how many steps to pull each arm in addition to which arm to pull, before running a QMC session.
+\footnotetext{Q.v. \cref{sec:ucb}.}
 
-As listed in \cref{alg:qucb1}, the algorithm first runs a preliminary phase where the means are estimated using QMC with a fixed number of samples, after which it iteratively pulls the arms with the highest confidence bounds, after which the confidence bound are halved and the number of QMC samples to be used for that arm is doubled.
+
+As listed in \cref{alg:qucb1}, the QUCB algorithm first runs a preliminary phase where the means are estimated using QMC with a fixed number of samples, after which it iteratively pulls the arms with the highest confidence bounds, after which the confidence bound are halved and the number of QMC samples to be used for that arm is doubled.
 A confidence parameter $\delta$ is used to determine the number of QMC samples to use, satisfying $\lvert\hat{\mu}_i - \mu_i\rvert \leq \text{UCB}_i$ with probability $1-\delta$.
 The constant $C_1>1$ is only described existentially to give an upper bound to the number of QMC queries needed, and is a result from the big-O notation used to describe QMC convergence.
 How it should be set for implementation of the algorithm is not described in~\autocite{wan2022}.
 
-% \begin{algorithm}
-%     \caption{QUCB1 as proposed in~\autocite{wan2022}}
-%     \label{alg:qucb1}
-%     \begin{algorithmic}[1]
-%         \Require Set of arms $\mathcal{A}$, $\mathcal{O}_i$ as in \cref{eq:wan_oracle}, $T$ horizon, $0 < \delta \ll 1$
-%         \For {$a \in \mathcal{A}$}
-%         \State $\text{UCB}_a \gets 1$
-%         \State $N_a \gets (C_1/\text{UCB}_a) \log(1/\delta)$
-%         \State Estimate $\mu_a$ using QMC with $N_a$ samples
-%         \EndFor
-%         \While{Total number of queries to the oracles is less than $T$}
-%         \State $a \gets \argmax_a (\hat\mu_a + \text{UCB}_a)$
-%         \State $\text{UCB}_a \gets \text{UCB}_a /2$
-%         \State $N_a \gets (C_1/\text{UCB}_a) \log(1/\delta)$
-%         \State Update estimate of $\mu_a$ using QMC with $N_a$ samples
-%         \EndWhile
-%     \end{algorithmic}
-% \end{algorithm}
 
 \begin{algorithm}
     \SetAlgoLined
-    \caption{QUCB1}
+    \caption{QUCB}
     \label{alg:qucb1}
     \KwIn{Set of arms $\mathcal{A}$, $\mathcal{O}_i$ as in \cref{eq:wan_oracle}, $T$ horizon, $0 < \delta \ll 1$}
     \For {$a \in \mathcal{A}$}{
@@ -259,8 +245,8 @@ In total, the QMC subroutine is implemented as in \cref{alg:qucb_qmc}.
     \label{alg:qucb_qmc}
 \end{algorithm}
 
-\subsubsection{QUCB1 simulation}
-Oracles and QMC being available, the QUCB1 algorithm can be implemented easily.
+\subsubsection{QUCB simulation}
+Oracles and QMC being available, the QUCB algorithm can be implemented easily.
 First, a set of oracles is initialised for each arm, and the algorithm is run for a given number of iterations.
 The number of oracle calls is tracked, and the algorithm is stopped when the number of oracle calls exceeds the number of iterations.
 Regret contributions are tracked and output after the simulation.
@@ -292,6 +278,6 @@ The simulation code thus appears as in \cref{alg:qucb1}.
     }
     Discard any regret from excess turns \;
     \Return regrets $R_1, \ldots, R_T$
-    \caption{QUCB1 simulation with a set of Bernoulli arms}
+    \caption{QUCB simulation with a set of Bernoulli arms}
     \label{alg:qucb1_sim}
 \end{algorithm}
