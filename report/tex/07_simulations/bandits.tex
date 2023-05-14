@@ -4,10 +4,9 @@ While the upper bound shown in \cref{sec:wan2022} implies QUCB advantage, it doe
 It is therefore of much interest to test it on a variety of problems and compare its average performance to other algorithms — not only with the classical UCB to which it is compared in the original paper, but also with the more performant Thompson sampling algorithm\footnote{Q.v. \cref{chap:bandits}.}.
 The UCB algorithm and Thompson algorithms were implemented in a straight-forward manner per the descriptions in \cref{sec:ucb,sec:thompson}, relying primarily on the NumPy~\autocite{numpy} and SciPy libraries~\autocite{scipy}, while the (simulation of the) QUCB algorithm was implemented as in explained in \cref{sec:qucb-implementation}, with the Qiskit library~\autocite{qiskit} for quantum computing support.
 
-Remark that it is specifically the UCB1 of \textcite{auer2002} that is implemented and that the digit is here omitted from the notation for brevity.
+Remark that it is specifically the UCB1 of~\autocite{auer2002} that is implemented and that the digit is here omitted from the notation for brevity.
 Similarly, what here is simply called QUCB is in the original paper called $\text{QUCB}_1$.
-The Thompson sampling algorithm that is implemented follows the original paper of \textcite{thompson1933}, with its uniform prior and Beta posterior distributions.
-
+The Thompson sampling algorithm that is implemented follows the original paper ~\autocite{thompson1933}, with its uniform prior and Beta posterior distributions.
 
 For fixed bandit instances, 100 simulations were run for each algorithm, while for Bayesian regrets 1000 parallels were run.
 Simulating quantum algorithms is computationally expensive, in general exponentially hard, such that much higher numbers of simulations were not feasible for the QUCB algorithm and the time horizons considered.

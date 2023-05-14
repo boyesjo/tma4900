@@ -1,6 +1,25 @@
 \chapter{Abstract}
 
-\lipsum[1-2]
+The bandit problem is a fundamental problem in sequential decision-making, and can be considered a special case of reinforcement learning.
+This thesis attempts to solve the bandit problem using two 21st century technologies: quantum computing and neural-network-based reinforcement learning.
+These are then compared with classical, bandit-specific algorithms.
+Quantum computing is a new paradigm of computation, which promises to solve certain problems faster than classical computers, and the search for what problems these are is ongoing.
+Modern reinforcement learning algorithms have shown great success in solving complex problems, beating the best humans at many tasks.
+
+It is primarily the quantum upper confidence bound algorithm that is implemented, tested and studied, which is a quantum extension of the classical upper confidence bound algorithm, where the estimation of the arm means is done using a quantum Monte-Carlo subroutine.
+The algorithm is compared with its classical peer and the usually favourable Thompson sampling algorithm.
+The experiments show that the quantum algorithm can outperform the classical algorithms, but only for certain bandit instances.
+While almost always outperforming the classical UCB algorithm, it is outperformed by Thompson sampling for what can be described as \enquote{easy} cases, where the arm means are far apart.
+
+Additionally, general reinforcement learning algorithms are tested on the bandit problem.
+These algorithms are not designed for the bandit problem, but it is interesting to see how these general, powerful algorithms perform on bandits.
+The results show that most of the modern algorithms are not able to solve the bandit instance that was tested.
+It is likely due to poor state representations or reward functions.
+
+Overall, these modern technologies may provide some benefits to the bandit problem, but the results are not conclusive.
+The quantum algorithm may be able to outperform classical algorithm, but it relies on receiving the rewards in quantum-mechanical superposition states, which is not possible in most cases.
+To get any good performance from the reinforcement learning algorithms, they must be adapted to the bandit problem, at which point there is no reason not to use the problem-specific algorithms instead.
+
 
 
 \cleardoublepage
