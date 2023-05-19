@@ -183,7 +183,7 @@ So,
     \pi(a|s) = \frac{\exp\left(\langle O_a \rangle\right)}{\sum_{a' \in \mathcal{A}} \exp\left(\langle O_{a'} \rangle\right)},
 \end{equation}
 where $\langle O_a \rangle$ is the expectation value of the observable $O_a$.
-For all experiments, the measurement was taken to be the parity when measuring all qubits in the $Z$-basis with a trainable weight $w$, id est, $O_a = \pm w \prod_{i=1}^N Z_i$.
+For all experiments, the measurement was taken to be the parity when measuring all qubits in the $Z$-basis with a trainable weight $w$, id est $O_a = \pm w \prod_{i=1}^N Z_i$.
 
 All this is easily done using the PennyLane library~\autocite{pennylane} in Python.
 In it, the circuits as described above are implemented procedurally as functions, which in Python are first-class objects, such that they are easily composable.
