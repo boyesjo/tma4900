@@ -1,25 +1,24 @@
 \chapter{Abstract}
 
-The bandit problem is a fundamental problem in sequential decision-making, and can be considered a special case of reinforcement learning.
-This thesis attempts to solve the bandit problem using two 21st century technologies: quantum computing and neural-network-based reinforcement learning.
+The bandit problem is a fundamental problem in sequential decision-making.
+In it, an agent must decide between different arms, each with an unknown reward distribution, trying to maximise all received rewards.
+Real-world applications include clinical trials, recommender systems, portfolio optimisation and more.
+This thesis studies the problem and how it can be solved with modern technologies, namely quantum computing and neural-network-based reinforcement learning.
 These are then compared with classical, bandit-specific algorithms.
-Quantum computing is a new paradigm of computation, which promises to solve certain problems faster than classical computers, and the search for what problems these are is ongoing.
-Modern reinforcement learning algorithms have shown great success in solving complex problems, beating the best humans at many tasks.
 
-It is primarily the quantum upper confidence bound algorithm that is implemented, tested and studied, which is a quantum extension of the classical upper confidence bound algorithm, where the estimation of the arm means is done using a quantum Monte-Carlo subroutine.
-The algorithm is compared with its classical peer and the usually favourable Thompson sampling algorithm.
-The experiments show that the quantum algorithm can outperform the classical algorithms, but only for certain bandit instances.
-While almost always outperforming the classical UCB algorithm, it is outperformed by Thompson sampling for what can be described as \enquote{easy} cases, where the arm means are far apart.
+A primary focus of the thesis is the quantum UCB algorithm.
+It relies on a quantum Monte Carlo subroutine to estimate the reward means, which is only possible for rewards received in quantum-mechanical superposition states.
+Numerical comparisons with classical UCB and Thompson sampling indicate that the quantum algorithm can outperform the classical algorithms, but only for hard instances.
+Quantum advantage requires numerous turns and highly correlated arms.
+Further research is needed to determine what applications permit the use of the quantum algorithm and that are difficult enough to warrant its use.
 
-Additionally, general reinforcement learning algorithms are tested on the bandit problem.
-These algorithms are not designed for the bandit problem, but it is interesting to see how these general, powerful algorithms perform on bandits.
-The results show that most of the modern algorithms are not able to solve the bandit instance that was tested.
-It is likely due to poor state representations or reward functions.
+General reinforcement learning algorithms, not specifically designed for the bandit problem, are also tested on it.
+It is observed that they struggle to solve the tested bandit instances.
+This is likely due to poor state representations or reward functions.
+While future work could find better setups for these algorithms, it is likely that bandit-specific algorithms will remain the best choice for the bandit problem; with the effort that may be required to match the specific algorithms, the benefit of using a general tool is lost.
 
-Overall, these modern technologies may provide some benefits to the bandit problem, but the results are not conclusive.
-The quantum algorithm may be able to outperform classical algorithm, but it relies on receiving the rewards in quantum-mechanical superposition states, which is not possible in most cases.
-To get any good performance from the reinforcement learning algorithms, they must be adapted to the bandit problem, at which point there is no reason not to use the problem-specific algorithms instead.
-
-
+To conclude, the thesis finds quantum computing a useful for the bandit problem, while general reinforcement learning algorithms appear not so.
+More studies are needed to determine what conditions are needed for quantum benefits and to test the algorithm on different reward distributions and arm numbers.
+Future work could consider non-stochastic bandits or attempt to find a better quantum bandit algorithm, building something inherently quantum instead of extending classical algorithms.
 
 \cleardoublepage

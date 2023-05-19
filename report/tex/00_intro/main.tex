@@ -5,6 +5,7 @@ The metaphor of the bandit refers to the idea that each option is like a slot ma
 One might imagine that the best strategy would be to invest heavily in the option with the highest expected reward.
 But what if that option is not immediately clear?
 Or what if the rewards are highly variable, such that it is difficult to predict which option will ultimately be the most lucrative?
+How to balance the competing demands of exploration and exploitation?
 These are the kinds of questions that make the multi-armed bandit problem so intriguing.
 
 Historically, the problem has arisen in a variety of contexts.
@@ -32,7 +33,7 @@ Bandits theory has also been applied to other problems, such as the problem of c
     \label{tab:mab_applications}
     \begin{tblr}{
             width=\linewidth,
-            colspec={X[l] X[r] X[r]}
+            colspec={X[l] X[l] X[l]}
         }
         \toprule
         Application            & Arms                 & Reward            \\
@@ -55,7 +56,10 @@ Despite the diversity of contexts, the essential challenge remains the same: how
 On the one hand, one would want to gather as much information as possible about the potential rewards of each option, so that an informed decision can be made.
 On the other hand, resources should be spent on the most promising option as quickly as possible, so that the returns are maximised.
 Having to deal with both random reward and random decisions based on said rewards makes the problem virtually impossible to solve optimally.
-\enquote{The problem is a  classic one; it was formulated during the war, and efforts to solve it so sapped the energies and minds of Allied analysts that the suggestion was made that the problem be dropped over Germany, as the ultimate instrument of intellectual sabotage}~\autocite{whittle1979}.
+% \enquote{The problem is a  classic one; it was formulated during the war, and efforts to solve it so sapped the energies and minds of Allied analysts that the suggestion was made that the problem be dropped over Germany, as the ultimate instrument of intellectual sabotage}~\autocite{whittle1979}.
+\begin{displayquote}
+    \enquote{The problem is a  classic one; it was formulated during the war, and efforts to solve it so sapped the energies and minds of Allied analysts that the suggestion was made that the problem be dropped over Germany, as the ultimate instrument of intellectual sabotage}~\autocite{whittle1979}.
+\end{displayquote}
 Luckily, since then, algorithms have been developed that can solve the problem with certain optimality guarantees.
 
 Machine learning and reinforcement learning in particular have in recent years become a popular tool for solving problems of all kinds.
@@ -86,7 +90,7 @@ Still, some algorithms have been proposed, and some indications of quantum advan
 This thesis is structured as follows.
 \Cref{chap:bandits} introduces the multi-armed bandit problem formally and presents what theoretical guarantees can be made about the performance of algorithms.
 Several classical algorithms are then presented, including the classical upper confidence bound algorithm, which is the basis for the quantum algorithm, to be discussed later, and Thompson sampling, a Bayesian method that tends to perform best in practice.
-Thereafter, the more general field of reinforcement learning and its mathematical formulation as Markov decision processes are introduced, along with several state-of-the-art algorithms based on deep learning and artificial neural networks.
+Thereafter, the more general field of reinforcement learning and its mathematical formulation as Markov decision processes are introduced in \cref{chap:rl}, along with several state-of-the-art algorithms based on deep learning and artificial neural networks.
 Next, in \cref{chap:qc}, quantum computing is explained, including the quantum circuit model and several quantum algorithms, such as Grover's and quantum Monte Carlo.
 In \cref{chap:qbandits}, quantum computing is applied to the bandit problem, leading to the quantum upper confidence bound algorithm, whose theoretically supreme performance is proved.
 \Cref{chap:qml} described more general methods for quantum reinforcement learning and quantum agents.
