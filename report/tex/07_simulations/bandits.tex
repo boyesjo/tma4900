@@ -254,12 +254,17 @@ Its symmetry around zero and coverage of the entire real number line allow for a
                             /pgf/number format/precision=3
                         },
                     scaled y ticks=false,
+                    colorbar,
+                    colormap/viridis,
+                    point meta min=-100,
+                    point meta max=0,
+                    view={0}{90},
                 ]
                 \addplot graphics [
                         xmin=0,
                         xmax=1,
-                        ymin=-0.1,
-                        ymax=0.1,
+                        ymin=-0.5,
+                        ymax=0.5,
                     ] {figs/priors/prior1};
             \end{axis}
         \end{tikzpicture}
@@ -269,7 +274,6 @@ Its symmetry around zero and coverage of the entire real number line allow for a
         ]
         {
             \Cref{eq:challenging_prior}.
-            Note that the density diverges at $(\mu_1, \mu_2) = (0, 0)$ and $(1, 1)$.
         }
     \end{subfigure}
     \begin{subfigure}{\textwidth}
@@ -288,12 +292,17 @@ Its symmetry around zero and coverage of the entire real number line allow for a
                             /pgf/number format/precision=3
                         },
                     scaled y ticks=false,
+                    colorbar,
+                    colormap/viridis,
+                    point meta min=-100,
+                    point meta max=0,
+                    view={0}{90},
                 ]
                 \addplot graphics [
                         xmin=0,
                         xmax=1,
-                        ymin=-0.02,
-                        ymax=0.02,
+                        ymin=-0.1,
+                        ymax=0.1,
                     ] {figs/priors/prior2};
             \end{axis}
         \end{tikzpicture}
@@ -306,8 +315,10 @@ Its symmetry around zero and coverage of the entire real number line allow for a
     ]
     {
         Priors used in the Bayesian regret experiments.
-        The joint distribution of the first arm and the difference between the means is shown, with brighter shades indicating higher density.
-        At these close arm means, any asymmetry differences are imperceptible; were the standard deviation greater, the difference would tend more upwards at low values for arm 1 and vice versa.
+        The log joint distribution of the first arm and the difference between the means is shown.
+        % At these close arm means, any asymmetry differences are imperceptible; were the standard deviation greater, the difference would tend more upwards at low values for arm 1 and vice versa.
+        Values above maximum and below the minimum as indicated by the colour bar are clipped.
+        Note that the density in (a) diverges at $(\mu_1, \mu_2) = (0, 0)$ and $(1, 1)$.
     }
 \end{figure}
 
