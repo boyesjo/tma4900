@@ -230,7 +230,7 @@ where the logit is given by
     \label{eq:logit}
     \text{logit}(\mu) = \log(\mu/(1-\mu)).
 \end{equation}
-This prior is displayed in \cref{fig:challenging_prior}.
+This prior is displayed in \cref{fig:priors}.
 
 The logit is used to ensure that the means are in the interval $[0, 1]$.
 It is particularly well-suited for interpreting the means of Bernoulli bandits due to its ability to capture meaningful differences between probabilities. For example, on the logit scale, the distance between 0.001 and 0.101 is much greater than that between 0.4 and 0.5.
@@ -377,17 +377,17 @@ Its symmetry around zero and coverage of the entire real number line allow for a
                 ] {figs/priors/prior2};
         \end{groupplot}
     \end{tikzpicture}
-    \label{fig:priors}
     \caption[
         Priors used in Bayesian regret experiments.
     ]
     {
         Priors used in Bayesian regret experiments.
-        The joint distribution of the first arm and the difference between the means is shown.
+        The joint distributions of the first arm and the difference between the means are shown.
         At these close arm means, any asymmetry differences are imperceptible; were the standard deviation greater, the difference would tend more upwards at low values for arm 1 and vice versa.
         Note that the density in \cref{eq:challenging_prior} diverges at $(\mu_1, \mu_2) = (0, 0)$ and $(1, 1)$.
-        Values above the colour bar maximum are therefore clipped.
+        Values above the colour bar maximum are therefore clipped in the upper image.
     }
+    \label{fig:priors}
 \end{figure}
 
 
@@ -407,7 +407,7 @@ The prior was constructed similarly to the one in \cref{eq:challenging_prior}, b
         \text{logit}(\mu_2) & \sim \text{N}(\text{logit}(\mu_1), 0.02),
     \end{aligned}
 \end{equation}
-as is rendered in \cref{fig:more_challenging_prior}.
+as is rendered in \cref{fig:priors}.
 
 This simulation was also run for 1,000 parallels.
 As is seen in \cref{fig:random3}, QUCB is reclaims superiority, while Thompson sampling still clearly outperforms UCB.
@@ -480,117 +480,211 @@ The classical UCB algorithm appears to have even more spread in its regret distr
 This is to be expected, as it does not achieve the same guarantees as Thompson sampling, as discussed in \cref{chap:bandits}.
 
 
+% \begin{figure}
+%     \centering
+%     \begin{subfigure}{\textwidth}
+%         \centering
+%         \begin{tikzpicture}
+%             \begin{axis}[
+%                     width=10 cm,
+%                     height=5 cm,
+%                     ybar,
+%                     xlabel={Regret},
+%                     ylabel={No. of occurrences},
+%                     xmin = 0,
+%                     xmax = 400,
+%                     ymin = 0,
+%                     grid = major,
+%                 ]
+%                 \pgfplotstableread[col sep=comma]{../code/wan/results/random/final_turn_regerts.dat}\datatable
+%                 \addplot+ [hist={bins=60}, red, opacity=0.5]
+%                 table [y index=2, col sep=comma]
+%                 \datatable;
+
+%                 \addplot+ [hist={bins=60}, blue, opacity=0.5]
+%                 table [y index=0, col sep=comma]
+%                 \datatable;
+
+%                 \addplot+ [hist={bins=60}, green, opacity=0.5]
+%                 table [y index=1, col sep=comma]
+%                 \datatable;
+
+%                 \legend{UCB, QUCB, Thompson};
+%             \end{axis}
+%         \end{tikzpicture}
+%         \caption{Uniform prior.}
+%     \end{subfigure}
+
+%     \begin{subfigure}{\textwidth}
+%         \centering
+%         \begin{tikzpicture}
+%             \begin{axis}[
+%                     width=10 cm,
+%                     height=5 cm,
+%                     ybar,
+%                     xlabel={Regret},
+%                     ylabel={No. of occurrences},
+%                     xmin = 0,
+%                     xmax = 600,
+%                     ymin = 0,
+%                     grid = major,
+%                 ]
+%                 \pgfplotstableread[col sep=comma]{../code/wan/results/random2/final_turn_regerts.dat}\datatable
+%                 \addplot+ [hist={bins=60}, red, opacity=0.5]
+%                 table [y index=2, col sep=comma]
+%                 \datatable;
+
+%                 \addplot+ [hist={bins=60}, blue, opacity=0.5]
+%                 table [y index=0, col sep=comma]
+%                 \datatable;
+
+%                 \addplot+ [hist={bins=60}, green, opacity=0.5]
+%                 table [y index=1, col sep=comma]
+%                 \datatable;
+
+%                 \legend{UCB, QUCB, Thompson};
+
+%             \end{axis}
+%         \end{tikzpicture}
+%         \caption{Prior as in \cref{eq:challenging_prior}.}
+%     \end{subfigure}
+
+
+%     \begin{subfigure}{\textwidth}
+%         \centering
+%         \begin{tikzpicture}
+%             \begin{axis}[
+%                     width=10 cm,
+%                     height=5 cm,
+%                     ybar,
+%                     xlabel={Regret},
+%                     ylabel={No. of occurrences},
+%                     xmin = 0,
+%                     xmax = 600,
+%                     ymin = 0,
+%                     grid = major,
+%                 ]
+%                 \pgfplotstableread[col sep=comma]{../code/wan/results/random3/final_turn_regerts.dat}\datatable
+%                 \addplot+ [hist={bins=60}, red, opacity=0.5]
+%                 table [y index=2, col sep=comma]
+%                 \datatable;
+
+%                 \addplot+ [hist={bins=60}, blue, opacity=0.5]
+%                 table [y index=0, col sep=comma]
+%                 \datatable;
+
+%                 \addplot+ [hist={bins=60}, green, opacity=0.5]
+%                 table [y index=1, col sep=comma]
+%                 \datatable;
+
+%                 \legend{UCB, QUCB, Thompson};
+
+%             \end{axis}
+%         \end{tikzpicture}
+%         \caption{Prior as in \cref{eq:more_challenging_prior}.}
+%     \end{subfigure}
+
+%     \caption[
+%         Histograms of final turn regret for the three priors considered.
+%     ]
+%     {
+%         Histograms of final turn regret for the three priors considered.
+%         Note that the rightmost bin is open-ended, including all values greater than the highest regret value plotted.
+%     }
+%     \label{fig:histograms_random}
+% \end{figure}
+
+
 \begin{figure}
     \centering
-    \begin{subfigure}{\textwidth}
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    width=10 cm,
-                    height=5 cm,
-                    ybar,
-                    xlabel={Regret},
-                    ylabel={No. of occurrences},
-                    xmin = 0,
-                    xmax = 400,
-                    ymin = 0,
-                    grid = major,
-                ]
-                \pgfplotstableread[col sep=comma]{../code/wan/results/random/final_turn_regerts.dat}\datatable
-                \addplot+ [hist={bins=60}, red, opacity=0.5]
-                table [y index=2, col sep=comma]
-                \datatable;
+    \begin{tikzpicture}
+        \begin{groupplot}[
+                ybar,
+                xlabel={Regret},
+                ylabel={No. of occurrences},
+                xmin = 0,
+                ymin = 0,
+                grid = major,
+                group style={
+                        group size=1 by 3,
+                        vertical sep=2.5cm,
+                    },
+            ]
+            \nextgroupplot[
+                title={Uniform prior},
+                width=10 cm,
+                height=5 cm,
+                xmax = 600,
+                % legend style={at={(0.5,-0.2)},anchor=north},
+            ]
+            \pgfplotstableread[col sep=comma]{../code/wan/results/random/final_turn_regerts.dat}\datatable
+            \addplot+ [hist={bins=60}, red, opacity=0.5]
+            table [y index=2, col sep=comma]
+            \datatable;
 
-                \addplot+ [hist={bins=60}, blue, opacity=0.5]
-                table [y index=0, col sep=comma]
-                \datatable;
+            \addplot+ [hist={bins=60}, blue, opacity=0.5]
+            table [y index=0, col sep=comma]
+            \datatable;
 
-                \addplot+ [hist={bins=60}, green, opacity=0.5]
-                table [y index=1, col sep=comma]
-                \datatable;
+            \addplot+ [hist={bins=60}, green, opacity=0.5]
+            table [y index=1, col sep=comma]
+            \datatable;
 
-                \legend{UCB, QUCB, Thompson};
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Uniform prior.}
-    \end{subfigure}
+            \legend{UCB, QUCB, Thompson};
 
-    \begin{subfigure}{\textwidth}
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    width=10 cm,
-                    height=5 cm,
-                    ybar,
-                    xlabel={Regret},
-                    ylabel={No. of occurrences},
-                    xmin = 0,
-                    xmax = 600,
-                    ymin = 0,
-                    grid = major,
-                ]
-                \pgfplotstableread[col sep=comma]{../code/wan/results/random2/final_turn_regerts.dat}\datatable
-                \addplot+ [hist={bins=60}, red, opacity=0.5]
-                table [y index=2, col sep=comma]
-                \datatable;
+            \nextgroupplot[
+                title={Prior as in \cref{eq:challenging_prior}},
+                width=10 cm,
+                height=5 cm,
+                xmax = 600,
+                % legend style={at={(0.5,-0.2)},anchor=north},
+            ]
+            \pgfplotstableread[col sep=comma]{../code/wan/results/random2/final_turn_regerts.dat}\datatable
+            \addplot+ [hist={bins=60}, red, opacity=0.5]
+            table [y index=2, col sep=comma]
+            \datatable;
 
-                \addplot+ [hist={bins=60}, blue, opacity=0.5]
-                table [y index=0, col sep=comma]
-                \datatable;
+            \addplot+ [hist={bins=60}, blue, opacity=0.5]
+            table [y index=0, col sep=comma]
+            \datatable;
 
-                \addplot+ [hist={bins=60}, green, opacity=0.5]
-                table [y index=1, col sep=comma]
-                \datatable;
+            \addplot+ [hist={bins=60}, green, opacity=0.5]
+            table [y index=1, col sep=comma]
+            \datatable;
 
-                \legend{UCB, QUCB, Thompson};
+            \legend{UCB, QUCB, Thompson};
 
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Prior as in \cref{eq:challenging_prior}.}
-    \end{subfigure}
+            \nextgroupplot[
+                title={Prior as in \cref{eq:more_challenging_prior}},
+                width=10 cm,
+                height=5 cm,
+                xmax = 600,
+                % legend style={at={(0.5,-0.2)},anchor=north},
+            ]
+            \pgfplotstableread[col sep=comma]{../code/wan/results/random3/final_turn_regerts.dat}\datatable
+            \addplot+ [hist={bins=60}, red, opacity=0.5]
+            table [y index=2, col sep=comma]
+            \datatable;
 
+            \addplot+ [hist={bins=60}, blue, opacity=0.5]
+            table [y index=0, col sep=comma]
+            \datatable;
 
-    \begin{subfigure}{\textwidth}
-        \centering
-        \begin{tikzpicture}
-            \begin{axis}[
-                    width=10 cm,
-                    height=5 cm,
-                    ybar,
-                    xlabel={Regret},
-                    ylabel={No. of occurrences},
-                    xmin = 0,
-                    xmax = 600,
-                    ymin = 0,
-                    grid = major,
-                ]
-                \pgfplotstableread[col sep=comma]{../code/wan/results/random3/final_turn_regerts.dat}\datatable
-                \addplot+ [hist={bins=60}, red, opacity=0.5]
-                table [y index=2, col sep=comma]
-                \datatable;
+            \addplot+ [hist={bins=60}, green, opacity=0.5]
+            table [y index=1, col sep=comma]
+            \datatable;
 
-                \addplot+ [hist={bins=60}, blue, opacity=0.5]
-                table [y index=0, col sep=comma]
-                \datatable;
+            \legend{UCB, QUCB, Thompson};
 
-                \addplot+ [hist={bins=60}, green, opacity=0.5]
-                table [y index=1, col sep=comma]
-                \datatable;
-
-                \legend{UCB, QUCB, Thompson};
-
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Prior as in \cref{eq:more_challenging_prior}.}
-    \end{subfigure}
+        \end{groupplot}
+    \end{tikzpicture}
 
     \caption[
         Histograms of final turn regret for the three priors considered.
     ]
     {
         Histograms of final turn regret for the three priors considered.
-        Note that the rightmost bin is open-ended, including all values greater than the highest regret value plotted.
+        Note that the rightmost bins are open-ended, including all values greater than the highest regret value indicated.
     }
     \label{fig:histograms_random}
 \end{figure}
-

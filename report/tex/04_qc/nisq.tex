@@ -49,8 +49,10 @@ Geometrically, this can be interpreted as contraction of states on the Bloch sph
                 view/h=120,
                 view/v=30,
                 scale uniformly strategy=units only,
-                % colour blue
-                colormap={blueblue}{color(0cm)=(blue); color(1cm)=(blue)},
+                % % colour blue
+                % colormap={blueblue}{color(0cm)=(blue); color(1cm)=(blue)},
+                % colour red
+                colormap={redred}{color(0cm)=(red); color(1cm)=(red)},
             ]
             \nextgroupplot
             \addplot3[
@@ -127,7 +129,7 @@ When a gate like the $X$-gate is applied many times, even small errors will add 
                 mystyle,
             ]
             \addplot[
-                color = blue,
+                color = red,
                 mark = none,
                 % samples = 100,
                 % domain = 0:100,
