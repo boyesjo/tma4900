@@ -236,89 +236,157 @@ The logit is used to ensure that the means are in the interval $[0, 1]$.
 It is particularly well-suited for interpreting the means of Bernoulli bandits due to its ability to capture meaningful differences between probabilities. For example, on the logit scale, the distance between 0.001 and 0.101 is much greater than that between 0.4 and 0.5.
 Its symmetry around zero and coverage of the entire real number line allow for a comprehensive representation of the reward means.
 
+% \begin{figure}
+%     \centering
+%     \begin{subfigure}{\textwidth}
+%         \centering
+%         \begin{tikzpicture}
+%             \centering
+%             \begin{axis}[
+%                     width=10cm,
+%                     height=8cm,
+%                     enlargelimits=false,
+%                     axis on top,
+%                     xlabel={$\mu_1$},
+%                     ylabel={$\mu_2 - \mu_1$},
+%                     yticklabel style={
+%                             /pgf/number format/fixed,
+%                             /pgf/number format/precision=3
+%                         },
+%                     scaled y ticks=false,
+%                     colorbar,
+%                     colormap/plasma,
+%                     point meta min=0,
+%                     point meta max=47.6,
+%                     view={0}{90},
+%                 ]
+%                 \addplot graphics [
+%                         xmin=0,
+%                         xmax=1,
+%                         ymin=-0.1,
+%                         ymax=0.1,
+%                     ] {figs/priors/prior1};
+%             \end{axis}
+%         \end{tikzpicture}
+%         \label{fig:challenging_prior}
+%         \caption[
+%             \Cref{eq:challenging_prior}.
+%         ]
+%         {
+%             \Cref{eq:challenging_prior}.
+%         }
+%     \end{subfigure}
+%     \begin{subfigure}{\textwidth}
+%         \centering
+%         \begin{tikzpicture}
+%             \centering
+%             \begin{axis}[
+%                     width=10cm,
+%                     height=8cm,
+%                     enlargelimits=false,
+%                     axis on top,
+%                     xlabel={$\mu_1$},
+%                     ylabel={$\mu_2 - \mu_1$},
+%                     yticklabel style={
+%                             /pgf/number format/fixed,
+%                             /pgf/number format/precision=3
+%                         },
+%                     scaled y ticks=false,
+%                     colorbar,
+%                     colormap/plasma,
+%                     point meta min=0,
+%                     point meta max=149.6,
+%                     view={0}{90},
+%                 ]
+%                 \addplot graphics [
+%                         xmin=0,
+%                         xmax=1,
+%                         ymin=-0.02,
+%                         ymax=0.02,
+%                     ] {figs/priors/prior2};
+%             \end{axis}
+%         \end{tikzpicture}
+%         \label{fig:more_challenging_prior}
+%         \caption{\Cref{eq:more_challenging_prior}.}
+%     \end{subfigure}
+%     \label{fig:priors}
+%     \caption[
+%         Priors used in the Bayesian regret experiments.
+%     ]
+%     {
+%         Priors used in the Bayesian regret experiments.
+%         The joint distribution of the first arm and the difference between the means is shown.
+%         At these close arm means, any asymmetry differences are imperceptible; were the standard deviation greater, the difference would tend more upwards at low values for arm 1 and vice versa.
+%         Note that the density in (a) diverges at $(\mu_1, \mu_2) = (0, 0)$ and $(1, 1)$.
+%         Values above the colour bar maximum are therefore clipped.
+%     }
+% \end{figure}
+
 \begin{figure}
     \centering
-    \begin{subfigure}{\textwidth}
-        \centering
-        \begin{tikzpicture}
-            \centering
-            \begin{axis}[
-                    width=10cm,
-                    height=8cm,
-                    enlargelimits=false,
-                    axis on top,
-                    xlabel={$\mu_1$},
-                    ylabel={$\mu_2 - \mu_1$},
-                    yticklabel style={
-                            /pgf/number format/fixed,
-                            /pgf/number format/precision=3
-                        },
-                    scaled y ticks=false,
-                    colorbar,
-                    colormap/viridis,
-                    point meta min=-100,
-                    point meta max=0,
-                    view={0}{90},
-                ]
-                \addplot graphics [
-                        xmin=0,
-                        xmax=1,
-                        ymin=-0.5,
-                        ymax=0.5,
-                    ] {figs/priors/prior1};
-            \end{axis}
-        \end{tikzpicture}
-        \label{fig:challenging_prior}
-        \caption[
-            \Cref{eq:challenging_prior}.
-        ]
-        {
-            \Cref{eq:challenging_prior}.
-        }
-    \end{subfigure}
-    \begin{subfigure}{\textwidth}
-        \centering
-        \begin{tikzpicture}
-            \centering
-            \begin{axis}[
-                    width=10cm,
-                    height=8cm,
-                    enlargelimits=false,
-                    axis on top,
-                    xlabel={$\mu_1$},
-                    ylabel={$\mu_2 - \mu_1$},
-                    yticklabel style={
-                            /pgf/number format/fixed,
-                            /pgf/number format/precision=3
-                        },
-                    scaled y ticks=false,
-                    colorbar,
-                    colormap/viridis,
-                    point meta min=-100,
-                    point meta max=0,
-                    view={0}{90},
-                ]
-                \addplot graphics [
-                        xmin=0,
-                        xmax=1,
-                        ymin=-0.1,
-                        ymax=0.1,
-                    ] {figs/priors/prior2};
-            \end{axis}
-        \end{tikzpicture}
-        \label{fig:more_challenging_prior}
-        \caption{\Cref{eq:more_challenging_prior}.}
-    \end{subfigure}
+    \begin{tikzpicture}
+        \begin{groupplot}[
+                width=10cm,
+                height=8cm,
+                enlargelimits=false,
+                axis on top,
+                xlabel={$\mu_1$},
+                ylabel={$\mu_2 - \mu_1$},
+                yticklabel style={
+                        /pgf/number format/fixed,
+                        /pgf/number format/precision=3
+                    },
+                scaled y ticks=false,
+                colorbar,
+                colormap/plasma,
+                point meta min=0,
+                view={0}{90},
+                group style={
+                        group size=1 by 2,
+                        vertical sep=2cm,
+                    },
+            ]
+            \nextgroupplot[
+                title={\Cref{eq:challenging_prior}},
+                xmin=0,
+                xmax=1,
+                ymin=-0.1,
+                ymax=0.1,
+                point meta max=47.6,
+            ]
+            \addplot graphics [
+                    xmin=0,
+                    xmax=1,
+                    ymin=-0.1,
+                    ymax=0.1,
+                ] {figs/priors/prior1};
+
+            \nextgroupplot[
+                title={\Cref{eq:more_challenging_prior}},
+                xmin=0,
+                xmax=1,
+                ymin=-0.02,
+                ymax=0.02,
+                point meta max=149.6,
+            ]
+            \addplot graphics [
+                    xmin=0,
+                    xmax=1,
+                    ymin=-0.02,
+                    ymax=0.02,
+                ] {figs/priors/prior2};
+        \end{groupplot}
+    \end{tikzpicture}
     \label{fig:priors}
     \caption[
-        Priors used in the Bayesian regret experiments.
+        Priors used in Bayesian regret experiments.
     ]
     {
-        Priors used in the Bayesian regret experiments.
-        The log joint distribution of the first arm and the difference between the means is shown.
-        % At these close arm means, any asymmetry differences are imperceptible; were the standard deviation greater, the difference would tend more upwards at low values for arm 1 and vice versa.
-        Values above maximum and below the minimum as indicated by the colour bar are clipped.
-        Note that the density in (a) diverges at $(\mu_1, \mu_2) = (0, 0)$ and $(1, 1)$.
+        Priors used in Bayesian regret experiments.
+        The joint distribution of the first arm and the difference between the means is shown.
+        At these close arm means, any asymmetry differences are imperceptible; were the standard deviation greater, the difference would tend more upwards at low values for arm 1 and vice versa.
+        Note that the density in \cref{eq:challenging_prior} diverges at $(\mu_1, \mu_2) = (0, 0)$ and $(1, 1)$.
+        Values above the colour bar maximum are therefore clipped.
     }
 \end{figure}
 

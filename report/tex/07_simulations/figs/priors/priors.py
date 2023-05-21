@@ -46,33 +46,43 @@ def plot_joint_log_likelihood(
     # normalise
     data -= np.log(np.sum(np.exp(data) * dx * dx))
 
-    data[data == -np.inf] = np.nan
+    # data[data == -np.inf] = np.nan
+    data = np.exp(data)
 
-    # high = np.nanquantile(data, 0.99)
-    high = 0
+    high_quantile = 0.9999 if name == "prior1" else 1
+
+    high = np.nanquantile(data, high_quantile)
     data[data > high] = high
 
-    low = -100
-    data[data < low] = low
-    data[np.isnan(data)] = low
+    # # low = -100
+    # low = -100000
+    # data[data < low] = low
+    # data[np.isnan(data)] = low
 
     plt.imshow(
+        # np.exp(data),
         data,
         extent=[0, 1, -1, 1],
         aspect="auto",
         # cmap="virdis",
+        cmap="plasma",
+        # cmap="inferno",
+        # cmap="magma",
+        # cmap="cividis",
     )
     plt.ylim(-y_range, y_range)
     plt.axis("off")
+    # plt.colorbar()
     print(f"Saving {name}")
-    # plt.savefig(f"{name}.pdf", bbox_inches="tight", pad_inches=0)
+    print(f"range: {0} - {high}")
+    plt.savefig(f"{name}.pdf", bbox_inches="tight", pad_inches=0)
     plt.show()
 
 
 # Define the different global parameters
 params = [
-    {"a": 0.5, "b": 0.5, "std": 0.1, "name": "prior1", "y_range": 0.5},
-    {"a": 2, "b": 2, "std": 0.02, "name": "prior2", "y_range": 0.1},
+    {"a": 0.5, "b": 0.5, "std": 0.1, "name": "prior1", "y_range": 0.1},
+    {"a": 2, "b": 2, "std": 0.02, "name": "prior2", "y_range": 0.02},
     # {"a": 1, "b": 2, "std": 10, "name": "prior3"},
 ]
 
@@ -80,5 +90,7 @@ params = [
 for p in params:
     plot_joint_log_likelihood(**p)
 
+
+# %%
 
 # %%
