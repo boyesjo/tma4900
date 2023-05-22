@@ -16,7 +16,7 @@ In an unmeasured, ideal quantum system, the state evolution is veritably unitary
 Take the $X$-gate as an example.
 If the fails to apply with probability $p$, the resulting density operator $\rho'$ can be expressed as
 \begin{equation}
-    \rho' = p\rho + (1-p)X\rho X^\dagger,
+  \rho' = p\rho + (1-p)X\rho X^\dagger,
 \end{equation}
 where $\rho$ is the initial density.
 Such a channel has eigenvalues $p$ and $1-2p$, where $I$ and $X$ share the former and $Y$and $Z$ the latter.
@@ -24,79 +24,79 @@ Consequently, states with $Y$- or $Z$-components will have mixing introduced.
 Geometrically, this can be interpreted as contraction of states on the Bloch sphere towards the centre, illustrated in \cref{fig:noise_bloch}.
 
 \begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \begin{groupplot}[
-                group style={
-                        group size=2 by 1,
-                        horizontal sep=0pt,
-                    },
-                width=\textwidth,
-                % height=30 cm,
-                ymin = -1.5, ymax = 1.5,
-                xmin = -1.5, xmax = 1.5,
-                zmin = -1.5, zmax = 1.5,
-                % grid=major,
-                axis equal,
-                axis lines = center,
-                xlabel = {$x$},
-                ylabel = {$y$},
-                zlabel = {$z$},
-                xtick = {-1, 0, 1},
-                ytick = {-1, 0, 1},
-                ztick = {-1, 0, 1},
-                % enlargelimits=0.3,
-                view/h=120,
-                view/v=30,
-                scale uniformly strategy=units only,
-                % % colour blue
-                % colormap={blueblue}{color(0cm)=(blue); color(1cm)=(blue)},
-                % colour red
-                colormap={redred}{color(0cm)=(red); color(1cm)=(red)},
-            ]
-            \nextgroupplot
-            \addplot3[
-                opacity = 0.35,
-                surf,
-                fill=white, point meta=0,
-                z buffer = sort,
-                samples = 21,
-                variable = \u,
-                variable y = \v,
-                domain = 0:180,
-                y domain = 0:360,
-            ]
-            ({cos(u)*sin(v)}, {sin(u)*sin(v)}, {cos(v)});;
-            \nextgroupplot[xshift=-3cm]
-            \addplot3[
-                opacity = 0.35,
-                surf,
-                fill=white, point meta=0,
-                z buffer = sort,
-                samples = 21,
-                variable = \u,
-                variable y = \v,
-                domain = 0:180,
-                y domain = 0:360,
-            ]
-            ({cos(u)*sin(v)}, {0.6*sin(u)*sin(v)}, {0.6*cos(v)});
-        \end{groupplot}
-        % add arrow from north on fig 1 to north on fig 2 
-        \draw[->, shorten >=0.5cm,shorten <=1cm]
-        ([yshift=-2.5cm] group c1r1.north)
-        edge[bend left]
-        node[midway,above] {\footnotesize Noisy $X$-gate}
-        ([yshift=-2.5cm] group c2r1.north);
-    \end{tikzpicture}
-    \caption[
-        Illustration of applying a noisy gate on the Bloch sphere.
-    ]{
-        Illustration of applying a noisy $X$-gate on the Bloch sphere.
-        The left plot shows the set of all pure states, the Bloch sphere.
-        On the right, the same set of states is shown after the application of a noisy $X$-gate with probability $p=0.2$ of failing.
-        There, the $y$- and $z$-axes are contracted towards the centre by a factor $1-2p=0.6$, introducing mixing.
-    }
-    \label{fig:noise_bloch}
+  \centering
+  \begin{tikzpicture}
+    \begin{groupplot}[
+        group style={
+            group size=2 by 1,
+            horizontal sep=0pt,
+          },
+        width=\textwidth,
+        % height=30 cm,
+        ymin = -1.5, ymax = 1.5,
+        xmin = -1.5, xmax = 1.5,
+        zmin = -1.5, zmax = 1.5,
+        % grid=major,
+        axis equal,
+        axis lines = center,
+        xlabel = {$x$},
+        ylabel = {$y$},
+        zlabel = {$z$},
+        xtick = {-1, 0, 1},
+        ytick = {-1, 0, 1},
+        ztick = {-1, 0, 1},
+        % enlargelimits=0.3,
+        view/h=120,
+        view/v=30,
+        scale uniformly strategy=units only,
+        % % colour blue
+        % colormap={blueblue}{color(0cm)=(blue); color(1cm)=(blue)},
+        % colour red
+        colormap={redred}{color(0cm)=(red); color(1cm)=(red)},
+      ]
+      \nextgroupplot
+      \addplot3[
+        opacity = 0.35,
+        surf,
+        fill=white, point meta=0,
+        z buffer = sort,
+        samples = 21,
+        variable = \u,
+        variable y = \v,
+        domain = 0:180,
+        y domain = 0:360,
+      ]
+      ({cos(u)*sin(v)}, {sin(u)*sin(v)}, {cos(v)});;
+      \nextgroupplot[xshift=-3cm]
+      \addplot3[
+        opacity = 0.35,
+        surf,
+        fill=white, point meta=0,
+        z buffer = sort,
+        samples = 21,
+        variable = \u,
+        variable y = \v,
+        domain = 0:180,
+        y domain = 0:360,
+      ]
+      ({cos(u)*sin(v)}, {0.6*sin(u)*sin(v)}, {0.6*cos(v)});
+    \end{groupplot}
+    % add arrow from north on fig 1 to north on fig 2 
+    \draw[->, shorten >=0.5cm,shorten <=1cm]
+    ([yshift=-2.5cm] group c1r1.north)
+    edge[bend left]
+    node[midway,above] {\footnotesize Noisy $X$-gate}
+    ([yshift=-2.5cm] group c2r1.north);
+  \end{tikzpicture}
+  \caption[
+    Illustration of applying a noisy gate on the Bloch sphere.
+  ]{
+    Illustration of applying a noisy $X$-gate on the Bloch sphere.
+    The left plot shows the set of all pure states, the Bloch sphere.
+    On the right, the same set of states is shown after the application of a noisy $X$-gate with probability $p=0.2$ of failing.
+    There, the $y$- and $z$-axes are contracted towards the centre by a factor $1-2p=0.6$, introducing mixing.
+  }
+  \label{fig:noise_bloch}
 \end{figure}
 
 Any physical gate will suffer some such noise, and so the tendency will be for states to degenerate towards the mixed centre of the Bloch sphere (or its higher-dimensional analogue).
@@ -118,71 +118,71 @@ If it is not calibrated correctly, the effective operation will be a rotation th
 When a gate like the $X$-gate is applied many times, even small errors will add up, which could cause an overall rotation of the state by a significant angle.
 
 \begin{figure}
-    \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-                width=0.8\textwidth,
-                height=0.6\textwidth,
-                xlabel = {Number of $X$-gates applied},
-                ylabel = {Correct measurements (\%)},
-                y filter/.code={\pgfmathparse{#1*100}\pgfmathresult},
-                mystyle,
-            ]
-            \addplot[
-                color = red,
-                mark = none,
-                % samples = 100,
-                % domain = 0:100,
-            ]
-            table[x = n, y = p, col sep=comma] {tex/04_qc/noise.dat};
-            % add exponential dampening to the plot
-            \addplot[
-                color = gray,
-                dashed,
-                mark = none,
-                samples = 100,
-                domain = 0:1000,
-            ]
-            {0.5*(1+(1-2*0.003)^x)};
-            \addplot[
-                color = gray,
-                dashed,
-                mark = none,
-                samples = 100,
-                domain = 0:1000,
-            ]
-            {0.5*(1-(1-2*0.003)^x)};
-            \addplot[
-                color = gray,
-                densely dotted,
-                mark = none,
-                samples = 100,
-                domain = 0:1000,
-            ]
-            {0.5*(1 + cos(x))};
-            \addplot[
-                color = black,
-                solid,
-                mark = none,
-                samples = 100,
-                domain = 0:1000,
-            ]
-            {0.5*(1+cos(x)*(1-2*0.003)^x)};
-        \end{axis}
-    \end{tikzpicture}
-    \caption[
-        % Proportion of correct measurements of a qubit after applying several noisy $X$-gates.
-        Effect of noise on the likelihood of a correct measurement.
-    ]
-    {
-        Proportion of correct measurements of a qubit after applying several noisy $X$-gates.
-        The error in the rotation is \ang{1}, while the probability of failing to apply the gate is $p=0.3\%$.
-        For each number of gates, the measurement is repeated 1000 times.
-        The coherent error causes a sinusoidal behaviour, in which 180 rotations causes the overall rotation to be completely opposite.
-        The decoherent error causes an exponential dampening, as the state becomes more and more mixed.
-        The wiggly pattern stems from the shot noise, simply classical randomness from the probabilistic measurement with a finite number of samples.
-    }
-    \label{fig:noise_graph}
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        width=0.8\textwidth,
+        height=0.6\textwidth,
+        xlabel = {Number of $X$-gates applied},
+        ylabel = {Correct measurements (\%)},
+        y filter/.code={\pgfmathparse{#1*100}\pgfmathresult},
+        mystyle,
+      ]
+      \addplot[
+        color = red,
+        mark = none,
+        % samples = 100,
+        % domain = 0:100,
+      ]
+      table[x = n, y = p, col sep=comma] {tex/04_qc/noise.dat};
+      % add exponential dampening to the plot
+      \addplot[
+        color = gray,
+        dashed,
+        mark = none,
+        samples = 100,
+        domain = 0:1000,
+      ]
+      {0.5*(1+(1-2*0.003)^x)};
+      \addplot[
+        color = gray,
+        dashed,
+        mark = none,
+        samples = 100,
+        domain = 0:1000,
+      ]
+      {0.5*(1-(1-2*0.003)^x)};
+      \addplot[
+        color = gray,
+        densely dotted,
+        mark = none,
+        samples = 100,
+        domain = 0:1000,
+      ]
+      {0.5*(1 + cos(x))};
+      \addplot[
+        color = black,
+        solid,
+        mark = none,
+        samples = 100,
+        domain = 0:1000,
+      ]
+      {0.5*(1+cos(x)*(1-2*0.003)^x)};
+    \end{axis}
+  \end{tikzpicture}
+  \caption[
+    % Proportion of correct measurements of a qubit after applying several noisy $X$-gates.
+    Effect of noise on the likelihood of a correct measurement.
+  ]
+  {
+    Proportion of correct measurements of a qubit after applying several noisy $X$-gates.
+    The error in the rotation is \ang{1}, while the probability of failing to apply the gate is $p=0.3\%$.
+    For each number of gates, the measurement is repeated 1000 times.
+    The coherent error causes a sinusoidal behaviour, in which 180 rotations causes the overall rotation to be completely opposite.
+    The decoherent error causes an exponential dampening, as the state becomes more and more mixed.
+    The wiggly pattern stems from the shot noise, simply classical randomness from the probabilistic measurement with a finite number of samples.
+  }
+  \label{fig:noise_graph}
 \end{figure}
 
 \Cref{fig:noise_graph} shows the effects of both coherent and decoherent noise on the measurement of a qubit after applying several noisy $X$-gates.
@@ -193,15 +193,15 @@ There are more sources of noise than the two included in the figure, and having 
 \subsection{Qubit counts and connectivity}
 \label{sec:qubit_counts}
 \begin{figure}
-    \centering
-    \includegraphics[width=0.65\textwidth]{connectivity.pdf}
-    \caption[
-        Qubit connectivity and error rates example.
-    ]{
-        Qubit connectivity and error rates in IBM's Montreal 27-qubit Falcon r4 chip~\autocite{connectivity}.
-        Brighter coloured nodes indicate higher $X$-error rates, while brighter edges indicate higher CNOT-error rates.
-    }
-    \label{fig:connectivity}
+  \centering
+  \includegraphics[width=0.65\textwidth]{connectivity.pdf}
+  \caption[
+    Qubit connectivity and error rates example.
+  ]{
+    Qubit connectivity and error rates in IBM's Montreal 27-qubit Falcon r4 chip~\autocite{connectivity}.
+    Brighter coloured nodes indicate higher $X$-error rates, while brighter edges indicate higher CNOT-error rates.
+  }
+  \label{fig:connectivity}
 \end{figure}
 
 Another limiting factor is the amount of qubits.
