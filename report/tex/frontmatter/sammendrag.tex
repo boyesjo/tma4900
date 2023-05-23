@@ -2,24 +2,26 @@
 
     \chapter{Sammendrag}
     Bandittproblemet er et grunnleggende problem i sekvensiell beslutningstaging.
-    I det må en spiller velge mellom ulike armer med ukjente premiefordelinger, og derfra prøve å maksimere samtlige mottatte premier.
-    Bruksområder inkluderer kliniske studier, anbefalingssystemer, porteføljeoptimering og mer.
+    I det må en spiller velge mellom ulike armer i hver runde.
+    Armene er en bestemt mengde valg spilleren kan ta, der hvert valg har en ukjent premiefordeling.
+    Målet er derfa å maksimere samtlige mottate premier.
+    Faktiske bruksområder inkluderer kliniske studier, anbefalingssystemer, porteføljeoptimering og mer.
     Her studeres problemet og hvordan det kan løses med moderne teknologier, nemlig kvantedatamaskiner og forsterkende læring med nevrale nettverk.
     Disse sammenlignes således med klassiske, bandittspesifikke algoritmer.
 
-    Kvante-UCB-algoritmen er et hovedfokus i oppgaven.
-    Den bygger på en kvante-Monte-Carlo-underprosedyre for å estimere forventet vinning mer nøyaktig enn er mulig klassisk, hvilket krever premier mottatt som kvantemekaniske superposisjonstilstander.
-    Numeriske sammenligninger med klassisk UCB og Thompson-trekking antyder at kvantealgoritmen kan slå de klassiske, men kun for vanskelige instanser.
+    Kvante-UCB (øvre konfidensintervallgrenser) er en sentral algoritme i oppgaven.
+    Den bygger på en kvante-Monte-Carlo-underprosedyre for å estimere forventet vinning mer nøyaktig enn det man kan klassisk, hvilket krever premier mottatt som kvantemekaniske superposisjonstilstander.
+    Numeriske sammenligninger med klassisk UCB og den bayesiske metoden Thompson-trekking antyder at kvantealgoritmen kan slå de klassiske, men kun  for vanskelige instanser.
     Kvantefordeler krever mange runder og sterkt korrelerte armer.
-    Videre forskning kreves for å finne ut av hvilke anvendelser som tillater bruk av kvantealgoritmen og som er vanskelige nok til å fodre dens bruk.
+    Videre forskning kreves for å finne ut av hvilke anvendelser som tillater bruk av kvantealgoritmen og som er vanskelige nok til å fordre dens bruk.
 
     Vanlig forsterkende læring, som ikke er laget spesifikt for bandittproblemet, testes også på det.
     Det ses at de sliter med å løse de testede bandittinstansene.
-    Dette skyldes sannsynligvis dårlige tilstandsrepresentasjoner eller premiefunksjoner.
+    Dette skyldes antagelig dårlige tilstandsrepresentasjoner eller premiefunksjoner.
     Selv om fremtidig arbeid kan finne bedre innstillinger for algoritmene, er nok de bandittspesifikke ennå best egnet; ved å bruke krefter på å anpasse algoritmene, mistes fordelen med å bruke generelle verktøy.
 
     Konklusjonsvis finner oppgaven at kvantedatamaskiner er nyttige for bandittproblemet, mens generell forsterkende læring tilsynelatende ikke er det.
-    Mer forskning må til for å finne ut hvilke betingelser som kreves for kvantefordeler og for å teste algoritmen på andre premiefordelinger og antall armer.
+    Mer forskning må til for å finne ut av når kvantealgoritmer er fordelaktige og for å teste algoritmen på andre premiefordelinger og antall armer.
     Fremtidige studier kan se på ikke-stokastiske banditter eller forsøke å konstruere en bedre kvantebandittalgoritme ved å lage noe helt kvantemekanisk i stedet for å bygge videre på klassiske algoritmer.
 
 \end{otherlanguage}
