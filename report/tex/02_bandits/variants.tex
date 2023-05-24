@@ -4,7 +4,8 @@ An alternative problem is to find the best arm with as few turns as possible.
 In this version, a $\delta$ is given, and the goal is to find the best arm with probability at least $1-\delta$.
 The metric here is how the turns needed grows as a function of $\delta$.
 Unlike regret minimisation, exploitation is less of a concern, but much theory can be transferred from the regret minimisation problem.
-Though there is no direct benefit from exploitation, as there is in regret optimisation where rewards are collected, it is still desirable to mainly pull good arms, as these will need more consideration to be distinguished from the optimal.
+Though there is no direct benefit from exploitation, as there is in regret optimisation where rewards are collected, it is still desirable mainly to pull good arms, as these will need more consideration to be distinguished from the optimal.
+Worse arms should new few pulls to be identified as suboptimal.
 
 \subsubsection{Bandit generalisations}
 The multi-armed bandit problem has numerous generalisations, including the non-stationary multi-armed bandit where the underlying reward distributions change over time, presenting a challenging environment for traditional algorithms developed for the standard, stationary multi-armed bandit problem.

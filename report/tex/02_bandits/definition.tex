@@ -3,7 +3,7 @@ In the multi-armed bandit problem the agent (the player or decision-maker) has k
 For each time step $t=1, \dots, T$, the agent selects an arm $a_t \in \mathcal{A}$ and receives a reward $X_t \sim P_{a_t}$, independent of previous rewards and actions.
 The time horizon $T$ is usually assumed finite and given, but for many applications, knowledge of it unreasonable, motivating algorithms that can work with infinite time horizons, known as being anytime.
 Nonetheless, it will be assumed greater than $k$, such that all arms may be pulled at least once, ensuring that empirical means and whatnot are well-defined.
-The goal of the agent is to maximise its cumulative rewards.
+The goal is for the agent to maximise its cumulative rewards.
 
 \subsection{Further assumptions}
 With no assumptions on the reward distributions, analysis is difficult.
@@ -131,13 +131,14 @@ Often the dependence on particular instances and policies are irrelevant or clea
 The usage of regret over the sum of rewards provides several advantages.
 Firstly, it serves as a normalised measure of performance, wherein perfect performance is achieved when the regret is zero.
 Secondly, it permits the usage of asymptotic notation for the analysis of algorithm performance as a function of the time horizon $T$.
+It will be seen that an uninformed policy will generate $O(T)$, while more clever solutions satisfy sublinear regret bounds.
 Finally, considering expectation rather than the stochastic sum of rewards makes the optimisation problem well-defined without having to introduce any utility measure or other assumptions.
 
-It may be more convenient to express the regret in terms of the number of times each action has been selected, irrespective of time.
+It may in some cases be more convenient to express the regret in terms of the number of times each action has been selected, irrespective of time.
 Letting $T_a$ be the number of times action $a$ has been selected up to time $T$, and using the finitude of $\mathcal{A}$ and linearity of expectations, the regret can be rewritten as
 \begin{equation}
     R_T = \sum_{a \in \mathcal{A}} \Delta_a  \mathbb{E}[T_a],
     \label{eq:regret2}
 \end{equation}
 where $\Delta_a = \mu^* - \mu_a$ is what is known as the suboptimality gap of action $a$.
-The dependency on the policy and instance is omitted for clarity will often be so when the context is clear
+The dependency on the policy and instance is here omitted for clarity, and it will often be so when the context is clear

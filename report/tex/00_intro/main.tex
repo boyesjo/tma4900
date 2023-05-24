@@ -19,15 +19,15 @@ Some of the many real-world settings in which the multi-armed bandit problem is 
 Despite being a simple problem, its countless variants and applications make it not only a useful tool for a plethora of real-world problems, but also a fascinating theoretical challenge.
 Netflix uses bandit theory to recommend movies~\autocite{kawale2018}, Amazon for its website layout~\autocite{hill2017}, Facebook for video compression~\autocite{daulton2019} and Doordash to identify responsive deliverymen~\autocite{sharma2022}.
 The problem and its variations are still being studied with several results in what follows being recent.
-Bandits theory has also been applied to other problems, such as the problem of choosing the best hyperparameters or models~\autocite{gagliolo2010}, where algorithms discussed in this thesis have shown success~\autocite{wang2014,bouneffouf2017}.
+Bandits theory has also been applied to other problems, such as the problem of choosing the best hyperparameters or models, where algorithms discussed in this thesis have shown success~\autocite{gagliolo2010,wang2014,bouneffouf2017}.
 
 \begin{table}
     \centering
     \captionabove[
         Applications of the multi-armed bandit problem.
     ]{
-        Some applications of the multi-armed bandit problem.
-        Arms correspond to the different actions that an agent can take, initially with unknown outcomes.
+        Some applications of the multi-armed bandit problem~\autocite{bouneffouf2020,kawale2018,hill2017,daulton2019,sharma2022}.
+        The arms are the set of the different actions an agent can take.
         The reward is the probabilistic outcome of the action, which the agent tries to maximise over time.
     }
     \label{tab:mab_applications}
@@ -36,17 +36,19 @@ Bandits theory has also been applied to other problems, such as the problem of c
             colspec={X[l] X[l] X[l]}
         }
         \toprule
-        Application            & Arms                 & Reward            \\
+        Application         & Arms            & Reward            \\
         \midrule
-        Medical trials         & Drugs                & Patient health    \\
-        Online advertising     & Ad placements        & Number of clicks  \\
-        Website design         & Layouts/fonts \&c.   & Number of clicks  \\
-        Recommendation systems & Items                & Number of clicks  \\
-        Dynamic pricing        & Prices               & Profit            \\
-        Networking             & Routes, settings     & Ping              \\
-        Lossy compression      & Compression settings & Quality preserved \\
-        Tasking employees      & Which employee       & Response time     \\
-        Finance                & Investment options   & Profit            \\
+        Medical trials      & Drugs           & Patient health    \\
+        Online advertising  & Ad placements   & No. of clicks     \\
+        Website design      & Layouts \&c.    & No. of clicks     \\
+        Recommender systems & Items           & No. of clicks     \\
+        Dynamic pricing     & Prices          & Profit            \\
+        Networking          & Routes          & Ping              \\
+        Lossy compression   & Settings        & Quality preserved \\
+        Tasking employees   & Employees       & Response time     \\
+        Finance             & Investments     & Profit            \\
+        Machine learning    & Hyperparameters & Performance       \\
+        Anomaly detection   & Thresholds      & No. of anomalies  \\
         \bottomrule
     \end{tblr}
 
@@ -56,7 +58,6 @@ Despite the diversity of contexts, the essential challenge remains the same: how
 On the one hand, one would want to gather as much information as possible about the potential rewards of each option, so that an informed decision can be made.
 On the other hand, resources should be spent on the most promising option as quickly as possible, so that the returns are maximised.
 Having to deal with both random reward and random decisions based on said rewards makes the problem virtually impossible to solve optimally.
-% \enquote{The problem is a  classic one; it was formulated during the war, and efforts to solve it so sapped the energies and minds of Allied analysts that the suggestion was made that the problem be dropped over Germany, as the ultimate instrument of intellectual sabotage}~\autocite{whittle1979}.
 \begin{displayquote}
     \enquote{The problem is a  classic one; it was formulated during the war, and efforts to solve it so sapped the energies and minds of Allied analysts that the suggestion was made that the problem be dropped over Germany, as the ultimate instrument of intellectual sabotage}~\autocite{whittle1979}.
 \end{displayquote}
@@ -66,7 +67,7 @@ Machine learning and reinforcement learning in particular have in recent years b
 Their mathematical formulations and implementations are much more intricate than the bandit problem, but the basic idea is the same: to learn from experience and make decisions that lead to the best possible outcome.
 Modern methods based on neural-networks have reached superhuman performance in many domains, such as Go and modern e-sport video games.
 These problems are too hard to solve anywhere near optimally, neither for humans nor for computers, so the bar for success is lower than for the bandit problem.
-Still, one might expect these modern and advanced methods to be able to do well on the classic bandit problem.
+Still, one might expect these modern, advanced and general tools to be able to do well on the classic bandit problem.
 
 The field of quantum computing has emerged as a promising new area of research with the potential to solve problems intractable for classical hardware.
 Their first conception goes back to the early 80s, often being accredited to Richard Feynman's 1982 paper \cite{feynman1982}, with the goal of simulating difficult quantum mechanical problems.

@@ -8,9 +8,9 @@ However, by defining some weighted average over all instances, an exact performa
 This is rarely done in the literature, but is included here to provide a more complete and practical measure of performance.
 
 \subsection{Instance-dependent lower bound}
-In order to meaningfully define a lower bound, it is imperative to assume a reasonable algorithm.
+In order to meaningfully define a lower bound for a given instance, it is imperative to assume a reasonable algorithm.
 Otherwise, trivial policies, such as always pulling the first arm, could achieve zero regret, hindering any meaningful comparison.
-A useful assumption is that the algorithm is asymptotically consistent in some class $\mathcal{E}$, which by definition means that for all inferior arms and all $\eta \in (0, 1)$, it holds that
+The common assumption is that the algorithm is asymptotically consistent in some class $\mathcal{E}$, which by definition means that for all inferior arms and all $\eta \in (0, 1)$, it holds that
 \begin{equation}
     \mathbb{E}[T_a] = o(T^{\eta}),
 \end{equation}
@@ -57,6 +57,7 @@ Algorithms satisfying \cref{eq:lai-robbins-regret} with equality are said to be 
 The Lai-Robbins bound is instance-dependent through its dependence on the Kullback-Leibler divergences.
 Its dependence on the divergences which are not known makes it inapplicable to real-world problems,
 and as reward distributions approach the optimal distribution, the bound diverges.
+It is still a useful tool for theoretical analysis and simulated experiments.
 
 
 \subsection{Instance-independent lower bound}
@@ -65,13 +66,12 @@ Given some problem class $\mathcal{E}$, it is defined as
 \begin{equation}
     \Inf_{\pi} \sup_{\nu \in \mathcal{E}} R(\nu, \pi),
 \end{equation}
-where $\pi$ is the algorithm and $\nu$ is the problem instance.
-The minimax regret is a lower bound on the whole class rather than one particular instance; algorithms may achieve better in some or even most instances, but no algorithm can do better than the minimax regret in all.
+where $\pi$ is the policy, and $\nu$ is the problem instance.
+The minimax regret is a lower bound on the whole class rather than one particular instance; algorithms may achieve better in some or even most instances, but no algorithm can do better than the minimax regret for all.
 In~\autocite{auer2002a}, it is proven that for all algorithms, given a fixed horizon $T$ and number of arms $K$, there is at least one problem instance such that
 \begin{equation}
-    R_T = \Omega(\sqrt{KT}),
+    R_T = \Omega(\sqrt{KT}).
 \end{equation}
-
 Such a bound is independent of the reward distributions, and as such, it is applicable in practice, but it may be overly robust.
 It can be preferable to sacrifice performance on some instances to gain performance on others.
 Minimax regret optimality implies a flat risk profile, while in practice, performance may be desired to correlate with instance difficulty.
@@ -82,7 +82,7 @@ Surprisingly, minimax optimality does not negate instance optimality, and recent
 \label{sec:bayesian-optimality}
 If a prior distribution were to be placed on the reward distributions, a notion of average or Bayesian regret can be defined.
 Alternatively, this can be thought of as having some weighing of the particular instances and averaging over them.
-Following the notation of~\autocite{lattimore2020}, the Bayesian interpretation is what is presented here.
+Following the notation of~\autocite{lattimore2020}, the Bayesian interpretation is what is here presented.
 
 For some bandit class $\mathcal{E}$, one simply includes the prior distribution of the reward distributions in the expectation taken to define the Bayesian regret,
 \begin{equation}
