@@ -1,4 +1,4 @@
-\section{Reinforcement learning}
+\section{Reinforcement learning algorithms}
 \label{sec:sim_rl}
 
 In addition to the above considered algorithms specifically made for the bandit problem, knowledge may also be gained from considering how more general-purpose reinforcement learning algorithms perform.
@@ -48,7 +48,7 @@ DQN appears completely futile, while both A2C and the QNN-based method of~\autoc
 
 \subsection{Bandits}
 Finally, the same agents as above are tested on the bandit problem.
-Note that translating the bandit problem to a reinforcement learning problem is not trivial.
+Note that translating the bandit problem to a reinforcement learning problem is not at all trivial.
 The modern algorithms rely on predicting an action given a state, and the bandit problem is in principle stateless.
 It was therefore decided to encode the empirical means of arms as the state.
 In addition, as to provide all the information, also the number of times each arm has been pulled is encoded and the current time step is also included.

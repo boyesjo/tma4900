@@ -1,4 +1,4 @@
-\section{Algorithms for the multi-armed bandit problem}
+\section{Algorithms for the bandit problem}
 By producing better predictions of the rewards of the arms, the QUCB algorithm promises to outperform classical algorithms in the multi-armed bandit problem.
 While the upper bound shown in \cref{sec:wan2022} implies QUCB advantage, it does not necessarily mean it is supreme in all cases or even on average.
 It is therefore of much interest to test it on a variety of problems and compare its average performance to other algorithms — not only with the classical UCB to which it is compared in the original paper, but also with the more performant Thompson sampling algorithm\footnote{Q.v. \cref{chap:bandits}.}.
@@ -6,10 +6,13 @@ The UCB algorithm and Thompson algorithms were implemented in a straight-forward
 
 Remark that it is specifically the UCB1 of~\autocite{auer2002} that is implemented and that the digit is here omitted from the notation for brevity.
 Similarly, what here is simply called QUCB is in the original paper called $\text{QUCB}_1$.
-The Thompson sampling algorithm that is implemented follows the original paper ~\autocite{thompson1933}, with its uniform prior and Beta posterior distributions.
+The Thompson sampling algorithm that is implemented follows the original paper ~\autocite{thompson1933}, with its uniform prior and conjugate Beta posterior distributions.
 
 For fixed bandit instances, 100 simulations were run for each algorithm, while for Bayesian regrets 1000 parallels were run.
 Simulating quantum algorithms is computationally expensive, in general exponentially hard, such that much higher numbers of simulations were not feasible for the QUCB algorithm and the time horizons considered.
+As such, there is undoubtedly some Monte Carlo error in the results, but it is not expected to be significant.
+The differences between the performances are in many cases large enough to draw statistically significant conclusions, and the results are consistent with the original paper~\autocite{wan2022}.
+
 To limit the scope and computational resources required, only Bernoulli rewards were considered, and in every case except one, only two arms were used.
 How the algorithm handles more arms may be of some interest, but its principal advantage is its better dependence on the time horizon $T$, and it handles multiple arms the same was as the classical UCB algorithm, so there is no reason to expect any regret improvements as the number of arms increases.
 
@@ -30,7 +33,8 @@ The results are shown in \cref{fig:big2}, agreeing with the original paper; QUCB
 However, Thompson sampling which was not considered in~\autocite{wan2022}, is not that far behind.
 
 Note the jagged and periodically completely flat behaviour of the QUCB algorithm regret.
-This is due to the long QMC periods in which its quantum advantage is gained; it must repeatedly pull the same arm for the QMC estimates to be produced.
+The regret is recorded at all turns, so this is not due to poor plotting.
+Instead, this is due to the long QMC periods in which its quantum advantage is gained; it must repeatedly pull the same arm for the QMC estimates to be produced.
 When the algorithm pulls the optimal arm, the change in regret is obviously zero.
 Additionally, these periods get longer as the algorithm progresses, as the QMC estimates become more accurate.
 The exponential lengthening of the QMC periods assure that such non-smooth and piecewise linear behaviour is to be expected.
@@ -64,53 +68,47 @@ Next, more extreme mean values of $0.01$ and $0.005$ with a reward gap of $0.005
 \Cref{fig:low_prob_fix} contains the results for these simulations.
 There, it can be seen that QUCB beats UCB thoroughly still, as both algorithms achieving similar regrets as in \cref{fig:big2}, but now Thompson sampling is clearly superior.
 
+\begin{figure}
+    \centering
+    \newcommand{\myoptions}{
+        width=10cm,
+        height=8cm,
+        xlabel={Kiloturn},
+        ylabel={Regret},
+        legend entries={UCB, QUCB, Thompson},
+        legend pos=north west,
+        legend cell align=left,
+        mystyle,
+    }
+    \subimport{figs}{low_prob_fix}
+    \caption{Regrets for Bernoulli arms with means 0.01 and 0.005.}
+    \label{fig:low_prob_fix}
+\end{figure}
 
 \begin{figure}
     \centering
-    \begin{subfigure}{\textwidth}
-        \centering
-        \newcommand{\myoptions}{
-            width=10cm,
-            height=8cm,
-            xlabel={Kiloturn},
-            ylabel={Regret},
-            legend entries={UCB, QUCB, Thompson},
-            legend pos=north west,
-            legend cell align=left,
-            mystyle,
-        }
-        \subimport{figs}{low_prob_fix}
-        \caption{Two Bernoulli arms, means 0.01, 0.005.}
-        \label{fig:low_prob_fix}
-    \end{subfigure}
-    \\[3ex]
-    \begin{subfigure}{\textwidth}
-        \centering
-        \newcommand{\myoptions}{
-            width=10cm,
-            height=8cm,
-            xlabel={Kiloturn},
-            ylabel={Regret},
-            legend entries={UCB, QUCB, Thompson},
-            legend pos=north west,
-            legend cell align=left,
-            mystyle,
-        }
-        \subimport{figs}{high_prob}
-        \caption{Two Bernoulli arms, means 0.99, 0.9905.}
-        \label{fig:high_prob}
-    \end{subfigure}
-    \label{fig:low_high_prob}
-    \caption[
-        Regrets for two Bernoulli arms with more extreme means.
-    ]{
-        Regrets for two Bernoulli arms with more extreme means.
+    \newcommand{\myoptions}{
+        width=10cm,
+        height=8cm,
+        xlabel={Kiloturn},
+        ylabel={Regret},
+        legend entries={UCB, QUCB, Thompson},
+        legend pos=north west,
+        legend cell align=left,
+        mystyle,
     }
+    \subimport{figs}{high_prob}
+    \caption{Regrets for two Bernoulli arms with means 0.99 and 0.9905.}
+    \label{fig:high_prob}
 \end{figure}
 
 At these extreme values, it seems the gap must shrink for QUCB to be able to outperform Thompson sampling.
 This is shown in \cref{fig:high_prob}, where the gap is reduced to $0.0005$,
 Even so, the QUCB advantage is not as pronounced as in \cref{fig:big2}.
+
+It appears as for the upper confidence bound algorithms, solely the difference between arm rewards means determines the performance.
+For the Thompson sampling algorithm, however, the absolute values of the means are also important, such that maybe some other scale like the difference of logit or probit means could be more relevant.
+This may be due to its inlaid knowledge of Bernoulli rewards, while the UCB and QUCB algorithm tested here only assumes bounded rewards, and they must thus be more conservative.
 
 \subsubsection{Four arms}
 As a final test, the number of arms is increased to four.
@@ -147,8 +145,14 @@ In general, QUCB provides no advantages or noteworthy changes from UCB with resp
 \label{sec:results_bayesian}
 As described in \cref{sec:bayesian-optimality}, the Bayesian regret is the average regret over some prior.
 What priors to choose is a topic for discussion, which will not be covered deeply in this section nor thesis in general.
-It may not be the most relevant measure for which to optimise policies, as explained in \cref{sec:optimality}.
+It may not be the most relevant measure for which to optimise policies.
 In any case, it provides a measure of robustness, measuring the performance over a range of possible instances.
+
+The use of Bayesian regrets instead of the regret for some fixed bandit instances is rarely seen in the literature.
+No such experiments were done in~\autocite{wan2022}, so what follows are new results.
+The same three algorithms as in the previous section are tested, but now on a different set of bandit instances drawn from different prior distributions for the arms.
+With Bernoulli rewards that are determined by their mean and just two arms, these priors are distributions over $[0, 1]^2$.
+
 
 \subsubsection{Uniform prior}
 First, the simple case of two arms, whose means are independently drawn from a uniform distribution on the interval $[0, 1]$ will be considered.
@@ -156,6 +160,7 @@ The Bayesian regret for this case is on display in \cref{fig:random}.
 All three were run on 1,000 instances sampled from the prior.
 Having randomness also in the bandit instances motivated the use of a larger number of simulations than in the previous experiments.
 The results shown are the averages over these instances.
+The distribution of the final regrets is considered last in this subsection.
 
 It is obvious that the Thompson sampling algorithm performs best.
 QUCB does outperform UCB, but not by as much as the previously considered cases and not in the first $\approx 30,000$ turns.
@@ -343,7 +348,7 @@ Its symmetry around zero and coverage of the entire real number line allow for a
                 view={0}{90},
                 group style={
                         group size=1 by 2,
-                        vertical sep=2cm,
+                        vertical sep=3cm,
                     },
             ]
             \nextgroupplot[
@@ -473,7 +478,7 @@ It seems that even the classical UCB algorithm has a better mode than QUCB, but 
 Across all three histograms, it appears as QUCB is more consistent in its performance, being less dependent on the random instances that are generated, while Thompson sampling, though better on many instances, suffers from outliers with very high regret.
 QUCB seemingly produces equal regrets independent of the prior, while the two classical algorithms perform worse on the more challenging priors.
 This could perhaps be explained with its logarithmic instance-independent regret bound as shown in \cref{sec:wan_proof}.
-Classically, such bounds are at best proportional to the square root of the Horizon.
+Classically, such bounds are at best proportional to the square root of the horizon.
 With its early and expensive exploration period, the QUCB algorithm is able to identify the best arm within the horizons considered here, seemingly independent of the difficulty of the instance.
 
 The classical UCB algorithm appears to have even more spread in its regret distribution than Thompson sampling, and simply worse performance overall.
@@ -684,7 +689,8 @@ This is to be expected, as it does not achieve the same guarantees as Thompson s
     ]
     {
         Histograms of final turn regret for the three priors considered.
-        Note that the rightmost bins are open-ended, including all values greater than the highest regret value indicated.
+        Note that the rightmost bins are open-ended; they include all values greater than the highest regret value indicated.
+        This was done to keep the interesting parts of the histograms at a reasonable scale.
     }
     \label{fig:histograms_random}
 \end{figure}

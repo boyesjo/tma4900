@@ -10,11 +10,16 @@ This is rarely done in the literature, but is included here to provide a more co
 \subsection{Instance-dependent lower bound}
 In order to meaningfully define a lower bound for a given instance, it is imperative to assume a reasonable algorithm.
 Otherwise, trivial policies, such as always pulling the first arm, could achieve zero regret, hindering any meaningful comparison.
-The common assumption is that the algorithm is asymptotically consistent in some class $\mathcal{E}$, which by definition means that for all inferior arms and all $\eta \in (0, 1)$, it holds that
+The common assumption is that the algorithm is asymptotically consistent in some class $\mathcal{E}$, which by definition means that for all inferior arms and all $\eta \in (0, 1)$, it holds that\footnotemark
 \begin{equation}
     \mathbb{E}[T_a] = o(T^{\eta}),
 \end{equation}
 for all instances $\nu \in \mathcal{E}$.
+
+\footnotetext{
+    The small-o is used to denote asymptotic upper bounds and is similar to big-O, but with a strict inequality.
+    E.g., $x^2 = o(x^3)$, but $x^2 \neq o(x^2)$.
+}
 
 For asymptotically consistent and bandit classes with reward distributions parametrised by only one parameter, the Lai-Robbins bound~\autocite{lai1985} holds.
 It states that
@@ -68,7 +73,7 @@ Given some problem class $\mathcal{E}$, it is defined as
 \end{equation}
 where $\pi$ is the policy, and $\nu$ is the problem instance.
 The minimax regret is a lower bound on the whole class rather than one particular instance; algorithms may achieve better in some or even most instances, but no algorithm can do better than the minimax regret for all.
-In~\autocite{auer2002a}, it is proven that for all algorithms, given a fixed horizon $T$ and number of arms $K$, there is at least one problem instance such that
+In~\autocite{auer2002a}, it is proven that for all algorithms, given a fixed horizon $T$ and number of arms $K$, there is at least one problem instance such that\footnotemark
 \begin{equation}
     R_T = \Omega(\sqrt{KT}).
 \end{equation}
@@ -77,6 +82,11 @@ It can be preferable to sacrifice performance on some instances to gain performa
 Minimax regret optimality implies a flat risk profile, while in practice, performance may be desired to correlate with instance difficulty.
 Surprisingly, minimax optimality does not negate instance optimality, and recent algorithms have been shown to achieve both~\autocite{menard2017, jin2020}.
 
+\footnotetext{
+    The $\Omega$-notation is used to denote asymptotic lower bounds, effectively the opposite of big-O.
+    E.g., $x^2 + x = \Omega(x^2) = \Omega(x) \neq \Omega(x^3)$.
+    \label{fn:omega}
+}
 
 \subsection{Bayesian optimality}
 \label{sec:bayesian-optimality}
@@ -92,7 +102,16 @@ For some bandit class $\mathcal{E}$, one simply includes the prior distribution 
 \end{equation}
 where $Q$ is the prior distribution over $\mathcal{E}$.
 Is it trivially observed that the Bayesian regret bounded above by the minimax regret.
-However, it can be proven that there exists priors such that the Bayesian regret is bounded below by some $\Omega(\sqrt{KT})$, such that $\sup_{Q} \inf_{\pi} \text{BR}_T(Q, \pi) = \Theta(\sqrt{KT})$~\autocite{lattimore2020}
+However, it can be proven that there exists priors such that the Bayesian regret is bounded below by some $\Omega(\sqrt{KT})$~\autocite{lattimore2020}, such that\footnotemark
+\begin{equation}
+    \sup_{Q} \inf_{\pi} \text{BR}_T(Q, \pi) = \Theta(\sqrt{KT}).
+\end{equation}
+
+\footnotetext{
+    The $\Theta$-notation describes both upper and lower bounds, effectively the intersection of big-O and $\Omega$ (q.v. \cref{fn:omega}).
+    E.g., $x^2 + x$ is $\Theta(x^2)$, but not $\Theta(x)$ or $\Theta(x^3)$.
+}
+
 
 The Bayesian regret can be a useful tool for designing algorithms, as knowledge inlaid in the prior can be used to guide the algorithm, but it may lead to less robust designs than policies devised by the above discussed methods.
 Furthermore, calculating the optimal policy is generally intractable for any horizon of size and reward distributions more complicated than Bernoulli~\autocite{lattimore2020}.

@@ -1,5 +1,5 @@
 \section{Classical solutions}
-\begin{table}
+\begin{table}[tbp]
     \centering
     \captionabove[
         Strategies for the multi-armed bandit problem.
@@ -225,7 +225,7 @@ With Bernoulli rewards and uniform priors, which is a special case of the Beta d
 The posterior distribution is updated after each pull, using the observed reward as evidence.
 By graphing the posterior distribution, such as is done in \cref{fig:thompson}, it is possible to see how the algorithm efficiently exploits the best arm while giving enough explorative efforts.
 
-\begin{figure}
+\begin{figure}[p]
     \pgfplotsset{
         ylabel right/.style={
                 after end axis/.append code={
@@ -438,7 +438,7 @@ All of these also appears to have linear regret curves, which is expected.
 The UCB algorithm performs better still, while Thompson sampling is without question dominant.
 Indeed, for at least the instance shown, the performance hierarchy indicated in this chapter is demonstrated.
 
-\begin{figure}
+\begin{figure}[tbp]
     \centering
     \begin{tikzpicture}
         \begin{axis}[
