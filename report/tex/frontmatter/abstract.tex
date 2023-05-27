@@ -1,26 +1,30 @@
+
 \chapter{Abstract}
-
-The bandit problem is a fundamental problem in sequential decision-making.
+The bandit problem is fundamental in sequential decision-making.
 In it, an agent must at each step decide between different arms.
-These are a fixed set of actions, each with an unknown reward distribution.
-The goal is thence to maximise the cumulative rewards received.
-Real-world applications include clinical trials, recommender systems, portfolio optimisation and more.
-This thesis studies the problem and how it can be solved with modern technologies, namely quantum computing and neural-network-based reinforcement learning.
-These are then compared with classical, bandit-specific algorithms.
+These are a fixed set of actions, each with unknown reward distributions.
+The goal is to maximise the cumulative rewards received.
+Real-world applications include clinical trials, recommender systems, portfolio optimisation and more
+This thesis studies the problem and how it can be solved with modern technologies: quantum computing and neural-network-based reinforcement learning (RL).
+These are compared with classical bandit algorithms.
 
-A primary focus of the thesis is the quantum UCB (upper confidence bounds) algorithm.
-It uses a quantum Monte Carlo subroutine to estimate the reward means more precisely than is possible classically, but requires rewards received in quantum-mechanical superposition states.
-Numerical comparisons with classical UCB and the Bayesian method of Thompson sampling indicate that the quantum algorithm can outperform the classical algorithms, but only for hard instances.
-Quantum advantage requires numerous turns and highly correlated arms.
-Further research is needed to determine which applications permit the use of the quantum algorithm and that are difficult enough to warrant its use.
+A primary focus is the quantum UCB (upper confidence bounds) algorithm.
+It uses a quantum Monte Carlo subroutine to estimate reward means more precisely than is possible classically.
+This requires rewards received as quantum-mechanical superpositions.
+Comparisons with classical UCB and the Bayesian method of Thompson sampling were conducted.
+In addition to new fixed instances, instances drawn from various priors (re Bayesian regret) were used, which is rare in the literature and new for the quantum algorithm.
+Results indicate that quantum UCB can outperform classical methods, but only for long time horizons and highly correlated arms.
+Further research is needed to determine which applications permit the use of the quantum algorithm and which are difficult enough to warrant its use.
 
-General reinforcement learning algorithms, not specifically designed for the bandit problem, are also tested on it.
-It is observed that they struggle to solve the tested bandit instances.
-This is likely due to poor state representations or reward functions.
-While future work could find better setups for these algorithms, it is likely that bandit-specific algorithms will remain the best choice for the bandit problem; with the effort that may be required to match the specific algorithms, the benefit of using a general tool is lost.
+Common RL, not specifically designed for the bandit problem, is tested on it.
+It is observed that the algorithms struggle to solve the tested instances.
+This is presumably due to poor state representations or rewards.
+While future work could find better setups for these algorithms, bandit-specific algorithms will likely remain the best choice for the problem; with the effort that may be required to match the specific algorithms, the benefit of using a general tool is lost.
 
-To conclude, the thesis finds quantum computing a useful for the bandit problem, while general reinforcement learning algorithms appear not so.
+To conclude, the thesis finds quantum computing useful for the bandit problem, while general RL appears less advantageous.
 More studies are needed to determine under which conditions quantum algorithms provide benefits and to test the algorithm on different reward distributions and arm numbers.
-Future work could consider non-stochastic bandits or attempt to find a better quantum bandit algorithm, building something inherently quantum instead of extending classical algorithms.
+Future work can consider different bandit variants or attempt to find a better quantum bandit algorithm, building something inherently quantum instead of extending classical algorithms.
+
+
 
 \cleardoublepage

@@ -24,14 +24,14 @@ The following will serve mostly as an introduction to the topic of RL, and will 
 
 Unlike bandit problems which can be considered analytically and solved somewhat optimally, the environments for which RL is used are generally intractable and far too complex to be solved optimally.
 Exempli gratia, the game of go has approximately $10^{170}$ possible states, far too complicated to be solved exactly optimally.
-However, with modern machine learning techniques, namely neural networks, it is possible to learn good policies and beat the best human players, which was famously demonstrated with AlphaGo in 2016~\autocite{silver2016}.
+However, with modern machine learning techniques, particularily neural networks, it is possible to learn good policies and beat the best human players, which was famously demonstrated with AlphaGo in 2016~\autocite{silver2016}.
 
 In contrast to bandits whose performance is important from the start, reinforcement learning is generally tackled by first training the model on a set of data or a simulated environment before deploying it to the real problem at hand.
 Consequently, the exploration-exploitation dilemma is not as pressing in reinforcement learning as it is in bandits, but it is still present.
 While learning strategies, there is indeed a trade-off between optimising the more promising strategies contra attempting something radically different.
 Epsilon-greedy strategies can be used, though more advanced strategies with adaptive exploration rates appear to be more effective~\autocite{tokic2011}.
 
-The first section of this chapter will introduce the Markov decision process (MDP), which is the mathematical model of reinforcement learning, and it will be based primarily on~\autocite{lattimore2020,sutton2018}.
+The first section of this chapter will introduce the Markov decision process (MDPs), which is the mathematical framework for reinforcement learning, and it will be based primarily on~\autocite{lattimore2020,sutton2018}.
 After that, neural networks will be introduced as a tool for solving machine learning problems, and the chapter will conclude with a brief overview of the state-of-the-art algorithms for reinforcement learning.
 
 
