@@ -429,7 +429,6 @@ The doubling trick is a simple idea: simply run the algorithm for $T$ steps firs
 It was first introduced in~\autocite{auer1995}, and has since been proven to conserve minimax regrets, but not instance-dependent regrets~\autocite{besson2018}.
 Using instead exponential progression of the episode lengths, it is possible to maintain instance-dependent regret bounds instead of minimax optimality~\autocite{besson2018}.
 
-\clearpage
 \subsection{Comparison}
 \label{sec:comparison}
 As a quick comparison of the algorithm presented above, the regrets for a simple bandit instance is shown in \cref{fig:comparison}.
@@ -438,7 +437,7 @@ All of these also appears to have linear regret curves, which is expected.
 The UCB algorithm performs better still, while Thompson sampling is without question dominant.
 Indeed, for at least the instance shown, the performance hierarchy indicated in this chapter is demonstrated.
 
-\begin{figure}[tbp]
+\begin{figure}[p]
     \centering
     \begin{tikzpicture}
         \begin{axis}[
