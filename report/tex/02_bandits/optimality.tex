@@ -17,7 +17,7 @@ The common assumption is that the algorithm is asymptotically consistent in some
 for all instances $\nu \in \mathcal{E}$.
 
 \footnotetext{
-    The small-o is used to denote asymptotic upper bounds and is similar to big-O, but with a strict inequality.
+    The small-o is used for asymptotic upper bounds and is similar to big-O, but with a strict inequality.
     E.g., $x^2 = o(x^3)$, but $x^2 \neq o(x^2)$.
 }
 
@@ -60,7 +60,7 @@ From \cref{eq:regret2}, it follows that
 Algorithms satisfying \cref{eq:lai-robbins-regret} with equality are said to be asymptotically optimal.
 
 The Lai-Robbins bound is instance-dependent through its dependence on the Kullback-Leibler divergences.
-Its dependence on the divergences which are not known makes it inapplicable to real-world problems,
+Its dependence on the divergences, which are not in practice known, makes it inapplicable to real-world problems,
 and as reward distributions approach the optimal distribution, the bound diverges.
 It is still a useful tool for theoretical analysis and simulated experiments.
 
@@ -83,7 +83,7 @@ Minimax regret optimality implies a flat risk profile, while in practice, perfor
 Surprisingly, minimax optimality does not negate instance optimality, and recent algorithms have been shown to achieve both~\autocite{menard2017, jin2020}.
 
 \footnotetext{
-    The $\Omega$-notation is used to denote asymptotic lower bounds, effectively the opposite of big-O.
+    The $\Omega$-notation denotes asymptotic lower bounds, effectively the opposite of big-O.
     E.g., $x^2 + x = \Omega(x^2) = \Omega(x) \neq \Omega(x^3)$.
     \label{fn:omega}
 }
@@ -108,7 +108,7 @@ However, it can be proven that there exists priors such that the Bayesian regret
 \end{equation}
 
 \footnotetext{
-    The $\Theta$-notation describes both upper and lower bounds, effectively the intersection of big-O and $\Omega$ (q.v. \cref{fn:omega}).
+    The $\Theta$-notation describes both upper and lower asymptotic bounds, effectively the intersection of big-O and $\Omega$ (q.v. \cref{fn:omega}).
     E.g., $x^2 + x$ is $\Theta(x^2)$, but not $\Theta(x)$ or $\Theta(x^3)$.
 }
 
