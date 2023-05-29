@@ -1,11 +1,12 @@
 \section{Other quantum bandit advances}
+\label{sec:qbandits_other}
 
-\subsection{Heavy-tailed bandits}
+\subsubsection{Heavy-tailed bandits}
 The more difficult problem of reward distributions with heavy tails is considered in~\autocite{wu2023}.
 Using a similar upper confidence bound approach as QUCB, their algorithm shows quantum advantage for bandits where the assumption of bounded $(1 + \epsilon)$-moments for some $0<\epsilon \leq 1$ is made, a weaker assumption than the bounded value or bounded variance assumptions made in~\autocite{wan2022}.
 Specifically, a polynomially improved regret is achieved, and the improvement is verified with experimental simulations.
 
-\subsection{Quantum contextual bandits}
+\subsubsection{Quantum contextual bandits}
 Variational methods are used in~\autocite{hu2019} to study the problem of quantum contextual bandits.
 There it is noted how quantum computers naturally encode continuous variables, and how this may be used to improve the performance of bandit algorithms.
 No quantum benefits are shown, but the potential is made clear.
@@ -15,7 +16,7 @@ A \enquote{quantum context} is observed, from which a recommender system is desi
 Similarly to the above QUCB algorithm, the rewards are assumed to come from quantum measurements.
 
 
-\subsection{Learning quantum states}
+\subsubsection{Learning quantum states}
 The bandit framework is in~\autocite{lumbreras2022} used to study the problem of learning quantum states efficiently.
 There, the set of arms are some observables and the bandits are some fixed quantum state.
 Thence a copy of the state is prepared and measured with the observable corresponding to the arm pulled, from with the measurement is interpreted as a reward.
@@ -23,22 +24,23 @@ Several classical algorithms are considered for this problem, including UCB, and
 Because the quantum state is measured at each step, something like QMC is not possible, so quantum speed-ups are not possible.
 
 
-\subsection{Best arm identification}
+\subsubsection{Best arm identification}
 In~\autocite{casale2020}, an algorithm based on amplitude amplification is proposed and is shown to find the optimal arm with quadratically fewer queries than the best classical algorithm for classical bandits in the case of Bernoulli rewards.
 There is albeit a significant drawback: the probability of the correct arm being suggested can not be set arbitrarily high, but is instead given by the ratio of the best arm's mean to the sum of the means of all arms.
-This greatly limits the usefulness of the algorithm, but it may still serve as a useful baseline for comparison, with the more complicated algorithms discussed in the following sections seeable as extensions hereof.
+This greatly limits the usefulness of the algorithm.
 
-They assume access to an oracle $\mathcal{O}_e$ that encodes the probabilities of the arms,
+They assume access to an oracle $\mathcal{O}_e$ that encodes the reward probabilities of the arms,
 \begin{equation}
-    \mathcal{O}_e: \ket{a} \otimes \ket{0} \mapsto \ket{a} \otimes \sum_{\omega \in \Omega} \sqrt{P_a(\omega)} \ket{Y(\omega)}
+    \mathcal{O}_e: \ket{a} \otimes \ket{0} \mapsto \ket{a} \otimes \sum_{\omega \in \Omega} \sqrt{P_a(\omega)} \ket{Y(\omega)},
 \end{equation}
-where $a$ is the arm to be queried, $\omega$ some state in the sample space $\Omega$, $P_a(\omega)$ the probability measure thereon, from which the random variable $Y(\omega)$ is drawn, some internal state.
+where $a$ is an arm, $\omega$ some state in the sample space $\Omega$, $P_a(\omega)$ the probability measure thereon, from which the random variable $Y(\omega)$ is drawn, some internal state.
+Remark that with the first qubit register being placed in superpositions, all arms can effectively be queried simultaneously.
 For a given arm $a$ and the internal state $\ket{y}$, the reward is determined by some function $f(a, y) \to \{0, 1\}$, accessed through the phase oracle $\mathcal{O}_f$,
 \begin{equation}
     \mathcal{O}_f :  \ket{a}\otimes\ket{y} \mapsto (-1)^{f(x,y)} \ket{a}\otimes\ket{y}.
 \end{equation}
 
-For such bandits, regret minimisation is no longer a valid objective, as all arms are in a sense pulled simultaneously.
+For such oracle bandits where all arms are in a way pulled simultaneously, regret minimisation is no longer really a valid objective, as all arms are in a sense pulled simultaneously.
 Instead, the problem is to find a strategy that maximises the probability of finding the optimal arm with as few applications of $\mathcal{O}_e$ as possible.
 
 The authors of~\autocite{wang2021} propose a more sophisticated algorithm, improving the results of~\autocite{casale2020} by allowing the probability of finding the optimal arm to be set arbitrarily high.
