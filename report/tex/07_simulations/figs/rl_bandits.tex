@@ -2,6 +2,16 @@
     \begin{axis}[
             \myoptions,
         ]
+        % random
+        \addplot[
+            mark = none,
+            color = black,
+            dashed,
+        ]
+        coordinates {
+                (0, 0)
+                (250, 250000*0.005 * 0.5)
+            };
         \pgfplotstableread[col sep=comma]{../code/sb3_v_qnns/results/rl.dat}\datatable
 
         \addplot+[mark = none, color = red]
@@ -17,16 +27,6 @@
         table[x expr=\thisrow{turn} * 0.001, y=regret, col sep=comma]{../code/sb3_v_qnns/results/jerbi.dat};
 
 
-        % random
-        \addplot[
-            mark = none,
-            color = black,
-            dashed,
-        ]
-        coordinates {
-                (0, 0)
-                (250, 250000*0.005 * 0.5)
-            };
 
     \end{axis}
 \end{tikzpicture}

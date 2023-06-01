@@ -3,7 +3,18 @@
             \myoptions,
             xmode=log,
             ymode=log,
+            ymax = 200,
         ]
+        % random
+        \addplot[
+            mark = none,
+            color = black,
+            dashed,
+        ]
+        coordinates {
+                (1, 0.33)
+                (6000, 1000)
+            };
         \pgfplotstableread[col sep=comma]{../code/wan/results/random/plot_data_log.dat}\datatable
         \addplot+[
             mark = none,

@@ -2,6 +2,17 @@
     \begin{axis}[
             \myoptions,
         ]
+        % random
+        \addplot[
+            mark = none,
+            color = black,
+            dashed,
+        ]
+        coordinates {
+                (0, 0)
+                (250, 250000*0.0005 * 0.5)
+            };
+
         \pgfplotstableread[col sep=comma]{../code/wan/results/high_prob/plot_data.dat}\datatable
         \addplot+[
             mark = none,
@@ -24,16 +35,6 @@
         ]
         table[x expr=\thisrow{turn} * 0.001, y=thomp_mean]{\datatable};
 
-        % random
-        \addplot[
-            mark = none,
-            color = black,
-            dashed,
-        ]
-        coordinates {
-                (0, 0)
-                (250, 250000*0.0005 * 0.5)
-            };
 
 
     \end{axis}

@@ -2,6 +2,15 @@
     \begin{axis}[
             \myoptions,
         ]
+        \addplot[
+            mark = none,
+            color = black,
+            dashed,
+        ]
+        coordinates {
+                (0, 0)
+                (250, 250000* 0.00319093834230492 * 0.5)
+            };
         \pgfplotstableread[col sep=comma]
         {../code/wan/results/random3/plot_data.dat}\datatable
         \addplot+[
@@ -25,14 +34,5 @@
         ]
         table[x expr=\thisrow{turn} * 0.001, y=thomp_mean]{\datatable};
 
-        \addplot[
-            mark = none,
-            color = black,
-            dashed,
-        ]
-        coordinates {
-                (0, 0)
-                (250, 250000* 0.00319093834230492 * 0.5)
-            };
     \end{axis}
 \end{tikzpicture}
