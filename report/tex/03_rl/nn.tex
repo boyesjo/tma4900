@@ -14,7 +14,7 @@ This is a phenomenon where, after some point, the variance no longer increases w
 Instead, it decreases and converges toward some value.
 This can be seen in \cref{fig:double_descent}, where convolutional networks\footnote{Q.v. \cref{sec:cnn}.} were tested with different layer sizes.
 Unlike statistical methods, once past this complexity threshold, there is little reason, other than the increased computational cost, not to increase the model complexity and thereby the performance.
-Double descent have been shown to appear for a variety of models~\autocite{nakkiran2021}.
+Double descent has been shown to appear for a variety of models~\autocite{nakkiran2021}.
 
 \begin{figure}
     \centering
@@ -70,7 +70,7 @@ Double descent have been shown to appear for a variety of models~\autocite{nakki
     ]
     {
         Double descent phenomenon.
-        As model complexity increases, the train error decreases steadily, but the test error reaches a minimum and after which the test error starts to increase again.
+        As model complexity increases, the training error decreases steadily, but the test error reaches a minimum and after which the test error starts to increase again.
         However, past a certain point, the test error decreases again.
         This defines two regimes: the first classical regime, where the bias-variance trade-off applies, and model complexity must remain low to avoid overfitting, compared to the modern ML regime, where more complexity is always better.
         The data is from~\autocite{nakkiran2021}, where ResNet18 models were used for image classification with added label noise.
@@ -114,7 +114,7 @@ These can be expressed as
 where $j$ is the layer number, $i$ is the node number and $w$ and $b$ are the weights and biases of the network — parameters to be optimised.
 
 The activation function $\sigma$ is a non-linear function, such as the sigmoid function, the hyperbolic tangent or the rectified linear unit (ReLU).
-Non-linearity is needed for the network not to collapse to one great linear transformation.
+Non-linearity is needed for the network not to collapse into one great linear transformation.
 Some commonly used activation functions are listed in \cref{tab:activations}.
 
 The output layer is similar to the hidden layers, though perhaps with different activation functions and fewer nodes.
@@ -192,7 +192,7 @@ This is very beneficial for tasks where the inputs are images, as local features
 \label{sec:rnn}
 Recurrent neural networks (RNNs) are a special type of neural network wherein cycles are allowed.
 This enables a temporal quality, which makes them particularly suited for tasks such as time-series prediction, speech recognition and machine translation.
-RNNs' flexibility permits them to take inputs of varying length, which is not natively supported by regular feed-forward networks.
+RNNs' flexibility permits them to take inputs of varying lengths, which is not natively supported by regular feed-forward networks.
 They are subsequently well suited for reinforcement learning, where the states and rewards from the environment can be continuously fed into the network as the agent interacts with it.
 For example, they have shown particularly useful for so-called partially observable Markov decision processes, where the agent does not have access to the full state of the environment~\autocite{arulkumaran2017}.
 
@@ -202,12 +202,12 @@ Therefore, more advanced variants of RNNs are used, such as long short-term memo
 
 
 \subsubsection{Generative adversarial networks}
-Generative adversarial networks (GANs) refer to special kind of design where two different networks are trained by competing against each other.
+Generative adversarial networks (GANs) refer to a special kind of design where two different networks are trained by competing against each other.
 With an unlabelled data set, the goal is to generate data that is indistinguishable from the real data.
 The first model, the generator, attempts to generate samples from the underlying distribution.
 On the other hand, the discriminator is tasked with distinguishing between data produced by the generator and the real samples from the data set.
-Accordingly, the discrimination is a supervised problem.
-Both models are trained simultaneously by first sampling from the generator and the data set, using supervised methods to update the discriminator, and then using the discriminators predictions to update the generator.
+Accordingly, discrimination is a supervised problem.
+Both models are trained simultaneously by first sampling from the generator and the data set, using supervised methods to update the discriminator, and then using the discriminator's predictions to update the generator.
 
 GANs are mainly used for unsupervised learning, having had great success in generating random images.
 They have also demonstrated success in more abstract tasks, such as translating text prompts to images or predicting what will happen next in a video.

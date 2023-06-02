@@ -1,7 +1,7 @@
 \section{Problem definition}
-In the multi-armed bandit problem the agent (the player or decision-maker) has knowledge of the set of available actions $\mathcal{A}=\{1, \dots, k\}$, but not the reward distributions $\nu = \{P_a : a \in \mathcal{A}\}$.
+In the multi-armed bandit problem, the agent (the player or decision-maker) has knowledge of the set of available actions $\mathcal{A}=\{1, \dots, k\}$, but not the reward distributions $\nu = \{P_a : a \in \mathcal{A}\}$.
 For each time step $t=1, \dots, T$, the agent selects an arm $a_t \in \mathcal{A}$ and receives a reward $X_t \sim P_{a_t}$, independent of previous rewards and actions.
-The time horizon $T$ is usually assumed finite and given, but for many applications, knowledge of it unreasonable, motivating algorithms that can work with infinite time horizons, known as being anytime.
+The time horizon $T$ is usually assumed finite and given, but for many applications, knowledge of it is unreasonable, motivating algorithms that can work with infinite time horizons, known as being anytime.
 Nonetheless, it will be assumed greater than $k$, such that all arms may be pulled at least once, ensuring that empirical means and whatnot are well-defined.
 The goal is for the agent to maximise its cumulative rewards.
 
@@ -13,7 +13,7 @@ It is therefore common to make some assumptions on the reward distributions, def
 \end{equation}
 
 Some common bandit classes are listed in \cref{tab:bandit_classes}.
-Note than some classes are parametric, like Bernoulli and Gaussian bandits, while others are non-parametric, such as the sub-Gaussian and bounded value bandits.
+Note that some classes are parametric, like Bernoulli and Gaussian bandits, while others are non-parametric, such as the sub-Gaussian and bounded value bandits.
 Only cases void of any inter-arm structure are considered in this thesis; knowledge of the mean of one arm should never be useful to infer the mean of another.
 
 It is assumed to be only one optimal arm, which is the arm with the highest mean reward.
@@ -28,7 +28,7 @@ This is rarely a crucial property, but still useful to avoid unnecessary complic
     {
         Common bandit classes for the unstructured, stochastic multi-armed bandit problem.
         The symbol is used for references in the text.
-        The defining properties of the classes is generally the specific distribution of the rewards, but may also being general properties that the distributions must satisfy, giving rise to non-parametric classes.
+        The defining properties of the classes are generally the specific distribution of the rewards, but may also be general properties that the distributions must satisfy, giving rise to non-parametric classes.
     }
     \label{tab:bandit_classes}
     \begin{tblr}{
@@ -126,7 +126,7 @@ Given a bandit instance $\nu$ and a policy $\pi$, at round $T$, the regret is de
     \label{eq:regret1}
 \end{equation}
 where $\mu^*$ is the mean of the optimal arm and the expectation is taken over both the reward distributions and the potentially probabilistic policy.
-Often the dependence on particular instances and policies are irrelevant or clear from the context and are therefore omitted.
+Often the dependences on particular instances and policies are irrelevant or clear from the context and are therefore omitted.
 
 The usage of regret over the sum of rewards provides several advantages.
 Firstly, it serves as a normalised measure of performance, wherein perfect performance is achieved when the regret is zero.

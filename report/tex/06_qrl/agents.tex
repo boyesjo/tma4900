@@ -9,7 +9,7 @@ Like with QML, the two fields of reinforcement learning and quantum machine lear
 The entire environment or Markov decision process can be assumed to be quantum, such as is done in~\autocite{ying2021}.
 There, approaches based on dynamic programming are used to solve the problem.
 Nonetheless, continuing the theme of solving classical problems with quantum methods, this thesis will focus mainly on the use of quantum neural networks as agents in classical reinforcement learning algorithms.
-Still, as will be seen, quantum agents provide the greatest benefits when the interacting with the environment is quantum also.
+Still, as will be seen, quantum agents provide the greatest benefits when also the environment exhibits quantum behaviour.
 
 In~\autocite{chen2020}, quantum neural networks are used to approximate Q-functions, which are used in reinforcement learning.
 Moreover, by including experience replay and a target network, the model proposed is effectively a true translation of the classical DQN algorithm to the quantum setting, a QDQN.
@@ -23,7 +23,7 @@ The authors of~\autocite{jerbi2021} propose to use a QNN to approximate the poli
 Their model is shown to solve several basic benchmark problems, including the cart-pole environment, with performance comparable to that of classical neural networks.
 Furthermore, by designing quantum environments particularly suited for the quantum model, it is shown to outperform classical neural networks.
 
-By letting the agent communicate over a quantum channel,~\autocite{saggio2021} show that the learning of an agent can be accelerated.
+By letting the agent communicate over a quantum channel,~\autocite{saggio2021} shows that the learning of an agent can be accelerated.
 Somewhat similarly, in~\autocite{hamann2022}, hybrid agents are shown to learn quadratically faster than purely classical agents.
 
 \subsection{Implementing a quantum agent}
@@ -70,7 +70,7 @@ Overall, the network appears as
     \end{quantikz}
 \end{equation}
 where the variational blocks take in parameters ${\phi}$ while the encoding block depends on both its parameters ${\lambda}$ and the input state $\ket{s}$.
-For more expressibility, further repetitions of the variational and encoding blocks may be appended pre measurement.
+For more expressibility, further repetitions of the variational and encoding blocks may be appended pre-measurement.
 The variational blocks are given by
 \begin{equation}
     \begin{quantikz}[column sep=0.5em]
@@ -187,7 +187,7 @@ For all experiments, the measurement was taken to be the parity when measuring a
 
 All this is easily done using the PennyLane library~\autocite{pennylane} in Python.
 In it, the circuits as described above are implemented procedurally as functions, which in Python are first-class objects, such that they are easily composable.
-The circuits are then compiled to the desired backend, which is this case was its built-in \texttt{default.qubit} simulator.
+The circuits are then compiled to the desired backend, which in this case was its built-in \texttt{default.qubit} simulator.
 What is more, the library provides seamless integration with PyTorch~\autocite{pytorch}, such that gradients can be computed easily with automatic differentiation and optimised using standard machine learning tools and optimisers.
 
 The quantum policy was trained using the REINFORCE algorithm with the Adam optimiser, as listed in \cref{alg:reinforce}.

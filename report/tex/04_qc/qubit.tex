@@ -35,9 +35,9 @@ Taking that and the normalisation into account, the state of the qubit can be ex
   \label{eq:bloch}
 \end{equation}
 where $\theta, \phi \in \mathbb{R}$.
-Interpreting $\theta$ as the polar angle and $\phi$ the azimuthal angle, the state of the qubit can be identified with a point on a sphere.
+Interpreting $\theta$ as the polar angle and $\phi$ as the azimuthal angle, the state of the qubit can be identified with a point on a sphere.
 See \cref{fig:bloch}.
-The state $\ket{0}$ is typically thought of as the north pole of this sphere and $\ket{1}$ the south pole.
+The state $\ket{0}$ is typically thought of as the north pole of this sphere and $\ket{1}$ as the south pole.
 % \Cref{fig:bloch} shows the Bloch sphere with the state of the qubit in \cref{eq:bloch}.
 
 \begin{figure}
@@ -59,7 +59,7 @@ The state $\ket{0}$ is typically thought of as the north pole of this sphere and
 
 \subsection{Mixed states and density operators}
 It is not only the superpositions of states that are important in quantum computing, but also the mixed states, states that are statistical ensembles of pure states.
-Pure states are those expressible as a single ket like \cref{eq:qubit}, while mixed states arise when the preparation the system is not perfectly known or when the system interacts with the environment.
+Pure states are those expressible as a single ket like \cref{eq:qubit}, while mixed states arise when the preparation of the system is not perfectly known or when the system interacts with the environment.
 For the description of mixed states, the formalism of density operators is more useful than the state vector formalism.
 If there are no classical uncertainties, the state is pure, and the density operator can be expressed a single ket-bra,
 \begin{equation}
@@ -88,7 +88,7 @@ The Pauli matrices,
   \sigma_z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix},
   \label{eq:pauli}
 \end{equation}
-together with the identity matrix serve as a basis for the real vector-space of Hermitian $2\times 2$-matrices.
+together with the identity matrix serve as a basis for the real vector space of Hermitian $2\times 2$-matrices.
 Since the diagonal elements of a density matrix must sum to one, the density matrix for a single qubit can be expressed as
 \begin{equation}
   \rho = \frac{1}{2} \left(I + x \sigma_x + y \sigma_y + z \sigma_z\right),
@@ -100,11 +100,11 @@ Notably, pure states lie on the surface, while mixed states lie within the spher
 A pure quantum superposition of $\ket{0}$ and $\ket{1}$ with equal probabilities would have a complex phase and lie somewhere on the equator, while a statistical mixture with equal classical probabilities of being $\ket{0}$ and $\ket{1}$ would lie in its centre.
 
 \subsection{Systems of multiple qubits}
-Although the continuous nature of the qubit is indeed useful, the true power of quantum computers lie in how multiple qubits interact.
+Although the continuous nature of the qubit is indeed useful, the true power of quantum computers lies in how multiple qubits interact.
 Having multiple qubits enables entanglement, which is a key feature of quantum computing.
 
 With two qubits, there are four possible states, $\ket{00}, \ket{01}, \ket{10}, \ket{11}$.
-Each of these four states have their own probability amplitude, and thus their own probability of being measured.
+Each of these four states has its own probability amplitude, and thus its own probability of being measured.
 A two-qubit system will therefore operate with four complex numbers in the four-dimensional Hilbert space $\mathbb{C}^{4}$.
 
 Generally, the state of multiple qubits can be expressed using the Kronecker product (a special case of the tensor product) of the individual qubits, as in

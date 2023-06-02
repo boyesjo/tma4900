@@ -105,8 +105,8 @@ The cost function should be meaningful in the sense that the minimum coincides w
 Additionally, the cost function should be complicated enough to warrant quantum computation by not being easily calculated on classical hardware, while still having few enough parameters to be efficiently optimised~\autocite{cerezo2021}.
 
 Important to the success of a VQA is the choice of the quantum circuit.
-The circuit selected is known as the ansatz, and there are a plethora of different ansätze that can be chosen.
-An example are hardware-efficient ansätze, which, as the name implies, is a general term used for ansätze designed in accordance with the hardware properties of a given quantum computer, taking for instance the physical gates available into account and minimising the circuit depth.
+The circuit selected is known as the ansatz, and there is a plethora of different ansätze that can be chosen.
+An example is hardware-efficient ansätze, which, as the name implies, is a general term used for ansätze designed in accordance with the hardware properties of a given quantum computer, taking, for instance the physical gates available into account and minimising the circuit depth.
 Other ansätze may be problem-specific, like the quantum alternating operator ansatz used for the quantum approximate optimisation algorithm (QAOA) (both sharing the QAOA acronym, confusingly), while others are more general and can be used to solve a variety of problems.
 It is believed that the development of better ansätze for specific applications will be important for the success of VQAs in the future~\autocite{cerezo2021}.
 
@@ -118,7 +118,7 @@ Not having to rely on finite differences is a major advantage, as the effects of
 Furthermore, it may be used recursively to evaluate higher order derivatives, which allows the usage of more advanced optimisation methods like the Newton method that requires the Hessian, though this requires more circuit evaluations.
 
 Once the gradient is known, the parameters can be updated with gradient descent methods.
-This leverages the well-developed tool-box of classical optimisation methods.
+This leverages the well-developed toolbox of classical optimisation methods.
 These can be adapted to the quantum setting, for example by adjusting the number of circuit evaluations rather than the step-sizes~\autocite{sweke2020}.
 However, the loss landscape will generally not be convex~\autocite{huembeli2021}, so convergence is not necessarily guaranteed.
 
@@ -136,7 +136,7 @@ This is useful in chemistry, nuclear physics, condensed matter physics, material
 VQAs are also well suited for general mathematical problems and combinatorial optimisation, with another common example being QAOA for the max-cut problem.
 
 Yet, despite the potential of VQAs, there are still many challenges to overcome.
-Despite having some inherent resilience to noise~\autocite{cerezo2021}, the noise and decoherence will still be a limiting factor.
+Despite having some inherent resilience to noise~\autocite{cerezo2021}, noise and decoherence will still be limiting factors.
 Error mitigating post-processing can be used to improve the performance of VQAs, but which methods to use, and their effectiveness requires further investigation~\autocite{endo2021}.
 The optimisation of the cost function is also a major challenge, as the gradients can vanish, so the choices of ansätze and the initialisation strategies are important.
 

@@ -28,7 +28,7 @@ Likewise, the QUCB$_2$ algorithm for bounded variance rewards could be tested on
 
 Across all bandit simulations, a time horizon of $T=250,000$ was used.
 This is indeed a large number, but still merely a quarter of what was tested in~\autocite{wan2022}.
-The quantum algorithm presents no immediate advantage for smaller time horizons, so  a time horizon of substance must be chosen to see its effects in the simulations.
+The quantum algorithm presents no immediate advantage for smaller time horizons, so a time horizon of substance must be chosen to see its effects in the simulations.
 Specifically, due to its exponentially long quantum Monte Carlo periods, as presented in \cref{sec:wan2022}, the horizon must be large enough for the greater accuracy of the QMC estimates to outweigh the cost of the long periods.
 
 As noted in~\autocite{wan2022}, setting the confidence parameter to a higher value than the theoretically desirable $1/T$ leads to better performance.
@@ -46,7 +46,7 @@ QUCB greatly outperforms UCB.
 However, Thompson sampling which was not considered in~\autocite{wan2022}, is not that far behind.
 
 It is worth acknowledging that the algorithms do not outperform the random, uninformed baseline by substantial amounts.
-Especially UCB, which performs worst of the three proper methods, does accumulate about two thirds of the baseline regret.
+Especially UCB, which performs worst of the three proper methods, does accumulate about two-thirds of the baseline regret.
 This is indicative of the difficulty of the instance, wherein the arm means are closely set.
 
 This instance was chosen as it was tested in~\autocite{wan2022}, and by replicating the results thence, it is easier to trust that the implementation of the quantum upper confidence bound algorithm is correct.
@@ -55,10 +55,10 @@ Due to the computational cost, a slightly reduced time horizon of only $T=250,00
 Note the jagged and periodically completely flat behaviour of the QUCB algorithm regret.
 The regret is recorded at every turn, so this is not due to poor plotting.
 Instead, this is caused by the long quantum Monte Carlo periods in which its quantum advantage is gained; it must repeatedly pull the same arm for the QMC estimates to be produced, and these periods are exponentially long in the time horizon $T$.
-When the algorithm pulls the optimal arm, the change in regret is obviously zero.
+When the algorithm pulls the optimal arm, the change in regret is indisputably zero.
 Additionally, these periods get longer as the algorithm progresses, as the QMC estimates become more accurate.
-The exponential lengthening of the QMC periods assure that such non-smooth and piecewise linear behaviour is to be expected.
-Because of these long periods, there is not as many possible trajectories as with the classical algorithms, so the jaggedness persists despite averaging over many simulations.
+The exponential lengthening of the QMC periods assures that such non-smooth and piecewise linear behaviour is to be expected.
+Because of these long periods, there are not as many possible trajectories as with the classical algorithms, so the jaggedness persists despite averaging over many simulations.
 Due to this exponential lengthening, similar behaviour should appear in all experiments with fixed instances regardless of the horizon.
 Such behaviour is not seen in the classical algorithms, as they can pull any arm at any time, so there are many more possible trajectories, and the regret curves are much smoother.
 
@@ -134,7 +134,7 @@ At these extreme values, it seems the gap must shrink for QUCB to be able to out
 This is shown in \cref{fig:high_prob}, where the gap is reduced to $0.0005$,
 Even so, the QUCB advantage is not as pronounced as in \cref{fig:big2}.
 Here, UCB is very close to the random, uninformed baseline, while the two other algorithms are able to learn.
-Still, their regret curves are still rising in the horizon considered.
+Still, their regret curves are also here rising in the time horizon considered.
 It is clear that this is a very difficult instance, and perhaps a greater time horizon could have shown the quantum advantage of QUCB more clearly.
 
 In \cref{fig:high_prob}, the UCB algorithm is only marginally better than the random baseline, and it is likely the case that its regret is not significantly different from the baseline at this horizon, considering the limited amount of simulations performed here of only $100$.
@@ -273,7 +273,7 @@ One might argue that the uniform prior is too easy, and that the quantum advanta
 Firstly, for real-world Bernoulli bandits, there may be reasons to believe that the means would lie closer to the endpoints 0 and 1 than in the middle.
 Secondly, for the problem to be interesting and warrant the use of clever quantum algorithms or even any bandit theory whatsoever, the means should be assumed close to each other.
 With means that lie far apart, the optimal arm can be identified with high certainty after only a few turns.
-Such problems are certainly also interesting, but it is not for these that the quantum algorithm is designed and for which it can be expected to provide benefits for.
+Such problems are certainly also interesting, but it is not for these that the quantum algorithm is designed and for which it can be expected to provide benefits.
 
 \begin{figure}[p]
     \centering
@@ -368,9 +368,9 @@ The UCB algorithm, on the other hand, is as before clearly outperformed by both 
 \clearpage
 \vspace{2cm}
 \subsubsection{More challenging prior}
-As the above prior proved to still too easy to demonstrate quantum advantage, a third was chosen, catering even more to QUCB's strengths discovered in \cref{sec:sim_fixed_arms}.
+As the above prior proved to be still too easy to demonstrate quantum advantage, a third was chosen, catering even more to QUCB's strengths discovered in \cref{sec:sim_fixed_arms}.
 Based on the relative performances of QUCB and Thompson sampling in \cref{fig:big2} and \cref{fig:low_prob_fix}, the quantum algorithm seems to perform relatively better when the arm rewards means are centred around $1/2$.
-Furthermore, as should have been made clear throughout this thesis, the quantum algorithm is deigned to be most useful when the arms are close to each other.
+Furthermore, as should have been made clear throughout this thesis, the quantum algorithm is designed to be most useful when the arms are close to each other.
 Accordingly, the even more challenging prior was constructed similarly to the above one in \cref{eq:challenging_prior} for the same reasons and for simplicity, but with different parameters to achieve the desired effect.
 The resulting prior is
 \begin{equation}
@@ -455,13 +455,13 @@ This indicates that this prior is indeed more challenging than the previous ones
 \clearpage
 
 \subsubsection{Regret distributions}
-With more simulations run, it is possible to garner more information about the performance of the algorithms.
+With more simulations computed, it is possible to garner more information about the performance of the algorithms.
 In \cref{fig:histograms_random}, the regrets at the final turn for the three algorithms are shown for the three priors that were tested.
 The distributions are clearly wide, but with 1,000 samples, the conclusions drawn in the previous sections are nevertheless significant.
 
 For the uniform prior, Thompson sampling is unquestionably supreme, while for the prior of \cref{eq:challenging_prior}, QUCB and Thompson achieve a similar average regret, but with QUCB's distribution being more concentrated.
-It seems that even the classical UCB algorithm has a better mode than QUCB, but with its heavy tail it is still outperformed by QUCB on average.
-Across all three histograms, it appears as QUCB is more consistent in its performance, being less dependent on the random instances that are generated, while Thompson sampling, though better on many instances, suffers from outliers with very high regret.
+It seems that even the classical UCB algorithm has a better mode than QUCB, but with its heavy tail, it is still outperformed by QUCB on average.
+Across all three histograms, it appears as QUCB is more consistent in its performance, being less dependent on the random instances that are generated, while Thompson sampling, though better at many instances, suffers from outliers with very high regret.
 QUCB seemingly produces equal regrets independent of the prior, while the two classical algorithms perform worse on the more challenging priors.
 This could perhaps be explained with its logarithmic instance-independent regret bound as shown in \cref{sec:wan_proof}.
 Classically, such bounds are at best proportional to the square root of the horizon.

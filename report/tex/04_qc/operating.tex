@@ -5,7 +5,7 @@ To operate on one or more qubits, a unitary operation is applied to the state.
 This is a computational interpretation of the unitary time evolution resulting from a Hamiltonian acting on the (closed) quantum system, described by the second postulate of quantum mechanics and the Schrödinger equation.
 As the operations are unitary, a pure state remains pure.
 These operations are often thought of as gates, paralleling the classical gates in digital logic.
-Mathematically, with a finite number of qubits, a unitary gate $U$ can be expressed a matrix acting on the state vector, $\ket{\psi}$, as
+Mathematically, with a finite number of qubits, a unitary gate $U$ can be expressed as a matrix acting on the state vector, $\ket{\psi}$, as
 \begin{equation}
     \ket{\psi'} = U\ket{\psi},
 \end{equation}
@@ -23,7 +23,7 @@ The Hadamard gate,
 is a rotation around the line between the $x$- and $z$-axes by $\pi/2$.
 It is an important gate in quantum computing, as it is used to create superpositions of the computational basis states.
 Applied on an initial $\ket{0}$ state, it creates the entangled state $\frac{1}{\sqrt{2}}(\ket{0} + \ket{1})$.
-Two consecutive applications thereof returns the state to the initial state, as can be seen from the matrix squaring to the identity.
+Two consecutive applications thereof return the state to the initial state, as can be seen from the matrix squaring to the identity.
 
 The $R_X$-, $R_Y$- and $R_Z$-gates are rotations around the $x$-, $y$- and $z$-axes, respectively, by an arbitrary angle $\theta$:
 \begin{align*}
@@ -73,7 +73,7 @@ In the quantum computational setting, it can be thought of as taking a random sa
 Often, the underlying probabilities are what is of interest.
 Therefore, many measurements will be performed.
 Usually, these results are averaged to obtain an estimate, but more complicated post-processing methods are also possible.
-For instance, neural networks have shown useful properties in regard of reducing variance in the estimates, though at the cost of some bias~\autocite{torlai2020}.
+For instance, neural networks have shown useful properties in regard to reducing variance in the estimates, though at the cost of some bias~\autocite{torlai2020}.
 
 Canonically, the computational $Z$-basis is used for measurements, and it is usually the only basis for which measurements are physically implemented in a quantum computer.
 When measuring in the computational basis in which a state is expressed, as \cref{eq:superposition}, the probabilities are simply given by the absolute square of the coefficients.

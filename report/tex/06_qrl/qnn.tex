@@ -4,7 +4,7 @@ Quantum neural networks (QNNs) are simply an abstraction of parametrised quantum
 As classical artificial neural networks have made classical machine learning into a powerful tool, QNNs are envisioned as a quantum counterpart, inheriting some classical theory, nomenclature and perhaps unfounded hype.
 The main goal of QNNs is to do what classical NNs do, but with some quantum advantage, be it in terms of generalisability, training required or something else.
 
-The structure of most quantum neural networks follow classical feed-forward networks.
+The structure of most quantum neural networks follows classical feed-forward networks.
 \Cref{fig:qnn} shows the general circuit layout.
 In the first step (or layer), data is encoded into the qubits, typically using a method discussed in \cref{sec:data_encoding}.
 Next, the data is passed through a sequence of parametrised quantum gates which often can be interpreted as belonging to layers.
@@ -89,7 +89,7 @@ This is done in the same way that classical computers use binary numbers.
 For example, some data $x$ can be expressed as a bit-string $x = \{x_1, x_2, \dots, x_n\}$, where each $x_i$ is either 0 or 1, where any continuous variables are encoded as floating point numbers.
 For multidimensional data, the bit-strings are simply concatenated.
 % 
-If for instance the data point $010101$ is to be encoded in a quantum computer, it is simply mapped to the computational basis state $\ket{010101}$.
+If, for instance, the data point $010101$ is to be encoded in a quantum computer, it is simply mapped to the computational basis state $\ket{010101}$.
 This allows for multiple data points to be encoded in parallel as
 \begin{equation}
   \ket{\mathcal{D}} = \frac{1}{\sqrt M} \sum_{m=1}^M \ket{\bm{x}^{(m)}},
@@ -122,7 +122,7 @@ where $x_i^{(m)}$ is the $i$th component of the $m$th data point.
 For such encodings, only $\lceil \log_2 (N M) \rceil$ qubits are needed.
 
 There are two main drawbacks of amplitude encoding.
-First, that the data must be normalised, which can be done without loss of information by requiring an additional bit to encode the normalisation constant.
+First, the data must be normalised, which can be done without loss of information by requiring an additional bit to encode the normalisation constant.
 Also, some padding may be needed if the dimension of the data is not a power of two.
 Secondly and more severely, there are significant practical difficulties with preparing such states.
 Any state of the form
@@ -131,7 +131,7 @@ Any state of the form
 \end{equation}
 must be efficiently and correctly prepared, which is not trivial.
 Unless some very specific assumptions are made, this is not possible with polynomially many gates (as a function of the number of qubits), which limits the potential for exponential speed-ups~\autocite{schuld2018}.
-In general, for classical data, circuits must be linearly deep in the size of the data and ergo exponentially deep in the amount of qubits, which makes it beyond the reach of NISQ hardware.
+In general, for classical data, circuits must be linearly deep in the size of the data and ergo exponentially deep in the number of qubits, which makes it beyond the reach of NISQ hardware.
 
 \subsubsection{Angle encoding}
 A third option is to encode data into the angles of rotations.
@@ -147,10 +147,10 @@ $N$ qubits are still required, but with native support for continuous variables,
 A constant number of gates are needed to prepare the state, which is a significant advantage over amplitude encoding.
 Still, being a product state, it offers no inherent quantum advantage.
 
-\subsubsection{Second order angle encoding}
+\subsubsection{Second-order angle encoding}
 \label{sec:second_order_angle_encoding}
 Conjectured to be hard to simulate classically, a second-order angle encoding is proposed in~\autocite{havlicek2019}.
-First, angles are encoded as above, but thereafter the qubits are entangled and rotated further based on second order terms.
+First, angles are encoded as above, but thereafter the qubits are entangled and rotated further based on second-order terms.
 In circuit notation, such an encoding with $Z$-rotations reads
 \begin{equation}
   \begin{quantikz}[column sep=3mm]
@@ -164,19 +164,19 @@ In circuit notation, such an encoding with $Z$-rotations reads
 \end{equation}
 where $R_Z^i = R_Z(x_i)$ and $R_Z^{i,j} = R_Z((\pi-x_i)(\pi-x_j))$ and with the entanglements and second-order rotations being applied pairwise for all $N$ qubits.
 This increases the circuit depth to order $N^2$, and full connectivity is needed.
-Nonetheless, the increased circuit depth could be compensated for by the extra entanglement and subsequent expressibility, compared to the first order encoding.
+Nonetheless, the increased circuit depth could be compensated for by the extra entanglement and subsequent expressibility, compared to the first-order encoding.
 Were it indeed classically hard to simulate, it could provide quantum advantage.
 
 \subsubsection{Repeats}
-The expressive power of models heavily rely on the encoding strategy.
+The expressive power of models heavily relies on the encoding strategy.
 For instance, a single qubit rotation only allows the model to learn sine functions, where the frequency is determined by the scaling of the data.
 Generally, quantum models will learn periodic functions, and thus Fourier analysis is a useful tool.
-The implications of this is studied in~\autocite{schuld2021}, where it is shown that simply repeating simple encoding blocks allows for learning of more frequencies and thus more complicated functions.
-Asymptotically, such repeats lets a quantum model learn arbitrary functions.
+The implications of this are studied in~\autocite{schuld2021}, where it is shown that simply repeating simple encoding blocks allows for the learning of more frequencies and thus more complicated functions.
+Asymptotically, such repeats let a quantum model learn arbitrary functions.
 
 
 \subsection{Challenges}
-While the power of classical neural network relies on the non-linear activation functions, the unitary operations in quantum computing are inherently linear.
+While the power of classical neural networks relies on the non-linear activation functions, the unitary operations in quantum computing are inherently linear.
 However, depending on how the data is encoded, the linear transformations in the Hilbert space may not be linear in the input space.
 With basis encoding, for example, mapping $\ket{b}\ket{0}$ to $\ket{b}\ket{\sigma(b)}$ is doable, where $b$ is a bit-string and $\sigma$ some function.
 Amplitude encoding, on the other hand, has its input necessarily transformed linearly, and is for this reason (in addition to those mentioned in \cref{sec:data_encoding}) less suitable for QNNs.
@@ -204,7 +204,7 @@ Below follow some promising architectures, with a brief description of how they 
 \label{sec:qcnn}
 Originally introduced in~\autocite{cong2019}, quantum convolutional neural networks (QCNNs) take inspiration from classical convolutional neural networks in that a sequence of convolutional and pooling layers are used to extract features and reduce the dimension before an output is made.
 In the quantum convolutional layers, neighbouring qubits are entangled by some parametrised gates, after which pooling layers reduce the active qubit count (usually by half).
-By basing the pooling on measurements, controlling a gate based on a neighbouring qubit measurement, non-linearities are introduced.
+By basing the pooling on measurements, and controlling a gate based on a neighbouring qubit measurement, non-linearities are introduced.
 Because of the constant reduction of layer sizes in (Q)CNNs, the total parameter count can be reduced to only logarithmic order of the network depth, making them easier to train than dense networks of similar input size.
 After several iterations of convolution and pooling, gates can be employed on the remaining qubits, analogous to a finishing fully connected layer in classical CNNs, before the final
 measurement and output.
@@ -219,23 +219,23 @@ Moreover, leveraging a classical model as the adversary ensures that the quantum
 Real quantum hardware has been used to generate (admittedly low-resolution) images of handwritten images~\autocite{huang2021}.
 
 \subsubsection{Hybrid quantum-classical neural networks}
-Another option is to include a quantum layer or node is some larger pipeline or even non-linear graph structure.
+Another option is to include a quantum layer or node in some larger pipeline or even non-linear graph structure.
 As parametrised quantum circuits are differentiable in their parameters, they can be handled using the chain rule when backpropagating a hybrid model.
 In~\autocite{killoran2019}, several such models are described and tested.
 The authors note that for the NISQ-era, limiting quantum components of models to very particular tasks to which they are especially suited should be beneficial.
-As quantum hardware develops, they can take over more and more of the hybrid models.
+As quantum hardware develops, it can take over more and more of the hybrid models.
 
 Quanvolutional neural networks, proposed in~\autocite{henderson2020}, are a hybrid model in which the convolutional layers of a classical CNN are replaced by quantum layers.
-As the quantum part is restrained to a single layer and a small convolutional kernel, the design can be implemented with small quantum circuits with little requirements for error-mitigation, still being able to process high-dimensional data, thereby making it a good candidate for NISQ-era hardware.
+As the quantum part is restrained to a single layer and a small convolutional kernel, the design can be implemented with small quantum circuits with little requirements for error mitigation, still being able to process high-dimensional data, thereby making it a good candidate for NISQ-era hardware.
 
-More recently, in~\autocite{zeng2022}, using a hybrid model for multi-class classification on real world data sets using a CNN-inspired structure was explored.
+More recently, in~\autocite{zeng2022}, using a hybrid model for multi-class classification on real-world data sets using a CNN-inspired structure was explored.
 In the model used, the quantum part was placed in the middle, after classical convolutions and pooling and before a classical fully connected layer.
 There, it was shown that the hybrid model could outperform a classical CNN of similar parameter size.
 
 \subsubsection{Quantum recurrent neural networks}
 The quantum state is collapsed upon measurement, losing information in the process.
-There is therefore not straightforward to translate the classical recurrent neural network (RNN) to a variational quantum circuit in the manner of \cref{fig:qnn} and the above discussed architectures.
-Still, there attempts have been made to define a QRNN, such as in~\autocite{bausch2020} where parametrised quantum neurons are defined and used to construct layers.
+It is therefore not straightforward to translate the classical recurrent neural network (RNN) to a variational quantum circuit in the manner of \cref{fig:qnn} and the above discussed architectures.
+Still, attempts have been made to define a QRNN, such as in~\autocite{bausch2020} where parametrised quantum neurons are defined and used to construct layers.
 These layers have two sets of qubits.
 The first set is not measured, and the state persists to the next layer.
 In contrast, the second set consists of ancillary qubits, which are either initiated in the state $\ket{0}$ or used to input data.

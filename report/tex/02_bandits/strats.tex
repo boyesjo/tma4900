@@ -8,7 +8,7 @@
         Strategies for the unstructured, stochastic multi-armed bandit problem.
         The minimax regret is the instance-independent upper bound, while the regret is the dependent.
         Note that different UCB variants with different regret bounds exist, with UCB1 only achieving the listed bounds for rewards in $[0, 1]$.
-        Also note that the Thompson sampling properties listed assumes Bernoulli rewards and a uniform prior.
+        Also, note that the Thompson sampling properties listed assume Bernoulli rewards and a uniform prior.
     }
     \label{tab:strategies}
     \begin{tblr}{
@@ -67,7 +67,7 @@ The arm-selection procedure is listed in \cref{alg:greedy}, where $\hat{\mu}_a$ 
 
 With greedy selection, the expected regret is clearly still linear in the horizon, as there is a non-zero probability of selecting the wrong arm when taking the greedy action.
 Still, there is a chance of achieving zero regret and the constant factor is reduced compared to pure exploration selection.
-To improve hereupon, it is necessary to occasionally explore other arms, which leads into the epsilon-greedy algorithm.
+To improve hereupon, it is necessary to occasionally explore other arms, which leads to the epsilon-greedy algorithm.
 
 \subsection{Epsilon-greedy}
 The problem with the greedy algorithm is that it may be unlucky and not discover the best arm in the initial exploration phase.
@@ -104,7 +104,7 @@ It is worth noting, however, that the optimal decay rate depends on the specific
 
 \subsection{Upper confidence bounds}
 \label{sec:ucb}
-The upper confidence bound (UCB) algorithm is a family of more sophisticated algorithm based on estimating upper confidence bounds for the means of all arms, and they are a common baseline for more advanced algorithms tackling more complicated bandit variants~\autocite{li2010}.
+The upper confidence bound (UCB) algorithm is a family of more sophisticated algorithms based on estimating upper confidence bounds for the means of all arms, and they are a common baseline for more advanced algorithms tackling more complicated bandit variants~\autocite{li2010}.
 The arm whose upper confidence bound is highest is always pulled, a principle known as \enquote{optimism in the face of uncertainty}.
 This should make sense, as if the wrong arm appears best, it will be pulled more often and the empirical mean will be corrected, while the true best arm with its larger bound will eventually become highest and so pulled.
 When exploiting the actual best arm, the agent can trust it to be the best, as the confidence bound will remain above those of all the other arms.
@@ -151,12 +151,12 @@ Nor is UCB1 truly minimax-optimal, as its instance-independent upper bound is $O
 
 Regardless of the assumptions made and the bandit class, the procedure for UCB strategies follows as in \cref{alg:ucb}.
 For few arms, the process is easily visualised, as is done in \cref{fig:ucb}.
-There it is made clear how the confidence bound based strategy naturally exploits the best arm and how the poorer arms are not explored more than needed.
+There it is made clear how the confidence bound-based strategy naturally exploits the best arm and how the poorer arms are not explored more than needed.
 
 Many variants of the algorithm exist; different assumptions about the distributions change the confidence bounds.
-While the choice of $p$ is arbitrary, it is less of nuisance than the choice of $\epsilon$ in the epsilon-greedy algorithm, with specific choices of $p$, such as the UCB1-algorithm, being well-studied and known to perform well.
+While the choice of $p$ is arbitrary, it is less of a nuisance than the choice of $\epsilon$ in the epsilon-greedy algorithm, with specific choices of $p$, such as the UCB1-algorithm, being well-studied and known to perform well.
 For example, MOSS, a modification of UCB1, has be shown to minimax-optimal for $\mathcal{E}_{[0,1]}^k$~\autocite{audibert2009}.
-Further, incorporating estimates of second moments improve performance in some cases~\autocite{audibert2009a}, while incorporating the whole empirical distributions of observed rewards appears be the most effective approach~\autocite{maillard2011}.
+Further, incorporating estimates of second moments improves performance in some cases~\autocite{audibert2009a}, while incorporating the whole empirical distributions of observed rewards appears to be the most effective approach~\autocite{maillard2011}.
 
 
 \begin{figure}[p]
@@ -384,7 +384,7 @@ By graphing the posterior distribution, such as is done in \cref{fig:thompson}, 
         In the top row, the uniform priors for the reward distribution means are on display.
         Thereunder, the posteriors are shown at turns 10, 100 and 1000.
         The dashed vertical lines indicate the true means.
-        As the algorithm progresses, the posterior of the optimal arm quickly spikes and approaches the true mean, while the other remain rather wide, but importantly with almost all their mass less than the optimal arm posterior.
+        As the algorithm progresses, the posterior of the optimal arm quickly spikes and approaches the true mean, while the others remain rather wide, but importantly with almost all their mass less than the optimal arm posterior.
     }
     \label{fig:thompson}
 \end{figure}
@@ -401,7 +401,7 @@ Namely, for every $\epsilon > 0$, there exists a constant $C_\epsilon$ such that
     + C_\epsilon,
 \end{equation}
 where $P_a$ is the reward distribution of arm $a$ and $P^*$ is the reward distribution of the best arm.
-Meanwhile, the minimax regret is can be bounded by either $O(\sqrt{kT \log T})$~\autocite{agrawal2013} or $O(\sqrt{kT \log k})$~\autocite{agrawal2017}, neither of which is quite minimax-optimal.
+Meanwhile, the minimax regret can be bounded by either $O(\sqrt{kT \log T})$~\autocite{agrawal2013} or $O(\sqrt{kT \log k})$~\autocite{agrawal2017}, neither of which is quite minimax-optimal.
 
 Also for Gaussian rewards, it was proven asymptotically optimal with uniform priors~\autocite{honda2014}.
 Notably, the Jeffreys prior was shown to be inadequate in achieving optimal regret, highlighting the importance of the prior selection for the algorithm's performance.
@@ -431,9 +431,9 @@ Using instead exponential progression of the episode lengths, it is possible to 
 
 \subsection{Comparison}
 \label{sec:comparison}
-As a quick comparison of the algorithm presented above, the regrets for a simple bandit instance is shown in \cref{fig:comparison}.
+As a quick comparison of the algorithm presented above, the regrets for a simple bandit instance are shown in \cref{fig:comparison}.
 Clearly, random selection performs the worst, as expected, while the greedy algorithm performs somewhat better, but still worse than the $\epsilon$-greedy algorithm.
-All of these also appears to have linear regret curves, which is expected.
+All of these also appear to have linear regret curves, which is expected.
 The UCB algorithm performs better still, while Thompson sampling is without question dominant.
 Indeed, for at least the instance shown, the performance hierarchy indicated in this chapter is demonstrated.
 
@@ -471,7 +471,7 @@ Indeed, for at least the instance shown, the performance hierarchy indicated in 
     ]
     {
         Comparison of bandit algorithms on a simple bandit instance of two Bernoulli arms with means $0.2$ and $0.8$.
-        The algorithms were run for 1000 turns, and the regret is averaged over 1000 instances.
+        The algorithms were run for 1000 turns, and the regrets are averaged over 1000 instances.
     }
     \label{fig:comparison}
 \end{figure}

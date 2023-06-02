@@ -1,6 +1,6 @@
 \section{Quantum algorithms}
 \subsection{Computational complexity and quantum supremacy}
-Quantum computers allure stems from their ability to solve certain problems more efficiently, exponentially so, than classical computers can.
+Quantum computers' allure stems from their ability to solve certain problems more efficiently, exponentially so, than classical computers can.
 Most (in-) famous of these problems are integer factorisation and discrete logarithms, which could be used to break effectively all public-key cryptography, but there are still several more problems for which quantum computers are believed to offer great advantages.
 It is proven that the class of problems quantum computers can solve in polynomial time (with high probability), $\BQP$, contains the complexity class $\P$~\autocite{nielsen2012} and $\BPP$, the class of problems that can be solved in polynomial time with a classical probabilistic algorithm~\autocite{nielsen2012}.
 This follows from the fact that quantum computers can efficiently run any efficient classical algorithm and reproduce any classical randomness by performing quantum measurements.
@@ -43,7 +43,7 @@ As disproving $\P = \PSPACE$ remains elusive, proving that $\BQP$ is strictly gr
 It is therefore hard to say anything definite about quantum supremacy and being able to solve more problems than classical computers can.
 
 The exponential speed-ups that are discovered have not come easily.
-Although the states spaces are exponentially large, with only a limited set of operations available, states can not be created and manipulated arbitrarily without exponentially many steps.
+Although the state spaces are exponentially large, with only a limited set of operations available, states can not be created and manipulated arbitrarily without exponentially many steps.
 What is more, recapturing all the information in a general state can not be done without exponentially many measurements, negating any exponential gains.
 The problem must have some structure to be exploited for a speed-up to be possible.
 Quantum computers have only been shown to solve certain problems exponentially faster than classical computers, and finding the algorithms to do so is not trivial.
@@ -62,7 +62,7 @@ Polynomial speed-ups are more easily found.
 For example, the Grover algorithm which is used to search for an element in an unsorted list has time complexity $O(\sqrt{N})$~\autocite{grover1996}.
 Classically, this can not be done in less than $O(N)$ time.
 It can be proven that the Grover algorithm is optimal~\autocite{zalka1999}, so for this problem,> an exponential speed-up is impossible.
-This algorithm and the more general amplitude amplification on which it builds solves very general problems and are often used subroutines to achieve quadratic speed-ups in other algorithms.
+This algorithm and the more general amplitude amplification, on which it builds, solve very general problems and are often used in other algorithms as subroutines to achieve quadratic speed-ups.
 Being only a quadratic speed-up, it is not as impressive as the exponential speed-ups, and achieving quantum supremacy in that manner would require larger quantum computers than if the speed-up were exponential.
 
 \subsection{Grover's algorithm}
@@ -87,7 +87,7 @@ The measurement probabilities are not immediately affected.
 Central to Grover's algorithm is the idea of amplifying the amplitude of the desired element.
 This is done by applying a sequence of operations that is repeated until the amplitude of the desired element is large enough for it to be most likely to be measured, while the other elements have their amplitudes reduced.
 
-Let the state $\ket{w}$ which be the winner state, a state with amplitude $1$ for the desired element and $0$ for all others.
+Let the state $\ket{w}$ be the winner state, a state with amplitude $1$ for the desired element and $0$ for all others.
 Then consider the state $\ket{s}$, which is a uniform superposition state, a state with equal amplitudes for all elements, trivially constructed by applying a Hadamard gate to each qubit in the canonical starting state $\ket{0}$.
 Define the state $\ket{s'}$ by subtracting the projection of $\ket{w}$ onto $\ket{s}$ from $\ket{s}$:
 \begin{equation}
@@ -119,7 +119,7 @@ Measuring the correct state has probability $\sin^2((2k+1)\theta)$.
 Therefore, $k \approx {\pi}/{4\theta}$ iterations should be completed.
 Assuming large $N$, for a short list would not warrant the use of Grover's algorithm, $\theta = \arcsin{({1}/{\sqrt{N}})} \approx 1/\sqrt{N}$, and so $k \approx \pi\sqrt{N}/4$.
 
-For lists with more than a single desired element, a similar reasoning will lead to the same algorithm, but instead with $k\approx\pi/4 \cdot \sqrt{N/M}$, where $M$ is the amount of solutions to $f(x)=1$~\autocite{nielsen2012}.
+For lists with more than a single desired element, a similar reasoning will lead to the same algorithm, but instead with $k\approx\pi/4 \cdot \sqrt{N/M}$, where $M$ is the number of solutions to $f(x)=1$~\autocite{nielsen2012}.
 
 
 \begin{figure}
@@ -329,4 +329,4 @@ The initial state for the amplitude estimation is set to
     \ket{\psi} = U(\mathcal{O} \otimes I)\ket{0}.
 \end{equation}
 
-For these bounded random variables in particular, $O(1/\epsilon)$ iterations suffices to achieve an additive error of $\epsilon$, repeating the whole procedure $O(1/\log(\delta))$ times to achieve a certainty $1-\delta$~\autocite{montanaro2015}.
+For these bounded random variables in particular, $O(1/\epsilon)$ iterations suffice to achieve an additive error of $\epsilon$, repeating the whole procedure $O(1/\log(\delta))$ times to achieve a certainty $1-\delta$~\autocite{montanaro2015}.

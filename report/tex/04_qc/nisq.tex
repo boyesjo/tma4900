@@ -1,9 +1,9 @@
 \section{Limitations of near-term quantum hardware}
 \label{sec:nisq}
-Quantum hardware have been physically realised and even demonstrated to outperform classical computers in very contrived situations~\autocite{arute2019, zhong2020, madsen2022}, but the hardware is still limited.
+Quantum hardware has been physically realised and even demonstrated to outperform classical computers in very contrived situations~\autocite{arute2019, zhong2020, madsen2022}, but the hardware is still limited.
 The hardware is limited in the number of qubits, the connectivity between the qubits, and the noise and decoherence of the qubits.
 It is believed that quantum hardware will continue to improve and eventually perform demanding algorithms like Shor's algorithm on numbers too great for classical computers to factorise.
-Once enough qubits are available and error rates low enough, error correction schemes can be implemented.
+Once enough qubits are available and error rates are low enough, error correction schemes can be implemented.
 Then, the hardware will be able to perform these provably faster algorithms.
 Still, the era dubbed NISQ (noisy intermediate-scale quantum) is the first step, and to make use of the hardware, the inherent noise and its consequences must be understood.
 Algorithms must take the following limitations into consideration.
@@ -14,14 +14,14 @@ A more realistic description of the gates is given by quantum channels, which ca
 In an unmeasured, ideal quantum system, the state evolution is veritably unitary, but as the system in practice does interact with the environment, this can be modelled as a quantum channel in which classical probabilistic noise is introduced.
 
 Take the $X$-gate as an example.
-If the fails to apply with probability $p$, the resulting density operator $\rho'$ can be expressed as
+If it fails to apply with probability $p$, the resulting density operator $\rho'$ can be expressed as
 \begin{equation}
   \rho' = p\rho + (1-p)X\rho X^\dagger,
 \end{equation}
 where $\rho$ is the initial density.
-Such a channel has eigenvalues $p$ and $1-2p$, where $I$ and $X$ share the former and $Y$and $Z$ the latter.
+Such a channel has eigenvalues $p$ and $1-2p$, where $I$ and $X$ share the former and $Y$ and $Z$ the latter.
 Consequently, states with $Y$- or $Z$-components will have mixing introduced.
-Geometrically, this can be interpreted as contraction of states on the Bloch sphere towards the centre, illustrated in \cref{fig:noise_bloch}.
+Geometrically, this can be interpreted as a contraction of states on the Bloch sphere towards the centre, illustrated in \cref{fig:noise_bloch}.
 
 \begin{figure}
   \centering
@@ -107,14 +107,14 @@ Additionally, to operate on multiple qubits, a connection between them is requir
 Nature tends to work against large-scale quantum systems, made evident by the absence of quantum effects in regular life.
 
 Due to the multiplicative effect of noise, the overall degeneracy will increase exponentially with the number of operations.
-This means that there will be limits to the number of operations that can be performed before the system becomes unusable, assuming no error-correction is done.
+This means that there will be limits to the number of operations that can be performed before the system becomes unusable, assuming no error correction is done.
 
 \subsection{Coherent noise}
 There may also be systematic errors in the unitary gates applied.
 This kind of noise, known as coherent noise does not need quantum channels to be modelled, but may rather be modelled simply by slightly different unitary gates.
 Here too, the $X$-gate can serve as an example.
 As gates are unitary evolutions resulting from a Hamiltonian acting on the system, any deviance in the energies of the Hamiltonian or length of the time interval will cause a different evolution.
-If it is not calibrated correctly, the effective operation will be a rotation that slightly deviates from the intended half turn around the Bloch sphere.
+If it is not calibrated correctly, the effective operation will be a rotation that slightly deviates from the intended half-turn around the Bloch sphere.
 When a gate like the $X$-gate is applied many times, even small errors will add up, which could cause an overall rotation of the state by a significant angle.
 
 \begin{figure}
@@ -172,13 +172,13 @@ When a gate like the $X$-gate is applied many times, even small errors will add 
   \end{tikzpicture}
   \caption[
     % Proportion of correct measurements of a qubit after applying several noisy $X$-gates.
-    Effect of noise on the likelihood of a correct measurement.
+    Effect of noise on the likelihood of correct measurement.
   ]
   {
     Proportion of correct measurements of a qubit after applying several noisy $X$-gates.
     The error in the rotation is \ang{1}, while the probability of failing to apply the gate is $p=0.3\%$.
     For each number of gates, the measurement is repeated 1000 times.
-    The coherent error causes a sinusoidal behaviour, in which 180 rotations causes the overall rotation to be completely opposite.
+    The coherent error causes a sinusoidal behaviour, in which 180 rotations cause the overall rotation to be completely opposite.
     The decoherent error causes an exponential dampening, as the state becomes more and more mixed.
     The wiggly pattern stems from the shot noise, simply classical randomness from the probabilistic measurement with a finite number of samples.
   }
@@ -204,11 +204,11 @@ There are more sources of noise than the two included in the figure, and having 
   \label{fig:connectivity}
 \end{figure}
 
-Another limiting factor is the amount of qubits.
+Another limiting factor is the number of qubits.
 Current hardware has around 10 to 100, which though still may be enough to express states too large for classical computers, is not enough to perform the most demanding algorithms.
 Recent estimates find that millions of noisy qubits would be needed to break RSA encryption~\autocite{gidney2021}.
 
-The transpiling of the circuit to what the hardware can actually do is also an important factor.
+The transpilation of the circuit to what the hardware can actually do is also an important factor.
 Consider for example IBM's Falcon r4 chip, which has 27 qubits and a connectivity graph as shown in \cref{fig:connectivity}.
 Qubits are generally only linked to two other qubits.
 Moreover, only a basis set of gates is available, which in this case are the CNOT-, $R_Z$-, $X$- and $\sqrt{X}$-gates.

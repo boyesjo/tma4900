@@ -3,13 +3,13 @@
 In the realm of multi-armed banditry, expressing optimality is fraught with difficulties.
 Any precise formulation is contingent upon not only the assumptions made, but also the particular instance, namely actual means and distributions overall.
 Usually, in the literature, no hyper-distributions are placed on the bandit classes $\mathcal{E}$, so no average regret over all instances can be defined.
-Lower bounds resort then to either determine what a reasonable policy can achieve on a given instance, or to describing its worst performance over all instances in the class.
+Lower bounds resort then to either determine what a reasonable policy can achieve on a given instance, or to describe its worst performance over all instances in the class.
 However, by defining some weighted average over all instances, an exact performance measure can be defined, such that optimality is well-defined.
 This is rarely done in the literature, but is included here to provide a more complete and practical measure of performance.
 
 \subsection{Instance-dependent lower bound}
 In order to meaningfully define a lower bound for a given instance, it is imperative to assume a reasonable algorithm.
-Otherwise, trivial policies, such as always pulling the first arm, could achieve zero regret, hindering any meaningful comparison.
+Otherwise, trivial policies, such as always pulling the first arm, could achieve zero regrets, hindering any meaningful comparison.
 The common assumption is that the algorithm is asymptotically consistent in some class $\mathcal{E}$, which by definition means that for all inferior arms and all $\eta \in (0, 1)$, it holds that\footnotemark
 \begin{equation}
     \mathbb{E}[T_a] = o(T^{\eta}),
@@ -101,8 +101,8 @@ For some bandit class $\mathcal{E}$, one simply includes the prior distribution 
     = \mathbb{E}_{\nu \sim Q} \left[R_T(\nu, \pi) \right],
 \end{equation}
 where $Q$ is the prior distribution over $\mathcal{E}$.
-Is it trivially observed that the Bayesian regret bounded above by the minimax regret.
-However, it can be proven that there exists priors such that the Bayesian regret is bounded below by some $\Omega(\sqrt{KT})$~\autocite{lattimore2020}, such that\footnotemark
+Is it trivially observed that the Bayesian regret is bounded above by the minimax regret.
+However, it can be proven that there exist priors such that the Bayesian regret is bounded below by some $\Omega(\sqrt{KT})$~\autocite{lattimore2020}, such that\footnotemark
 \begin{equation}
     \sup_{Q} \inf_{\pi} \text{BR}_T(Q, \pi) = \Theta(\sqrt{KT}).
 \end{equation}

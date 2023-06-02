@@ -24,13 +24,13 @@ Only the bounded-value variant of the algorithm is described here for its simpli
 What is here denoted simply as QUCB is in~\autocite{wan2022} called $\text{QUCB}_1$, while the variant for bounded variances is denoted by $\text{QUCB}_2$.
 
 The algorithm proposed is essentially a UCB-like algorithm\footnotemark, where QMC (as described in \cref{sec:qmc}) is used to estimate means more efficiently.
-Because QMC estimates are only produced after a set number of quantum queries, the algorithm must cleverly decide for how many steps to pull each arm in addition to which arm to pull, before running a QMC session.
+Because QMC estimates are only produced after a set number of consecutive quantum queries, the algorithm must cleverly decide for how many steps to pull each arm, in addition to which arm to pull, before commencing a QMC session.
 \footnotetext{Q.v. \cref{sec:ucb}.}
 
 
-As listed in \cref{alg:qucb1}, the QUCB algorithm first runs a preliminary phase where the means are estimated using QMC with a fixed number of samples, after which it iteratively pulls the arms with the highest confidence bounds, after which the confidence bound are halved and the number of QMC samples to be used for that arm is doubled.
+As listed in \cref{alg:qucb1}, the QUCB algorithm first runs a preliminary phase where the means are estimated using QMC with a fixed number of samples, after which it iteratively pulls the arms with the highest confidence bounds, after which the confidence bound is halved and the number of QMC samples to be used for that arm is doubled.
 A confidence parameter $\delta$ is used to determine the number of QMC samples to use, satisfying $\lvert\hat{\mu}_i - \mu_i\rvert \leq \text{UCB}_i$ with probability $1-\delta$.
-The constant $C_1>1$ is only described existentially to give an upper bound to the number of QMC queries needed, and is a result from the big-O notation used to describe QMC convergence.
+The constant $C_1>1$ is only described existentially to give an upper bound to the number of QMC queries needed, and is a result of the big-O notation used to describe QMC convergence.
 How it should be set for implementation of the algorithm is not described in~\autocite{wan2022}.
 
 
@@ -66,7 +66,7 @@ for each QMC session in the algorithm.
 
 Let $S_a$ be the set of stages where arm $a$ is pulled in the while-block of the algorithm, and let its cardinality be $K_a = |S_a|$.
 Then, each arm is pulled $(2^{K_a + 1} - 1)C_1 \log \frac1\delta$ in the second phase.
-With the preliminary phase, the total number of queries is
+In the preliminary phase, the total number of queries is
 \begin{equation}
     C_1 \log \frac{1}{\delta} \sum_{a \in \mathcal{A}} 2^{K_a + 1} = T.
 \end{equation}
@@ -204,7 +204,7 @@ They are, however, not well-defined unitary operators, leaving several rows open
 These can be easily filled by using Gram-Schmidt orthogonalisation on the remaining rows.
 More explicit solutions are of course possible, but these become more intricate with different reward distributions and $\Omega$.
 
-In result, the oracle initialisation can be implemented as is listed in \cref{alg:qucb_oracle}, which is easily done in Qiskit.
+As a result, the oracle initialisation can be implemented as is listed in \cref{alg:qucb_oracle}, which is easily done in Qiskit.
 
 \begin{algorithm}
     \SetAlgoLined

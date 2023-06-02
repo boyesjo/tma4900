@@ -3,10 +3,10 @@
 
 \subsection{Value-based methods}
 One of the most popular modern value-based algorithms is the Deep Q-Network (DQN) algorithm~\autocite{mnih2013}.
-DQN is an extension of action-value-learning that uses a neural network to approximate the Q-function.
+DQN is an extension of action-value learning that uses a neural network to approximate the Q-function.
 The neural network takes the current state as input and outputs the Q-values for each action.
 Storing previous actions and returns, the network is trained using a variant of stochastic gradient descent that minimises the mean squared error between the predicted Q-values and the target Q-values.
-DQN uses of an $\epsilon$-greedy exploration strategy to balance exploration and exploitation during training.
+DQN uses an $\epsilon$-greedy exploration strategy to balance exploration and exploitation during training.
 
 DQN has been shown to be effective in a wide range of reinforcement learning problems, including Atari games and robotics tasks.
 Receiving only pixel values from the video game screen, the DQN algorithm was able to learn to play Atari games at a level comparable to professional human players~\autocite{mnih2015}.
@@ -36,8 +36,8 @@ It has become a popular baseline for reinforcement learning problems thanks to i
 What is more, PPO has been able to beat the \textit{Dota~2}~\autocite{dota} world champions~\autocite{brockman2018,openai2019}.
 
 \subsection{Actor-critic methods}
-Actor-critic methods are a type of reinforcement learning algorithms that combine ideas from both value-based and policy-based methods.
-Proposed in~\autocite{konda1999}, these algorithms maintain both a policy function and a value function that are learnt simultaneously during the training process.
+Actor-critic methods are types of reinforcement learning algorithms that combine ideas from both value-based and policy-based methods.
+Proposed in~\autocite{konda1999}, these algorithms maintain both a policy function and a value function, where both are learnt simultaneously during the training process.
 The value function estimates the expected return from a given state, while the policy function defines the probability distribution over actions given the current state.
 The policy function is typically represented using a neural network, and the value function can also be represented using a neural network or some other function approximator.
 

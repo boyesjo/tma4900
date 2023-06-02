@@ -12,7 +12,7 @@ For the first turn, the state is taken from some distribution $P(s_0)$.
 When the agent commits to an action $a_t \in \mathcal{A}$, the environment transitions to a new state $s_{t+1}$ according to the transition probabilities $P(s_{t+1} | s_t, a_t)$, and the agent receives a reward $r(s_t, a_t)$.
 
 The goal is to find a (potentially probabilistic) policy which maps each state to an action, such that the agent receives the highest possible expected cumulative reward.
-In particular, one attempts to maximise expected future sum of discounted rewards, the return, defined as
+In particular, one attempts to maximise the expected future sum of discounted rewards, the return, defined as
 \begin{equation}
     G_t = \mathbb{E} \left[ \sum_{\tau=0}^{\infty} \gamma^\tau X_{t+\tau} \right],
 \end{equation}
@@ -27,7 +27,7 @@ Hence, the optimal policy is given by the policy that maximises the expected ret
 \end{equation}
 where the expectation is taken over the distribution of initial states.
 
-Note that policies will in general depend on the whole history of states, action and rewards, and not just the current state.
+Note that policies will in general depend on the whole history of states, actions and rewards, and not just the current state.
 
 \begin{figure}
     \centering
@@ -133,8 +133,8 @@ Note that policies will in general depend on the whole history of states, action
         A Markov decision process (MDP) graph based on the game-show \textit{Who Wants to be a Millionaire?}
         The states are how many questions the contestant has answered correctly, stating with one, and the actions are whether to go to the next question, $a_1$, or to cash out $a_2$.
         Cashing out proceeds to the terminal end state with certainty, yielding a reward depending on the number of questions answered correctly.
-        Betting and going to the next question may either result in a loss and end of the game, with a low reward, or in proceeding to the next question with no immediate reward.
-        The probabilities of answering a question correctly is not known, so whether continuing or cashing out is the best action is not known a priori.
+        Betting and going to the next question may either result in a loss and the end of the game, with a low reward, or in proceeding to the next question with no immediate reward.
+        The probabilities of answering the questions correctly are not known, so whether continuing or cashing out is the best action is not known a priori.
         Moreover, with rewards being delayed until cashing out or answering the final question correctly (highlighted in blue), and losing transitions (shown in red) having the same reward of 0 as transitions to new questions, it is not completely trivial to determine the quality of an action.
     }
     \label{fig:mdp}
@@ -198,10 +198,10 @@ Instead, one must resort to approximate methods, such as dynamic programming, Mo
 There are three main categories of reinforcement learning algorithms:
 \begin{description}
     \item[Value-based algorithms]
-        The state-value function or the action-value function is learnt and then used  to determine the optimal policy.
+        The state-value function or the action-value function is learnt and then used to determine the optimal policy.
         Value-based algorithms can be very effective in problems with large state spaces, as they inherently extract the most important features of the state.
-        This also makes them good at generalising to unseen states without requiring too many samples, and they can benefit from data obtained earlier in the training process with and old policy.
-        They can nonetheless be sensitive to the choice of hyperparameters and may struggle in problems with continuous action spaces.
+        This also makes them good at generalising to unseen states without requiring too many samples, and they can benefit from data obtained earlier in the training process with an old policy.
+        They can nonetheless be sensitive to the choice of hyperparameters and may struggle with problems with continuous action spaces.
 
 
     \item[Policy-based algorithms]
@@ -218,7 +218,7 @@ There are three main categories of reinforcement learning algorithms:
 
 \end{description}
 
-It is primarily the model-free, latter two methods (or combinations thereof) that have seen the most success in recent years, and these that will be discussed further in \cref{sec:rl_algs}.
+It is primarily the model-free, latter two methods (or combinations thereof) that have seen the most success in recent years, and these which will be discussed further in \cref{sec:rl_algs}.
 But also model-based algorithms have seen some commendable results recently, for example, playing \textit{Minecraft}~\autocite{minecraft} and being able to find diamonds~\autocite{hafner2023}.
 
 
@@ -235,16 +235,16 @@ This problem is especially pronounced in environments with long time horizons, w
 
 Designing appropriate rewards is a critical component of reinforcement learning, as they guide the agent's behaviour towards achieving the desired outcome.
 However, poorly designed rewards can lead to slow or intractable learning, as the agent may not receive sufficient feedback on its actions to adjust its policy.
-A classic example thereof is pausing the game in \textit{Tetris} as to not lose the game~\autocite{murphy2013}.
+A classic example thereof is pausing the game in \textit{Tetris} as not to lose the game~\autocite{murphy2013}.
 
 Specialised rewards that provide more detailed feedback and guidance can improve learning, but they also make it harder to generalise to new situations.
 For instance, the Atari game \textit{Montezuma's Revenge}~\autocite{montezuma} is nigh impossible to solve with off-the-shelf methods and without specialising the rewards~\autocite{salimans2018}.
-While the suite of Atari games is mostly solvable with the same algorithms, the lack of immediate rewards leaves agents clueless as how to progress.
-Implementing the necessary guidance is can not only be demanding, but it also looses the general applicability that is so central to RL.
+While the suite of Atari games is mostly solvable with the same algorithms, the lack of immediate rewards leaves agents clueless as to how to progress.
+Implementing the necessary guidance can not only be demanding, but it also loses the general applicability that is so central to RL.
 
 RL is fundamentally more challenging than supervised learning because it requires an agent to explore and interact with its environment to learn from experience, as opposed to having access to labelled data.
 Randomly discovering an optimal strategy can be highly unlikely, especially in high-dimensional state and action spaces, making it necessary to develop specialised algorithms~\autocite{sutton2018}.
-While humans can employ prior knowledge, such as that keys will open doors, reinforcement learning agents typically has to learn this by chance.
+While humans can employ prior knowledge, such as that keys will open doors, reinforcement learning agents typically have to learn this by chance.
 In a testing video game, the removal of non-essential visual elements, altering the orientation and employing unconventional control schemes had minimal impact on RL algorithms, whereas it caused a drastic shift for humans, going from completing the game much faster than the RL algorithms to being unable to complete the game whatsoever~\autocite{dubey2018}.
 It can be computationally expensive and require significant amounts of data to learn an optimal policy, which is why the idea of algorithms competing against themselves has been so central in achieving super-human performance in board and video games~\autocite{silver2016}.
 All this leads to the necessity of deep learning in reinforcement learning.
