@@ -3,12 +3,12 @@
 In the realm of multi-armed banditry, expressing optimality is fraught with difficulties.
 Any precise formulation is contingent upon not only the assumptions made, but also the particular instance, namely actual means and distributions overall.
 Usually, in the literature, no hyper-distributions are placed on the bandit classes $\mathcal{E}$, so no average regret over all instances can be defined.
-Lower bounds resort then to either determine what a reasonable policy can achieve on a given instance, or to describe its worst performance over all instances in the class.
+Lower bounds resort then either to determine what a reasonable policy can achieve on a given instance or to describe its worst performance over all instances in the class.
 However, by defining some weighted average over all instances, an exact performance measure can be defined, such that optimality is well-defined.
 This is rarely done in the literature, but is included here to provide a more complete and practical measure of performance.
 
 \subsection{Instance-dependent lower bound}
-In order to meaningfully define a lower bound for a given instance, it is imperative to assume a reasonable algorithm.
+In order meaningfully to define a lower bound for a given instance, it is imperative to assume a reasonable algorithm.
 Otherwise, trivial policies, such as always pulling the first arm, could achieve zero regrets, hindering any meaningful comparison.
 The common assumption is that the algorithm is asymptotically consistent in some class $\mathcal{E}$, which by definition means that for all inferior arms and all $\eta \in (0, 1)$, it holds that\footnotemark
 \begin{equation}
