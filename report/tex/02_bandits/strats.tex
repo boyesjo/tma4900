@@ -107,10 +107,67 @@ It is worth noting, however, that the optimal decay rate depends on the specific
 The upper confidence bound (UCB) algorithm is a family of more sophisticated algorithms based on estimating upper confidence bounds for the means of all arms, and they are a common baseline for more advanced algorithms tackling more complicated bandit variants~\autocite{li2010}.
 The arm whose upper confidence bound is highest is always pulled, a principle known as \enquote{optimism in the face of uncertainty}.
 This should make sense, as if the wrong arm appears best, it will be pulled more often and the empirical mean will be corrected, while the true best arm with its larger bound will eventually become highest and so pulled.
+Worse arms will generally be pulled less often, so their bounds will be reduced by larger amounts than the better arms, as is indicated in \cref{fig:ucb}.
 When exploiting the actual best arm, the agent can trust it to be the best, as the confidence bound will remain above those of all the other arms.
 In addition, by increasing the confidence as the number of pulls increases, getting stuck in suboptimality is avoided.
 
-\subsubsection{UCB1}
+\begin{figure}[p]
+    \centering
+    \vspace{1 cm}
+    \foreach \turn in {10, 100, 1000, 10000} {
+            \begin{subfigure}{0.4\textwidth}
+                \centering
+                \begin{tikzpicture}
+                    \begin{axis}[
+                            width=\textwidth,
+                            height=\textwidth,
+                            xlabel=Arm,
+                            ylabel=Estimate,
+                            grid=major,
+                            xtick=data,
+                            title={Turn $\turn$},
+                            title style={font=\footnotesize},
+                            % y range is 0 to 2
+                            ymin=0,
+                            ymax=2,
+                        ]
+                        \pgfplotstableread[col sep=comma]{../code/bandit_figs/ucb/ucb_\turn.dat}\datatable
+                        \addplot[
+                            red,
+                            only marks,
+                            error bars/.cd,
+                            y dir=plus,
+                            y explicit,
+                        ] table[
+                                x=arm,
+                                y=estimate,
+                                y error=ucb,
+                                col sep=comma,
+                            ] {\datatable};
+                        \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.8, 0.2) (1.2, 0.2)};
+                        \addplot+[dashed, mark=none, black, forget plot] coordinates {(1.8, 0.4) (2.2, 0.4)};
+                        \addplot+[dashed, mark=none, black, forget plot] coordinates {(2.8, 0.7) (3.2, 0.7)};
+                    \end{axis}
+                \end{tikzpicture}
+                % \caption{
+                %     Turn $\turn$.
+                % }
+            \end{subfigure}
+            \vspace{0.5cm}
+        }
+    \caption[
+        UCB1 algorithm visualisation.
+    ]
+    {
+        Visualisation of the UCB1 algorithm on three Bernoulli arms; estimates and error bars for each arm at different turns.
+        The dots represent the estimates of the means of the arms, while the error bars represent the upper confidence bounds and the dashed lines represent the true means.
+        As the number of turns increases, the estimate of the highest mean converges quickly to the true mean, while the estimates of suboptimal arms remain uncertain.
+    }
+    \label{fig:ucb}
+    \vspace{2 cm}
+\end{figure}
+
+\subsubsection{UCB1 for bounded rewards}
 Assuming rewards in $[0,1]$ and using Hoeffding's inequality, it follows that
 \begin{equation}
     p
@@ -158,59 +215,6 @@ While the choice of $p$ is arbitrary, it is less of a nuisance than the choice o
 For example, MOSS, a modification of UCB1, has be shown to minimax-optimal for $\mathcal{E}_{[0,1]}^k$~\autocite{audibert2009}.
 Further, incorporating estimates of second moments improves performance in some cases~\autocite{audibert2009a}, while incorporating the whole empirical distributions of observed rewards appears to be the most effective approach~\autocite{maillard2011}.
 
-
-\begin{figure}[p]
-    \centering
-    \vspace{1 cm}
-    \foreach \turn in {10, 100, 1000, 10000} {
-            \begin{subfigure}{0.4\textwidth}
-                \centering
-                \begin{tikzpicture}
-                    \begin{axis}[
-                            width=\textwidth,
-                            height=\textwidth,
-                            xlabel=Arm,
-                            ylabel=Estimate,
-                            grid=major,
-                            xtick=data,
-                            title={Turn $\turn$},
-                            title style={font=\footnotesize},
-                        ]
-                        \pgfplotstableread[col sep=comma]{../code/bandit_figs/ucb/ucb_\turn.dat}\datatable
-                        \addplot[
-                            red,
-                            only marks,
-                            error bars/.cd,
-                            y dir=plus,
-                            y explicit,
-                        ] table[
-                                x=arm,
-                                y=estimate,
-                                y error=ucb,
-                                col sep=comma,
-                            ] {\datatable};
-                        \addplot+[dashed, mark=none, black, forget plot] coordinates {(0.8, 0.2) (1.2, 0.2)};
-                        \addplot+[dashed, mark=none, black, forget plot] coordinates {(1.8, 0.4) (2.2, 0.4)};
-                        \addplot+[dashed, mark=none, black, forget plot] coordinates {(2.8, 0.7) (3.2, 0.7)};
-                    \end{axis}
-                \end{tikzpicture}
-                % \caption{
-                %     Turn $\turn$.
-                % }
-            \end{subfigure}
-            \vspace{0.5cm}
-        }
-    \caption[
-        UCB1 algorithm visualisation.
-    ]
-    {
-        Visualisation of the UCB1 algorithm on three Bernoulli arms; estimates and error bars for each arm at different turns.
-        The dots represent the estimates of the means of the arms, while the error bars represent the upper confidence bounds and the dashed lines represent the true means.
-        As the number of turns increases, the estimate of the highest mean converge quickly to the true mean, while the estimates of suboptimal arms remain uncertain.
-    }
-    \label{fig:ucb}
-    \vspace{2 cm}
-\end{figure}
 
 
 

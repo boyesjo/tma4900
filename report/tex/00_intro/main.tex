@@ -50,6 +50,7 @@ Bandits theory has also been applied to other problems, such as the problem of c
         Finance             & Investments     & Profit            \\
         Machine learning    & Hyperparameters & Performance       \\
         Anomaly detection   & Thresholds      & No. of anomalies  \\
+        % Tree search         & Nodes           & Value of node     \\
         \bottomrule
     \end{tblr}
 
@@ -58,21 +59,22 @@ Bandits theory has also been applied to other problems, such as the problem of c
 Despite the diversity of contexts, the essential challenge remains the same: how to balance the competing demands of exploration and exploitation.
 On the one hand, one would want to gather as much information as possible about the potential rewards of each option, so that an informed decision can be made.
 On the other hand, resources should be spent on the most promising option as quickly as possible, so that the returns are maximised.
-Having to deal with both random rewards and random decisions based on said rewards makes the problem virtually impossible to solve optimally.
+Having to deal with both random rewards and generally random decisions based on said rewards makes the problem virtually impossible to solve optimally.
 \begin{displayquote}
     \enquote{The problem is a  classic one; it was formulated during the war, and efforts to solve it so sapped the energies and minds of Allied analysts that the suggestion was made that the problem be dropped over Germany, as the ultimate instrument of intellectual sabotage}~\autocite{whittle1979}.
 \end{displayquote}
-Luckily, since then, algorithms have been developed that can solve the problem with certain optimality guarantees.
+Luckily, since then, algorithms have been developed that can solve the problem with at least certain optimality guarantees and useful performance bounds.
 
-Machine learning and reinforcement learning in particular have in recent years become a popular tools for solving problems of all kinds.
+Machine learning and reinforcement learning in particular have in recent years become popular tools for solving problems of all kinds.
 Their mathematical formulations and implementations are much more intricate than the bandit problem, but the basic idea is the same: to learn from experience and make decisions that lead to the best possible outcome.
-Modern methods based on neural networks have reached superhuman performance in many domains, such as Go and modern e-sport video games.
+Modern methods based on artificial neural networks have reached superhuman performance in many domains, such as Go and modern e-sport video games.
 These problems are too hard to solve anywhere near optimally, neither for humans nor for computers, so the bar for success is lower than for the bandit problem.
 Still, one might expect these modern, advanced and general tools to be able to do well on the classic bandit problem.
 
 The field of quantum computing has emerged as a promising new area of research with the potential to solve problems intractable for classical hardware.
 Their first conception goes back to the early 80s, often being accredited to Richard Feynman's 1982 paper \cite{feynman1982}, with the goal of simulating difficult quantum mechanical problems.
 It was however only really with the discovery of Shor's algorithm in 1994 \cite{shor1994} that the potential of quantum computers gained widespread attention.
+Shor's algorithm is able to factorise large numbers in polynomial time, which is believed to be so difficult for classical computers that it is used as the basis for modern cryptography.
 The threat of encrypted data being exposed, not only in the future, but also current data through so-called \enquote{store now, decrypt later} attacks (for which encrypted data is indeed already collected), is a major driving force behind the development of quantum computers and government involvement~\autocite{alagic2022, cisa2022}.
 As it is assumed that quantum computers are truly able to solve problems intractable for classical computers, the search for what other problems they can solve has been a major focus of research.
 
@@ -94,7 +96,7 @@ This thesis is structured as follows.
 Several classical algorithms are then presented, including the classical upper confidence bound algorithm, which is the basis for the quantum algorithm, to be discussed later, and Thompson sampling, a Bayesian method that tends to perform best in practice.
 Thereafter, the more general field of reinforcement learning and its mathematical formulation as Markov decision processes are introduced in \cref{chap:rl}, along with several state-of-the-art algorithms based on deep learning and artificial neural networks.
 Next, in \cref{chap:qc}, quantum computing is explained, including the quantum circuit model and several quantum algorithms, such as Grover's and quantum Monte Carlo.
-In \cref{chap:qbandits}, quantum computing is applied to the bandit problem, leading to the quantum upper confidence bound algorithm, whose theoretically supreme performance is proved.
+In \cref{chap:qbandits}, quantum computing is applied to the bandit problem, leading to the quantum upper confidence bound algorithm, whose theoretically supreme performance is proved formally.
 \Cref{chap:qml} describes more general methods for quantum reinforcement learning and quantum agents.
 The quantum upper confidence algorithm is implemented and tested against classical methods on a suite of bandit problems in \cref{chap:simulations}, wherein also general agents of both classical and quantum kinds are tried on the bandit problem.
 Finally, \cref{chap:final} concludes the thesis and discusses future work.

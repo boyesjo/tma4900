@@ -177,7 +177,7 @@ It is nonetheless far too complicated to be visualised as the toy example in \cr
 
 \subsection{Learning Markov decision processes}
 One key concept in MDPs is the notion of value functions.
-A value function is a function that estimates the expected cumulative reward from a given state or state-action pair, under a given policy.
+A value function estimates the expected cumulative reward under a given policy, given a state or a state-action pair.
 Specifically, the state-value function $V^{\pi}(s)$ estimates the expected cumulative reward from state $s$, under policy $\pi$.
 It is given by
 \begin{equation}
@@ -192,8 +192,12 @@ It can be expressed as
 \end{equation}
 
 Naturally, it is desirable to maximise either, leading to the Bellman equations, from which the optimal policies can be derived.
-This is alas rarely possible exactly; even if the mechanics of the game is known exactly a prior (like in card games or chess), the state spaces will generally be too large to be able to compute the value functions exactly.
+This is alas rarely possible exactly; even if the mechanics of the game is known exactly a priori\footnotemark, the state spaces will generally be too large to be able to compute the value functions exactly.
 Instead, one must resort to approximate methods, such as dynamic programming, Monte Carlo tree-search, and temporal difference learning.
+
+\footnotetext{
+    As is the case in e.g., chess but not robotics.
+}
 
 There are three main categories of reinforcement learning algorithms:
 \begin{description}
