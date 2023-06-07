@@ -79,10 +79,14 @@ Double descent has been shown to appear for a variety of models~\autocite{nakkir
 \end{figure}
 
 With the great size and complexity, interpretability is sacrificed.
-The models are deterministic and often black boxes; it is difficult to understand why they make the predictions they do.
+The models are deterministic\footnotemark and often black boxes; it is difficult to understand why they make the predictions they do.
 Luckily, there have been some developments, perhaps most notably the universal approximation theorem.
 It states that a neural network with a single hidden layer can approximate any continuous function to arbitrary precision, given enough neurons\footnote{In addition to some easily met requirements regarding the activation function.}.
 This gives some credence to the idea that NNs with any kind of structure could be used to approximate intricate functions well.
+
+\footnotetext{
+    Though their outputs are often interpreted as probabilities, the output is a deterministic and well-defined function of the input.
+}
 
 \subsection{Architectures}
 \subsubsection{Dense feed-forward neural networks}
@@ -118,7 +122,7 @@ Non-linearity is needed for the network not to collapse into one great linear tr
 Some commonly used activation functions are listed in \cref{tab:activations}.
 
 The output layer is similar to the hidden layers, though perhaps with different activation functions and fewer nodes.
-For instance, if the goal is to choose one of $k$ different action, the output layer could have $k$ nodes with an activation function that ensures the sum of the outputs is one.
+For instance, if the goal is to choose one of $k$ different actions, the output layer could have $k$ nodes with an activation function that ensures the sum of the outputs is one.
 In that way, the output can be interpreted as a policy for choosing an action.
 
 \begin{table}

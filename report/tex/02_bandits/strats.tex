@@ -420,17 +420,18 @@ Notably, the Jeffreys prior was shown to be inadequate in achieving optimal regr
     \Return $\argmax_{a \in \mathcal{A}} \theta_a$\;
 \end{algorithm}
 
-One of the key advantages of Thompson sampling is that it can natively incorporate prior knowledge about the arms, whereas doing so with the above methods would require some sort of ad-hoc manipulation of the recorded rewards and arm pull counts.
-Furthermore, empirical results generally indicate better performance than UCB variants~\autocite{kaufmann2012}.
+One of the key advantages of Thompson sampling is that it can natively incorporate prior knowledge about the arms, whereas doing so with the methods presented above would require some sort of ad-hoc manipulation of the recorded rewards and arm pull counts.
+Furthermore, empirical results generally indicate better performance for Thompson sampling than UCB variants~\autocite{kaufmann2012} and certainly so relative to the others.
+
 Still, Thompson sampling is not without its drawbacks.
 The algorithm can be computationally expensive, as it requires sampling from the posterior distribution for each arm at each time step.
 Even with conjugate priors, the computational costs of sampling will be higher than the straightforward computations required by UCB and epsilon-greedy algorithms.
 It is also at its core a probabilistic policy, which for some applications may be undesirable, for example when explainability is a major concern.
 
 \subsection{The doubling trick}
-Given an algorithm reliant on knowing the horizon $T$, it is possible to use the doubling trick to achieve similar regret properties regardless of the horizon, and so turn the algorithm into an anytime algorithm.
-The doubling trick is a simple idea: simply run the algorithm for $T$ steps first, then $2T$ steps, $4T$, ad infinitum, possibly with some other geometric factor.
-It was first introduced in~\autocite{auer1995}, and has since been proven to conserve minimax regrets, but not instance-dependent regrets~\autocite{besson2018}.
+Given an algorithm reliant on knowing the horizon $T$ a priori, it is possible to use what is known as the doubling trick to achieve similar regret properties regardless of the horizon, and so turn the algorithm into an anytime algorithm.
+The doubling trick is an uncomplicated idea: simply run the algorithm for $T$ steps first, then $2T$ steps, $4T$, ad infinitum, possibly with some other geometric factor.
+The trick was first introduced in~\autocite{auer1995}, and it has since been proven to conserve minimax regrets, but not instance-dependent regrets~\autocite{besson2018}.
 Using instead exponential progression of the episode lengths, it is possible to maintain instance-dependent regret bounds instead of minimax optimality~\autocite{besson2018}.
 
 \subsection{Comparison}
@@ -439,7 +440,7 @@ As a quick comparison of the algorithm presented above, the regrets for a simple
 Clearly, random selection performs the worst, as expected, while the greedy algorithm performs somewhat better, but still worse than the $\epsilon$-greedy algorithm.
 All of these also appear to have linear regret curves, which is expected.
 The UCB algorithm performs better still, while Thompson sampling is without question dominant.
-Indeed, for at least the instance shown, the performance hierarchy indicated in this chapter is demonstrated.
+Indeed, for at least the sole instance shown, the performance hierarchy indicated in this chapter is demonstrated.
 
 \begin{figure}[p]
     \centering

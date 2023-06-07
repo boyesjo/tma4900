@@ -4,17 +4,17 @@
 The quantum bit, the qubit, is the building block of quantum computing.
 Like the classical binary digit, it can be either 0 or 1.
 But being quantum, these are quantum states, $\ket{0}$ and $\ket{1}$\footnotemark{}, and the qubit can be in any superposition of these states.
-\footnotetext{
+\footnotetext{%
   The $\ket{\cdot}$ notation is known as a ket and is used in quantum mechanics to denote a quantum state.
   It is effectively a column vector.
   The inner product may be taken with a bra, $\bra{\cdot}$, to give a scalar.
   These inner products are then denoted by $\bra{\cdot}\ket{\cdot}$.
   Similarly, outer products are well-defined and denoted by $\ketbra{\cdot}{\cdot}$.
-}
+}%
 This follows from the first postulate of quantum mechanics\footnotemark, which states that an isolated system is entirely described by a normalised vector in a Hilbert space.
-\footnotetext{
+\footnotetext{%
   As they are laid out in~\autocite{nielsen2012}.
-}
+}%
 For the qubit, this is the two-dimensional space where the states $\ket{0}$ and $\ket{1}$ are basis vectors, known as the computational basis states.
 Thus, the state of a qubit can be expressed as
 \begin{equation}
@@ -40,9 +40,9 @@ See \cref{fig:bloch}.
 The state $\ket{0}$ is typically thought of as the north pole of this sphere and $\ket{1}$ as the south pole.
 % \Cref{fig:bloch} shows the Bloch sphere with the state of the qubit in \cref{eq:bloch}.
 
-\begin{figure}
+\begin{figure}[t]
   \centering
-  \def\svgwidth{0.65\textwidth}
+  \def\svgwidth{0.62\textwidth}
   \subimport{bloch}{bloch_sphere}
   \caption[
     The Bloch sphere.
@@ -72,7 +72,7 @@ In a mixed state, however, some classical probabilities $p_i$ are associated wit
   \label{eq:density}
 \end{equation}
 where $\ket{\psi_i}$ are the states of the system, and $\bra{\psi_i}$ are the corresponding dual vectors.
-Being probabilities, the $p_i$ must be non-negative and sum to one.
+Being probabilities, the $p_i$s must be non-negative and sum to one.
 Given a basis and a finite Hilbert space, the density operator can be expressed as a density matrix\footnotemark{} where the diagonal elements are the probabilities of measuring the system in the corresponding basis state.
 Furthermore, it is easily seen that the density operator must be positive semidefinite and Hermitian.
 

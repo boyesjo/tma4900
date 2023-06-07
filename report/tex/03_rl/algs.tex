@@ -1,9 +1,12 @@
 \section{State-of-the-art algorithms}
 \label{sec:rl_algs}
+The following section will give a brief overview of some of the most popular and successful reinforcement learning algorithms.
+These follow the basic framework as described in \cref{sec:mdps}, but use the great power of neural networks, as described in \cref{sec:nn}, to learn more intricate value-functions and policies than would be possible with traditional methods.
+In this way, these algorithms are able to solve problems with large state and action spaces, such as \textit{Starcraft II} and \textit{Dota 2}.
 
 \subsection{Value-based methods}
 One of the most popular modern value-based algorithms is the Deep Q-Network (DQN) algorithm~\autocite{mnih2013}.
-DQN is an extension of action-value learning that uses a neural network to approximate the Q-function.
+DQN is an extension of action-value learning that uses a neural network to approximate the Q-function, as defined in \cref{sec:learning-mdps}.
 The neural network takes the current state as input and outputs the Q-values for each action.
 Storing previous actions and returns, the network is trained using a variant of stochastic gradient descent that minimises the mean squared error between the predicted Q-values and the target Q-values.
 DQN uses an $\epsilon$-greedy exploration strategy to balance exploration and exploitation during training.
@@ -15,31 +18,31 @@ One limitation of DQN is that it can be slow to converge, especially in large st
 To address this issue, several extensions to DQN have been proposed, such as the double DQN algorithm~\autocite{hasselt2016}, prioritised experience replay algorithm~\autocite{schaul2015} and duelling DQN algorithm~\autocite{wang2016}.
 
 \subsection{Policy gradient methods}
-Policy gradient methods are a class of Reinforcement Learning algorithms that directly optimise the policy of an agent.
-These methods are particularly well-suited to problems with continuous or high-dimensional action spaces, where it may be difficult to find the optimal policy using value-based methods.
+Policy gradient methods are a class of reinforcement learning algorithms that directly optimise the policy.
+These methods are particularly well-suited to problems with continuous or high-dimensional action spaces, where it may be difficult to find a good approximation of the value functions and what policy optimises them.
 
-One popular policy gradient algorithm is the REINFORCE algorithm~\autocite{williams1992}.
-The REINFORCE algorithm is a Monte Carlo policy gradient method that estimates the gradient of the expected cumulative reward with respect to the current policy parameters, using this gradient to update the policy.
-The algorithm is based on the likelihood ratio method, which allows the gradient of the expected returns to be expressed as the product of the reward and the gradient of the log-probability of the actions under the policy.
+A popular policy gradient algorithm is the REINFORCE algorithm~\autocite{williams1992}.
+The REINFORCE algorithm is a Monte Carlo policy gradient method that estimates the gradient of the expected cumulative reward with respect to the current policy parameters, whereupon the policy parameters are updated in the direction of the gradient.
+The algorithm is based on the likelihood ratio method, which allows the gradient of the expected returns to be expressed as the product of the reward and the gradient of the log-probability of the actions under the current policy.
 
 The REINFORCE algorithm uses this gradient to update the policy parameters in the direction that increases the expected cumulative reward. Specifically, the update rule for the policy parameters is given by
 \begin{equation}
     \theta_{t+1} = \theta_t + \alpha \nabla_{\theta} \log \pi_{\theta}(a_k|s_k) G_t,
 \end{equation}
-where $\theta_t$ and $\theta_{t+1}$ are the policy parameters at time steps $t$ and $t+1$, $\alpha$ is the learning rate, $\pi_{\theta}(a_k|s_k)$ is the probability of taking action $a_k$ in state $s_k$ under the policy $\pi_{\theta}$ and $G_t$ is the expected cumulative reward starting from time step $t$, found by sampling trajectories from the current policy.
+where $\theta_t$ and $\theta_{t+1}$ are the policy parameters at time steps $t$ and $t+1$, $\alpha$ is the learning rate, $\pi_{\theta}(a_k|s_k)$ is the probability of taking action $a_k$ in state $s_k$ under the policy $\pi_{\theta}$ and $G_t$ is the expected cumulative reward starting from time step $t$, found by sampling state trajectories from the current policy.
 This sampling results in high variance, which can make the training process unstable~\autocite{arulkumaran2017}.
 
 The Proximal Policy Optimisation (PPO) algorithm~\autocite{schulman2017} has been particularly successful, expanding on the ideas from the Trust Region Policy Optimisation (TRPO) algorithm~\autocite{schulman2015}.
-It is based on the idea of clipping the policy update, which helps to prevent large policy updates that could destabilise the training process, and was designed to require little hyperparameter tuning.
-The algorithm uses a surrogate objective function that combines the clipped policy objective and the value function objective, and updates the policy and value function parameters using a combination of stochastic gradient descent and trust region optimisation.
-It has become a popular baseline for reinforcement learning problems thanks to its performance, ease of implementation and being simple to tune~\autocite{schulman2017}.
-What is more, PPO has been able to beat the \textit{Dota~2}~\autocite{dota} world champions~\autocite{brockman2018,openai2019}.
+It is based on the idea of clipping the policy update, which helps to prevent large policy updates that could destabilise the training process, and it was designed to require little hyperparameter tuning.
+The algorithm uses a surrogate objective function that combines the clipped policy objective and the value function objective, and in it, the policy and value function parameters are updated using a combination of stochastic gradient descent and trust region optimisation.
+It has become a popular baseline for reinforcement learning problems thanks to its performance, its ease of implementation and it being simple to tune~\autocite{schulman2017}.
+What is more, the PPO algorithm has been able to beat the \textit{Dota~2}~\autocite{dota} world champions~\autocite{brockman2018,openai2019}.
 
 \subsection{Actor-critic methods}
 Actor-critic methods are types of reinforcement learning algorithms that combine ideas from both value-based and policy-based methods.
 Proposed in~\autocite{konda1999}, these algorithms maintain both a policy function and a value function, where both are learnt simultaneously during the training process.
 The value function estimates the expected return from a given state, while the policy function defines the probability distribution over actions given the current state.
-The policy function is typically represented using a neural network, and the value function can also be represented using a neural network or some other function approximator.
+The policy function is typically represented using a neural network, and the value function can also be represented using a neural network or some other, simpler function approximator.
 
 One popular actor-critic algorithm is the Advantage Actor-Critic (A2C) algorithm~\autocite{mnih2016}.
 The A2C algorithm updates both the policy and value function parameters using stochastic gradient descent.

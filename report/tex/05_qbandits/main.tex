@@ -1,9 +1,12 @@
 \chapter{Quantum bandits}
 \label{chap:qbandits}
 
+How can quantum computers be used to solve the multi-armed bandit problem?
+For most formulations of the problem, there is no clear advantage to using quantum computers, as the central issue is sample efficiency rather than computational difficulty.
+But by introducing new quantum bandit models, the sample efficiency may be improved, and so the best arm may be found more quickly.
 Several formulations of the multi-armed bandit problem have been made for a quantum computing setting.
-As the central issue in bandit problems lies in sample efficiency rather than computational difficulties, quantum computers offer little advantage assuming classical bandits.
-However, by granting some sort of superposition queries, means can be estimated more efficiently, and so regrets may be reduced, or best arms found more quickly.
+% As the central issue in bandit problems lies in sample efficiency rather than computational difficulties, quantum computers offer little advantage assuming classical bandits.
+% However, by granting some sort of superposition queries, means can be estimated more efficiently, and so regrets may be reduced, or best arms found more quickly.
 
 Querying in superposition may at first appear to remove any real-world relevance; administering medications to patients can certainly not be done in superposition.
 However, with the training for reinforcement learning primarily being done in simulation, it is conceivable that the theory of quantum bandits may be applied to the learning of agents that are trained on quantum hardware and subsequently deployed to the real world.

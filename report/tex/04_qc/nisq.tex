@@ -1,7 +1,7 @@
 \section{Limitations of near-term quantum hardware}
 \label{sec:nisq}
 Quantum hardware has been physically realised and even demonstrated to outperform classical computers in very contrived situations~\autocite{arute2019, zhong2020, madsen2022}, but the hardware is still limited.
-The hardware is limited in the number of qubits, the connectivity between the qubits, and the noise and decoherence of the qubits.
+The hardware is limited in the number of qubits, by the connectivity between them, and by noise and decoherence of the states.
 It is believed that quantum hardware will continue to improve and eventually perform demanding algorithms like Shor's algorithm on numbers too great for classical computers to factorise.
 Once enough qubits are available and error rates are low enough, error correction schemes can be implemented.
 Then, the hardware will be able to perform these provably faster algorithms.
@@ -102,20 +102,20 @@ Geometrically, this can be interpreted as a contraction of states on the Bloch s
 Any physical gate will suffer some such noise, and so the tendency will be for states to degenerate towards the mixed centre of the Bloch sphere (or its higher-dimensional analogue).
 Furthermore, measurements, letting a qubit idle when operating on others and even the preparation of the initial state will suffer from decoherence.
 
-This noise is very hard to avoid, as controlling the qubits necessarily requires some interaction with the environment.
+This noise is very hard to avoid, as controlling the qubits necessarily requires some outside interaction with the environment.
 Additionally, to operate on multiple qubits, a connection between them is required, which too will introduce noise.
-Nature tends to work against large-scale quantum systems, made evident by the absence of quantum effects in regular life.
+It seems that Nature tends to work against large-scale quantum systems, evidenced by the absence of quantum effects in everyday life.
 
 Due to the multiplicative effect of noise, the overall degeneracy will increase exponentially with the number of operations.
-This means that there will be limits to the number of operations that can be performed before the system becomes unusable, assuming no error correction is done.
+This means that there will be impenetrable limits to the number of operations that can be performed before the system becomes unusable, assuming no error correction is done.
 
 \subsection{Coherent noise}
 There may also be systematic errors in the unitary gates applied.
 This kind of noise, known as coherent noise does not need quantum channels to be modelled, but may rather be modelled simply by slightly different unitary gates.
 Here too, the $X$-gate can serve as an example.
-As gates are unitary evolutions resulting from a Hamiltonian acting on the system, any deviance in the energies of the Hamiltonian or length of the time interval will cause a different evolution.
-If it is not calibrated correctly, the effective operation will be a rotation that slightly deviates from the intended half-turn around the Bloch sphere.
-When a gate like the $X$-gate is applied many times, even small errors will add up, which could cause an overall rotation of the state by a significant angle.
+As gates are unitary evolutions resulting from a Hamiltonian acting on the system, any deviance in the energies of the Hamiltonian or length of the time interval in which it is applied will cause a different state evolution.
+If the gate is not correctly calibrated, the effective operation will be a rotation that slightly deviates from the intended half-turn around the Bloch sphere.
+When a gate like the $X$-gate is applied many times, even small errors may add up, which could cause an overall rotation of the state by a significant angle.
 
 \begin{figure}
   \centering
@@ -194,7 +194,9 @@ There are more sources of noise than the two included in the figure, and having 
 \label{sec:qubit_counts}
 \begin{figure}
   \centering
+  % \vspace{1cm}
   \includegraphics[width=0.65\textwidth]{connectivity.pdf}
+  % \vspace{1cm}
   \caption[
     Qubit connectivity and error rates example.
   ]{

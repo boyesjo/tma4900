@@ -1,6 +1,6 @@
 \section{Quantum algorithms}
 \subsection{Computational complexity and quantum supremacy}
-Quantum computers' allure stems from their ability to solve certain problems more efficiently, exponentially so, than classical computers can.
+Quantum computers' allure stems from their potential to solve certain problems more efficiently, exponentially so, than classical computers can.
 Most (in-) famous of these problems are integer factorisation and discrete logarithms, which could be used to break effectively all public-key cryptography, but there are still several more problems for which quantum computers are believed to offer great advantages.
 It is proven that the class of problems quantum computers can solve in polynomial time (with high probability), $\BQP$, contains the complexity class $\P$~\autocite{nielsen2012} and $\BPP$, the class of problems that can be solved in polynomial time with a classical probabilistic algorithm~\autocite{nielsen2012}.
 This follows from the fact that quantum computers can efficiently run any efficient classical algorithm and reproduce any classical randomness by performing quantum measurements.
@@ -8,7 +8,7 @@ To produce a sample from a desired probability distribution, a corresponding sup
 
 The Deutsch-Jozsa algorithm~\autocite{deutsch1992}, while of no practical use, is proved to be exponentially faster than any deterministic classical algorithm\footnotemark~\autocite{simon1994}.
 Since quantum computers can solve problems like integer factorisation and discrete logarithms efficiently, it is believed that $\BQP$ is strictly greater than $\P$ by containing elements of $\NP \setminus \P$, but as whether $\P = \NP$ is unknown, these problems could turn out actually to be in $\P$.
-In a similar vein, $\NP$-complete problems are believed to lie outside $\BQP$, such neither $\BQP$ nor $\NP$ contains the other, but this is again unproven~\autocite{aaronson2010}.
+In a similar vein, $\NP$-complete problems are believed to lie outside $\BQP$, such that neither $\BQP$ nor $\NP$ contains the other, but this too remains unproven~\autocite{aaronson2010}.
 
 \footnotetext{
     The provable exponential speed-up does not prove $\P \neq \BQP$, as the algorithm requires an oracle~\autocite{johansson2017}.
@@ -40,10 +40,10 @@ The complexity hierarchy can be expressed thus:
 \end{center}
 Other than $\P \stackrel{?}{=} \BPP$, it is widely conjectured that the containments are strict, but this is not proven.
 As disproving $\P = \PSPACE$ remains elusive, proving that $\BQP$ is strictly greater than $\P$ must be even harder.
-It is therefore hard to say anything definite about quantum supremacy and being able to solve more problems than classical computers can.
+It is therefore hard to say anything definite about quantum supremacy and how much of an advantage quantum computers offer.
 
 The exponential speed-ups that are discovered have not come easily.
-Although the state spaces are exponentially large, with only a limited set of operations available, states can not be created and manipulated arbitrarily without exponentially many steps.
+Although the state spaces are exponentially large, with only a limited set of operations available, states can not be created and manipulated arbitrarily without exponentially many operations.
 What is more, recapturing all the information in a general state can not be done without exponentially many measurements, negating any exponential gains.
 The problem must have some structure to be exploited for a speed-up to be possible.
 Quantum computers have only been shown to solve certain problems exponentially faster than classical computers, and finding the algorithms to do so is not trivial.
@@ -61,7 +61,7 @@ Still, these are non-trivial algorithms, not yet usable in practice and that wer
 Polynomial speed-ups are more easily found.
 For example, the Grover algorithm which is used to search for an element in an unsorted list has time complexity $O(\sqrt{N})$~\autocite{grover1996}.
 Classically, this can not be done in less than $O(N)$ time.
-It can be proven that the Grover algorithm is optimal~\autocite{zalka1999}, so for this problem,> an exponential speed-up is impossible.
+It can be proven that the Grover algorithm is optimal~\autocite{zalka1999}, so for this problem, an exponential speed-up is impossible.
 This algorithm and the more general amplitude amplification, on which it builds, solve very general problems and are often used in other algorithms as subroutines to achieve quadratic speed-ups.
 Being only a quadratic speed-up, it is not as impressive as the exponential speed-ups, and achieving quantum supremacy in that manner would require larger quantum computers than if the speed-up were exponential.
 
@@ -70,7 +70,7 @@ The quantum search algorithm of Grover~\autocite{grover1996} is a quantum algori
 While such a problem necessarily requires $O(N)$ time in a classical setting, needing on average $N/2$ steps to find the element and in the worst case $N$, Grover's algorithm finds the element in $O(\sqrt{N})$ steps.
 This is a quadratic speed-up.
 
-Grover's algorithm is provably optimal; no quantum algorithm can perform such general, unstructured searches any faster~\autocite{zalka1999}.
+Grover's algorithm is provably optimal; no quantum algorithm can perform such general, unstructured searches more efficiently~\autocite{zalka1999}.
 This should not be surprising.
 If an exponential speed-up were possible, Grover search could be used to find the solution to NP-hard problems fast.
 
@@ -82,7 +82,7 @@ Then, one assumes access to a quantum oracle, $\mathcal{O}_f$
     \label{eq:grover_oracle}
     \mathcal{O}_f \ket{x} = (-1)^{f(x)} \ket{x}.
 \end{equation}
-A single application of this oracle is not enough to find the desired element, as the square of the amplitude of the desired element remains unchanged.
+A single application of this oracle is not enough to find the desired element, as the square absolute of the amplitude of the desired element remains unchanged.
 The measurement probabilities are not immediately affected.
 Central to Grover's algorithm is the idea of amplifying the amplitude of the desired element.
 This is done by applying a sequence of operations that is repeated until the amplitude of the desired element is large enough for it to be most likely to be measured, while the other elements have their amplitudes reduced.
@@ -119,7 +119,7 @@ Measuring the correct state has probability $\sin^2((2k+1)\theta)$.
 Therefore, $k \approx {\pi}/{4\theta}$ iterations should be completed.
 Assuming large $N$, for a short list would not warrant the use of Grover's algorithm, $\theta = \arcsin{({1}/{\sqrt{N}})} \approx 1/\sqrt{N}$, and so $k \approx \pi\sqrt{N}/4$.
 
-For lists with more than a single desired element, a similar reasoning will lead to the same algorithm, but instead with $k\approx\pi/4 \cdot \sqrt{N/M}$, where $M$ is the number of solutions to $f(x)=1$~\autocite{nielsen2012}.
+For lists with more than a single desired element, similar reasoning will lead to the same algorithm, but instead with $k\approx\pi/4 \cdot \sqrt{N/M}$, where $M$ is the number of solutions to $f(x)=1$~\autocite{nielsen2012}.
 
 
 \begin{figure}
@@ -263,12 +263,12 @@ Then, for some initial state $\ket{\psi}$, it is decomposed into the orthogonal 
 where $\ket{\psi_1} = P\ket{\psi}$ and $\ket{\psi_0} = \ket{\psi} - \ket{\psi_1}$, effectively the projections onto the image and kernel of $P$.
 Clearly, the angle $\theta$ is given by $\arcsin(|P\ket{\psi}|)$.
 
-The Grover operator is now given by $G=-S_\psi S_P$ where
+The Grover operator is then given by $G=-S_\psi S_P$ where
 \begin{align}
     S_\psi & = I - 2\ket{\psi}\bra{\psi} \\
     S_P    & = I - 2P,
 \end{align}
-such that $S_\psi$ being analogue to the diffusion operator $D$ and $S_P$ being the oracle operator.
+such that $S_\psi$ is analogue to the diffusion operator $D$ and $S_P$ the oracle operator.
 
 Following the same reasoning as in the previous section, the state after $k$ iterations is given by
 \begin{equation}
@@ -276,8 +276,8 @@ Following the same reasoning as in the previous section, the state after $k$ ite
 \end{equation}
 meaning that $k \approx \frac{\pi}{4\theta}$ will result in a state close to $\ket{\psi_1}$.
 
-Amplitude amplification can be used to speed up Grover search by using an informed prior rather than a uniform prior.
-Furthermore, it is useful as a subroutine in other algorithms, such as finding the number of \enquote{good} states for a Grover search~\autocite{brassard2002}, quantum Monte Carlo methods~\autocite{montanaro2015} and some bandit algorithms to be discussed in what follows.
+Amplitude amplification can be used to speed up Grover search by using an informed prior rather than a uniform superposition as the initial state.
+Furthermore, it is useful as a subroutine in other algorithms, such as finding the number of \enquote{good} states for a Grover search~\autocite{brassard2002} or in the following sections and algorithms.
 
 \subsection{Amplitude estimation}
 \label{sec:amplitude-estimation}
@@ -299,7 +299,7 @@ Later variants have been proposed to reduce the qubits needed and circuit depths
 
 \subsection{Quantum Monte Carlo}
 \label{sec:qmc}
-Monte Carlo methods have been a powerful tool to analyse the behaviour of quantum mechanical systems, where probabilistic methods are natural to describe probabilistic physics~\autocite{ceperley1986, austin2012,gubernatis2016}.
+Monte Carlo methods have been a powerful tool to analyse the behaviour of quantum mechanical systems, where probabilistic methods are natural to describe probabilistic physics~\autocite{ceperley1986,austin2012,gubernatis2016}.
 On the other hand, more in line with the scope of this report, recent advances in quantum computing have opened up a new avenue for the intersection of quantum mechanics and Monte Carlo methods.
 
 In the problem of estimating the mean of a random variable without assumptions of its distribution or properties, the additive error can be bounded by Chebyshev's inequality as
@@ -307,10 +307,10 @@ In the problem of estimating the mean of a random variable without assumptions o
     P(\lvert \hat\mu - \mu \rvert \geq \epsilon) \leq \frac{\sigma^2}{n \epsilon^2},
 \end{equation}
 where $\hat\mu$ is the sample mean, $\mu$ is the true mean, $\sigma$ is the standard deviation and $n$ is the number of samples.
-Consequently, there is a need of quadratically many samples to achieve a given error, which for example means that estimating the mean of a random variable with a standard deviation of $1$ with four decimals' accuracy and a certainty of $99.9\%$ would require $10^9$ samples.
+Consequently, there is a need for quadratically many samples to achieve a given error, which for example means that estimating the mean of a random variable with a standard deviation of $1$ with four decimals' accuracy and a certainty of $99.9\%$ would require $10^9$ samples.
 Moreover, this is provably optimal asymptotically~\autocite{dagum2000}.
 
-Generalising amplitude estimation, in~\autocite{montanaro2015}, a \enquote{near-quadratic} speed-up of Monte Carlo methods was achieved by using amplitude estimation to estimate the mean of a random variable encoded by quantum algorithms.
+Generalising amplitude estimation, in~\autocite{montanaro2015}, a \enquote{near-quadratic} speed-up of Monte Carlo methods have been achieved by using amplitude estimation to estimate the mean of a random variable encoded by quantum algorithms.
 Given an algorithm $\mathcal{O}$ whose measurement outputs are assigned real values such that $v(\mathcal{A})$ is a random variable with mean $\mu$ and variance $\sigma^2$, it is proved that approximating $\mu$ with an additive error of $\epsilon$ can be achieved with only $\tilde{O}(\sigma/\epsilon)$ calls to $\mathcal{A}$ and its inverse, which is a near-quadratic speed-up over the classical case\footnotemark{}.
 
 \footnotetext{
@@ -318,7 +318,7 @@ Given an algorithm $\mathcal{O}$ whose measurement outputs are assigned real val
 }
 
 The simpler version on which the general builds, $v(\mathcal{A})$ is assumed to lie in the interval $[0,1]$.
-Thus, the value can be encoded in a single qubit by through a unitary
+Thus, the value can be encoded in a single qubit through a unitary
 \begin{equation}
     U\ket{x}\ket{0} = \ket{x}\left(\sqrt{1 - \phi(x)}\ket{0} + \sqrt{\phi(x)}\ket{1}\right),
 \end{equation}

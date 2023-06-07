@@ -30,7 +30,7 @@ Because QMC estimates are only produced after a set number of consecutive quantu
 
 As listed in \cref{alg:qucb1}, the QUCB algorithm first runs a preliminary phase where the means are estimated using QMC with a fixed number of samples, after which it iteratively pulls the arms with the highest confidence bounds, after which the confidence bound is halved and the number of QMC samples to be used for that arm is doubled.
 A confidence parameter $\delta$ is used to determine the number of QMC samples to use, satisfying $\lvert\hat{\mu}_i - \mu_i\rvert \leq \text{UCB}_i$ with probability $1-\delta$.
-The constant $C_1>1$ is only described existentially to give an upper bound to the number of QMC queries needed, and is a result of the big-O notation used to describe QMC convergence.
+The constant $C_1>1$ is only described existentially to give an upper bound to the number of QMC queries needed, and it is a result of the big-O notation used to describe QMC convergence.
 How it should be set for implementation of the algorithm is not described in~\autocite{wan2022}.
 
 
