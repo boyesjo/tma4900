@@ -2,28 +2,20 @@
 \documentclass[
     12pt,
     a4paper,
-    % draft,
+    twoside=semi,
     % egregdoesnotlikesansseriftitles,
     headings=twolinechapter,
     listof=totoc,
     listof=flat,
+    BCOR=0pt,
+    DIV=9,
 ]{scrbook}
 
-% no headers
-\pagestyle{plain}
+\usepackage[defaultlines=3,all]{nowidow}
 
-\usepackage[
-    bindingoffset=20mm,
-    twoside,
-]{geometry}
 
 \usepackage{import}
 \usepackage{preamble}
-
-
-% newpage on sections
-% \usepackage{titlesec}
-% \newcommand{\sectionbreak}{\clearpage}
 
 
 % bibliography

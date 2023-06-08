@@ -54,45 +54,45 @@
 %     title style={font=\footnotesize},
 % }
 \pgfplotsset{
-    %every axis/.append style={font=\footnotesize},
-    every axis label/.append style={font=\footnotesize},
-    every x tick label/.append style = {font=\scriptsize},
-    every y tick label/.append style = {font=\scriptsize},
-    every axis legend/.append style={font=\footnotesize},
-    % every axis title/.append style={font=\footnotesize},
+  %every axis/.append style={font=\footnotesize},
+  every axis label/.append style={font=\footnotesize},
+  every x tick label/.append style = {font=\scriptsize},
+  every y tick label/.append style = {font=\scriptsize},
+  every axis legend/.append style={font=\footnotesize},
+  % every axis title/.append style={font=\footnotesize},
 }
 \pgfplotsset{
-    mystyle/.style={
-            grid = major,
-        },
+  mystyle/.style={
+      grid = major,
+    },
 }
 
 \usepgfplotslibrary{colormaps}
-  
-  
+
+
 \pgfplotsset{
-colormap/plasma/.style={%
-  /pgfplots/colormap={plasma}{%
-    rgb=(0.050383, 0.029803, 0.527975)
-    rgb=(0.186213, 0.018803, 0.587228)
-    rgb=(0.287076, 0.010855, 0.627295)
-    rgb=(0.381047, 0.001814, 0.653068)
-    rgb=(0.471457, 0.005678, 0.659897)
-    rgb=(0.557243, 0.047331, 0.643443)
-    rgb=(0.636008, 0.112092, 0.605205)
-    rgb=(0.706178, 0.178437, 0.553657)
-    rgb=(0.768090, 0.244817, 0.498465)
-    rgb=(0.823132, 0.311261, 0.444806)
-    rgb=(0.872303, 0.378774, 0.393355)
-    rgb=(0.915471, 0.448807, 0.342890)
-    rgb=(0.951344, 0.522850, 0.292275)
-    rgb=(0.977856, 0.602051, 0.241387)
-    rgb=(0.992541, 0.687030, 0.192170)
-    rgb=(0.992505, 0.777967, 0.152855)
-    rgb=(0.974443, 0.874622, 0.144061)
-    rgb=(0.940015, 0.975158, 0.131326)
-  },
-},
+  colormap/plasma/.style={%
+      /pgfplots/colormap={plasma}{%
+          rgb=(0.050383, 0.029803, 0.527975)
+          rgb=(0.186213, 0.018803, 0.587228)
+          rgb=(0.287076, 0.010855, 0.627295)
+          rgb=(0.381047, 0.001814, 0.653068)
+          rgb=(0.471457, 0.005678, 0.659897)
+          rgb=(0.557243, 0.047331, 0.643443)
+          rgb=(0.636008, 0.112092, 0.605205)
+          rgb=(0.706178, 0.178437, 0.553657)
+          rgb=(0.768090, 0.244817, 0.498465)
+          rgb=(0.823132, 0.311261, 0.444806)
+          rgb=(0.872303, 0.378774, 0.393355)
+          rgb=(0.915471, 0.448807, 0.342890)
+          rgb=(0.951344, 0.522850, 0.292275)
+          rgb=(0.977856, 0.602051, 0.241387)
+          rgb=(0.992541, 0.687030, 0.192170)
+          rgb=(0.992505, 0.777967, 0.152855)
+          rgb=(0.974443, 0.874622, 0.144061)
+          rgb=(0.940015, 0.975158, 0.131326)
+        },
+    },
 }
 
 % % RB COLOURS
@@ -242,3 +242,39 @@ colormap/plasma/.style={%
 % footnotes
 \counterwithout{footnote}{chapter}
 
+% chapter heading spacing
+\g@addto@macro\frontmatter{%
+  \IfChapterUsesPrefixLine{
+    % default skips
+    \RedeclareSectionCommand[
+      beforeskip=1.3cm,
+      afterskip=1cm
+    ]{chapter}
+  }{
+    % else nothing
+  }
+}%
+
+\g@addto@macro\mainmatter{%
+  \IfChapterUsesPrefixLine{
+    % vspace 5 cm before chapter
+    \RedeclareSectionCommand[
+      beforeskip=4.5cm,
+      afterskip=1cm
+    ]{chapter}
+  }{
+    % else nothing
+  }
+}%
+
+\g@addto@macro\backmatter{%
+  \IfChapterUsesPrefixLine{
+    % default skips
+    \RedeclareSectionCommand[
+      beforeskip=1.3cm,
+      afterskip=1cm
+    ]{chapter}
+  }{
+    % else nothing
+  }
+}%

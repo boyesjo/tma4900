@@ -16,25 +16,23 @@ The source code for the simulations presented here is available on GitHub\footno
     Cf. \url{https://www.github.com/boyesjo/tma4900/code/}.
 }.
 
-\clearpage
-
 
 \subimport{}{bandits}
-\clearpage
+\pagebreak\clearpage
 
 
 % \subimport{}{bayesian}
-% \clearpage
+% \pagebreak\clearpage
 
 \subimport{}{rl}
 
-\clearpage
+\pagebreak\clearpage
 % \section{Interpretation}
 % \section{Implications}
 % \section{Significance}
 % \section{Takeaways}
 \section{Discussion}
-In the above, the potential superiority of the quantum upper confidence bound algorithm was explored in solving the stochastic multi-armed bandit problem.
+Hereinabove, the potential superiority of the quantum upper confidence bound algorithm was explored in solving the stochastic multi-armed bandit problem.
 Specifically, the QUCB algorithm was tested against its classical ancestor, the UCB algorithm, and the oftentimes best classical algorithm, namely Thompson sampling.
 These tests included static bandit instances where the means were fixed, and dynamic bandit instances the means were drawn from a prior distribution, from which Bayesian regrets were studied.
 Additionally, state-of-the-art reinforcement learning algorithms were tested on the bandit problem, where also a quantum policy agent was included.
@@ -44,10 +42,10 @@ As seen in \cref{fig:big2,fig:high_prob}, the algorithm does not only outperform
 However, as seen in \cref{fig:low_prob_fix,fig:random}, settings wherein quantum advantage is not achieved also arise.
 While still performing better than classical UCB, the algorithm is outperformed by Thompson sampling for these \enquote{easier} scenarios.
 
-Most visibly in \cref{fig:random}, the QUCB algorithm can be very inefficient in the early turns of a bandit problem, after which it may be too late for its asymptotic advantages to be realised.
-With easy instances, such as the uniform prior in \cref{fig:random}, arm means are customarily relatively far apart.
-Accordingly, arms can be eliminated early with a high probability of the elimination being correct.
-The QUCB algorithm, however, does not take proper advantage thereof, and instead proceeds with its conservative strategy of producing quantum supreme estimates.
+Most visibly in \cref{fig:random}, the QUCB algorithm can be very inefficient in the early turns for some bandit instances, after which it may be too late for its asymptotic advantages to be realised.
+With easy instances, such as is the case for most sampled instances from the uniform prior used in \cref{fig:random}, arm means are customarily relatively far apart.
+Accordingly, arms can oft be eliminated early with a high probability of the elimination being correct.
+The QUCB algorithm, however, does not take proper advantage thereof, and instead proceeds with its conservative strategy of producing quantum supreme estimates with unnecessarily high precision.
 
 \Cref{fig:histograms_random} indicate that the QUCB regret distribution is more concentrated around the mean and is less affected by the actual bandit instance, but the regret curves in \cref{fig:random,fig:random2,fig:random3} show that it does positively matter which bandit instance is at hand.
 It is likely the asymptomatic regret properties of the QUCB algorithm, namely the logarithmic upper bound, that enables its regret to flatten out as the number of rounds increases, achieving on occasion better final regrets at the time horizons that were attempted.
@@ -55,7 +53,7 @@ For truly great time horizons, it may be the case that the QUCB algorithm would 
 
 As briefly covered in the opening of this chapter, what can be considered the hyperparameter of the QUCB algorithm, that is its confidence level $\delta$ and the coefficient $C_1$, were not tuned or investigated in these experiments.
 The confidence level $\delta$ determines at which probability the upper bound, internally used by the algorithm to decide which arm to pull, is guaranteed to hold, and should according to the logarithmic bound presented in \cref{sec:wan_proof} be set according to the inverse time horizon $1/T$.
-It was seen in the original paper and some preliminary testing for this thesis that fixing this value to a much higher $\delta = 0.01$ yields good results, at least for the instance in \cref{fig:big2}.
+It was seen in the original paper and some preliminary testing for this thesis that fixing this value to a much higher $\delta = 0.01$ yields better results, at least for the instance in \cref{fig:big2}.
 This may be a good value for all instances, but its certainty remains obscure, and it is as such something which could warrant deeper investigation.
 In a similar manner, the coefficient $C_1$ was arbitrarily set to $2$.
 It is not clear whether this is a good value, or if it should be set differently for different instances.
@@ -64,7 +62,8 @@ Still, changing these hyperparameters would not change the fundamental propertie
 
 In contrast to the QUCB algorithm, reinforcement learning algorithms did not seem to be well suited for solving the bandit problem.
 They do offer great power and flexibility, but only for problems correctly designed for them.
-The bandit problem, even with some help in explicit observations of the means, do not seem to work well with these algorithms.
+The bandit problem, even with some help in explicit observations of the means, does not seem to work well with these algorithms.
+It is conceivable, and mayhap even likely, that further tuning of both state representations and reward functions could yield results on par with the specialised bandit algorithms, but this is not a trivial task, and the time and effort required simply diminish the merit of the general reinforcement learning algorithms.
 A quantum neural network policy could in principle inherit some QUCB advantages, but this would require a different, specialised data inputting scheme to allow direct input of the quantum states representing rewards.
 For it to be possible, another architecture would be needed, such as a quantum recurrent neural network.
 As it stands, the simpler, but specialised bandit algorithms appear to be the best choice for the bandit problem.

@@ -1,7 +1,7 @@
 \section{Reinforcement learning algorithms}
 \label{sec:sim_rl}
 
-In addition to the above considered algorithms specifically made for the bandit problem, knowledge may also be gained from considering how more general-purpose reinforcement learning algorithms perform.
+In addition to the algorithms considered in the previous sections, devised specifically for the bandit problem, knowledge may also be gained from considering how more general-purpose reinforcement learning algorithms perform.
 Here, three state-of-the-art algorithms are tested on a general reinforcement learning problem and then the bandit problem.
 These algorithms are the deep Q-network (DQN), a value-based algorithm, the advantage actor-critic (A2C), a mixed policy and value-based algorithm, and the proximal policy optimisation (PPO), a policy-based algorithm, all described in further detail in \cref{sec:rl_algs}
 They are all implemented in the Stable Baselines~3 (v1.7)~\autocite{sb3} library, which is a high-level reinforcement learning library built on top of PyTorch (v2.0)~\autocite{pytorch} and OpenAI's Gym (v0.21)~\autocite{gym} library, intended to make it easy to apply reinforcement learning algorithms to new problems without having to implement them from scratch, worry about the details of the algorithms or having to tune their hyperparameters.
