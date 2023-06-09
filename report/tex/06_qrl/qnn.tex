@@ -5,8 +5,8 @@ As classical artificial neural networks have made classical machine learning int
 The main goal of QNNs is to do what classical NNs do, but with some quantum advantage, be it in terms of generalisability, training required or something else.
 
 The structure of most quantum neural networks follows classical feed-forward networks.
-\Cref{fig:qnn} shows the general circuit layout.
-In the first step (or layer), data is encoded into the qubits, typically using a method discussed in \cref{sec:data_encoding}.
+\Cref{fig:qnn} shows a general circuit layout.
+In the first step (or layer), data is encoded as a quantum state into the qubits, typically using a method discussed in \cref{sec:data_encoding}.
 Next, the data is passed through a sequence of parametrised quantum gates which often can be interpreted as belonging to layers.
 Lastly, an output is produced by measuring the qubits, potentially with some post-processing.
 Thence, a cost function is calculated, and the parameters are updated.
@@ -86,15 +86,15 @@ The four methods that will be discussed in this section are summarised in \cref{
 \subsubsection{Basis encoding}
 The perhaps simplest way to encode data is to use the computational basis states of the qubits.
 This is done in the same way that classical computers use binary numbers.
-For example, some data $x$ can be expressed as a bit-string $x = \{x_1, x_2, \dots, x_n\}$, where each $x_i$ is either 0 or 1, where any continuous variables are encoded as floating point numbers.
+For example, some data $x$ can be expressed as a bit-string $x = \{x_1, x_2, \dots, x_n\}$, where each $x_i$ is either 0 or 1, and where any continuous variables are encoded as floating point numbers.
 For multidimensional data, the bit-strings are simply concatenated.
-% 
+
 If, for instance, the data point $010101$ is to be encoded in a quantum computer, it is simply mapped to the computational basis state $\ket{010101}$.
 This allows for multiple data points to be encoded in parallel as
 \begin{equation}
   \ket{\mathcal{D}} = \frac{1}{\sqrt M} \sum_{m=1}^M \ket{\bm{x}^{(m)}},
 \end{equation}
-where $\mathcal{D}$ is the data set, $M$ the total number of data points and $\bm{x}^{(m)}$ the $m$-th binarised data point.
+where $\mathcal{D}$ is the data set, $M$ the total number of data points and $\bm{x}^{(m)}$ the $m$th binarised data point.
 This is a simple encoding and has some significant disadvantages.
 There must be at least as many qubits as there are bits in the binarised data.
 For $N$ bits, there are $2^N$ possible states, but at most $M$ are used, which means that the embedding will be sparse.
@@ -109,7 +109,7 @@ Mathematically, for some $N$-dimensional data point $\bm{x}$, this reads
   \ket{\psi(\bm{x})} = \sum_{i=1}^{N} x_i \ket{i},
 \end{equation}
 where $x_i$ is the $i$th component of the data point and $\ket{i}$ is the $i$th computational basis state.
-This has the advantage of being able to encode any numeric type natively, and perhaps more importantly, only needing logarithmically many qubits.
+This has the advantage of being able to encode not just integers, but also real numbers, natively, and perhaps more importantly, only needing logarithmically many qubits.
 For $N$-dimensional data points, only $\lceil \log_2 N \rceil$ qubits are needed.
 This is a significant improvement over the basis encoding, which requires $N$ qubits (or more if integers and floats are to be binarised).
 
@@ -168,7 +168,7 @@ Nonetheless, the increased circuit depth could be compensated for by the extra e
 Were it indeed classically hard to simulate, it could provide quantum advantage.
 
 \subsubsection{Repeats}
-The expressive power of models heavily relies on the encoding strategy.
+The expressive power of models relies heavily on the encoding strategy.
 For instance, a single qubit rotation only allows the model to learn sine functions, where the frequency is determined by the scaling of the data.
 Generally, quantum models will learn periodic functions, and thus Fourier analysis is a useful tool.
 The implications of this are studied in~\autocite{schuld2021}, where it is shown that simply repeating simple encoding blocks allows for the learning of more frequencies and thus more complicated functions.
@@ -234,7 +234,7 @@ There, it was shown that the hybrid model could outperform a classical CNN of si
 
 \subsubsection{Quantum recurrent neural networks}
 The quantum state is collapsed upon measurement, losing information in the process.
-It is therefore not straightforward to translate the classical recurrent neural network (RNN) to a variational quantum circuit in the manner of \cref{fig:qnn} and the above discussed architectures.
+It is therefore not straightforward to translate the classical recurrent neural network (RNN) to a variational quantum circuit in the manner of \cref{fig:qnn} and the architectures hereinabove.
 Still, attempts have been made to define a QRNN, such as in~\autocite{bausch2020} where parametrised quantum neurons are defined and used to construct layers.
 These layers have two sets of qubits.
 The first set is not measured, and the state persists to the next layer.

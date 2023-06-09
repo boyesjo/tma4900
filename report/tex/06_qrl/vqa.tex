@@ -99,14 +99,14 @@ Running the same circuit many times with different parameters and inputs in a cl
 
 
 \subsection{Design}
-Generally, VQAs start with defining a cost function, depending on some input data (states) and the parametrised circuit, to be minimised with respect to the parameters of the quantum circuit.
+Generally, VQAs start with defining a cost function, depending on some input data (quantum states) and the parametrised circuit, to be minimised with respect to the parameters of the quantum circuit.
 For example, the cost function for the variational quantum eigensolver (VQE) is the expectation value of some Hamiltonian, the energy of a quantum mechanical system such as different molecules.
 The cost function should be meaningful in the sense that the minimum coincides with the optimal solution to the problem, and that lower values generally imply better solutions.
-Additionally, the cost function should be complicated enough to warrant quantum computation by not being easily calculated on classical hardware, while still having few enough parameters to be efficiently optimised~\autocite{cerezo2021}.
+Additionally, the cost function should be complicated enough to warrant quantum computation by not being easily evaluated on classical hardware, while still having few enough parameters to be efficiently optimised~\autocite{cerezo2021}.
 
 Important to the success of a VQA is the choice of the quantum circuit.
 The circuit selected is known as the ansatz, and there is a plethora of different ansätze that can be chosen.
-An example is hardware-efficient ansätze, which, as the name implies, is a general term used for ansätze designed in accordance with the hardware properties of a given quantum computer, taking, for instance the physical gates available into account and minimising the circuit depth.
+A common approach is hardware-efficient ansätze, which, as the name implies, is a general term used for ansätze designed in accordance with the hardware properties of a given quantum computer, taking, for instance, the physical gates available into account, thereby minimising the circuit depth.
 Other ansätze may be problem-specific, like the quantum alternating operator ansatz used for the quantum approximate optimisation algorithm (QAOA) (both sharing the QAOA acronym, confusingly), while others are more general and can be used to solve a variety of problems.
 It is believed that the development of better ansätze for specific applications will be important for the success of VQAs in the future~\autocite{cerezo2021}.
 
@@ -114,19 +114,19 @@ It is believed that the development of better ansätze for specific applications
 The optimisation of the cost function is often done with gradient descent methods.
 To evaluate the gradient of the quantum circuit with respect to the parameters, the very convenient parameter-shift rule can be used~\autocite{schuld2019}.
 Though appearing almost as a finite difference scheme, relying on evaluating the circuit with shifted parameters, it is indeed an exact formula.
-Not having to rely on finite differences is a major advantage, as the effects of small changes in parameters would quickly be drowned out in noise.
-Furthermore, it may be used recursively to evaluate higher order derivatives, which allows the usage of more advanced optimisation methods like the Newton method that requires the Hessian, though this requires more circuit evaluations.
+Not having to rely on finite differences is a major advantage, as the effects of small changes in parameters on the evaluated cost would quickly be drowned out in noise.
+Furthermore, it may be used recursively to evaluate higher order derivatives, which allows the usage of more advanced optimisation methods like the Newton method that requires the Hessian, though this will naturally require further circuit evaluations.
 
-Once the gradient is known, the parameters can be updated with gradient descent methods.
+Once the gradient is computed, the parameters can be updated with gradient descent methods.
 This leverages the well-developed toolbox of classical optimisation methods.
 These can be adapted to the quantum setting, for example by adjusting the number of circuit evaluations rather than the step-sizes~\autocite{sweke2020}.
 However, the loss landscape will generally not be convex~\autocite{huembeli2021}, so convergence is not necessarily guaranteed.
 
-A major obstacle with VQAs is that the gradients of the cost function can be exponentially small, a phenomenon known as barren plateaus.
-Barren plateaus prohibit the optimisation from converging, as evaluating the gradient would need exponentially many function calls.
+A major obstacle for VQAs is that the gradients of their cost function can be exponentially small, a phenomenon known as barren plateaus.
+Barren plateaus prohibit the optimisation from converging, as evaluating the gradient would need exponentially many circuit evaluations to produce sufficiently precise estimates.
 The ansatz and parameter initialisation seem to be the main culprits for the barren plateaus~\autocite{mcclean2018, cerezo2021a}.
 Additionally, with noisy quantum hardware, \enquote{conceptually different} but equally problematic noise-induced plateaus can occur~\autocite{wang2021}.
-It is therefore important to consider both the hardware and the ansatz when designing a VQA.
+It is therefore important that both the hardware and the ansatz be considered when designing a VQA.
 
 \subsection{Applications and outlook}
 VQAs can be used to solve a variety of problems.
@@ -139,9 +139,3 @@ Yet, despite the potential of VQAs, there are still many challenges to overcome.
 Despite having some inherent resilience to noise~\autocite{cerezo2021}, noise and decoherence will still be limiting factors.
 Error mitigating post-processing can be used to improve the performance of VQAs, but which methods to use, and their effectiveness requires further investigation~\autocite{endo2021}.
 The optimisation of the cost function is also a major challenge, as the gradients can vanish, so the choices of ansätze and the initialisation strategies are important.
-
-% Still, there are many difficulties when applying VQAs.
-% Exponentially vanishing gradients, known as barren plateaus, are a common occurrence, making optimisation futile.
-% The choosing of the ansatz determines the performance and feasibility of the algorithms, and there are many strategies and options.
-% Some rely on exploiting the specific quantum hardware's properties, while others use the specifics of the problem at hand.
-% Finally, the inherent noise and errors on near-term hardware will still be a problem and limit circuit depths.
