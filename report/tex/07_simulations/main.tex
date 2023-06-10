@@ -34,20 +34,24 @@ The source code for the simulations presented here is available on GitHub\footno
 \section{Discussion}
 Hereinabove, the potential superiority of the quantum upper confidence bound algorithm was explored in solving the stochastic multi-armed bandit problem.
 Specifically, the QUCB algorithm was tested against its classical ancestor, the UCB algorithm, and the oftentimes best classical algorithm, namely Thompson sampling.
-These tests included static bandit instances where the means were fixed, and dynamic bandit instances the means were drawn from a prior distribution, from which Bayesian regrets were studied.
+These tests included static bandit instances where the means were fixed, and dynamic bandit instances whose means were drawn from a prior distribution pre each separate simulation, from which Bayesian regrets were estimated and studied.
 Additionally, state-of-the-art reinforcement learning algorithms were tested on the bandit problem, where also a quantum policy agent was included.
 
 From the experiments, it is evident that the QUCB algorithm indeed has the potential to outperform classical algorithms in the bandit problem.
-As seen in \cref{fig:big2,fig:high_prob}, the algorithm does not only outperform the classical UCB algorithm, but for these particular instances, also the better Thompson sampling algorithm.
-However, as seen in \cref{fig:low_prob_fix,fig:random}, settings wherein quantum advantage is not achieved also arise.
-While still performing better than classical UCB, the algorithm is outperformed by Thompson sampling for these \enquote{easier} scenarios.
+As seen in \cref{fig:big2,fig:high_prob}, the quantum algorithm does not only outperform the classical UCB algorithm, but for these particular instances, also the better classical solution of Thompson sampling.
+However, based on the results rendered in \cref{fig:low_prob_fix,fig:random}, settings wherein quantum advantage is not achieved may also arise.
+While still performing better than classical UCB in all the considered bandits and the long time horizon used, the algorithm is outperformed by Thompson sampling for these \enquote{easier} scenarios.
 
-Most visibly in \cref{fig:random}, the QUCB algorithm can be very inefficient in the early turns for some bandit instances, after which it may be too late for its asymptotic advantages to be realised.
-With easy instances, such as is the case for most sampled instances from the uniform prior used in \cref{fig:random}, arm means are customarily relatively far apart.
+Most visibly in \cref{fig:random}, the QUCB algorithm can be very inefficient in the early turns for some bandit instances, after which it may be too late for its asymptotic advantages to be realised and for it to overtake the lower regret of Thompson sampling.
+With easy instances, such as is the case for most sampled instances from the uniform prior used in \cref{fig:random}, arm means are customarily relatively far apart\footnotemark.
 Accordingly, arms can oft be eliminated early with a high probability of the elimination being correct.
-The QUCB algorithm, however, does not take proper advantage thereof, and instead proceeds with its conservative strategy of producing quantum supreme estimates with unnecessarily high precision.
+The QUCB algorithm, however, does not take proper advantage thereof, and it instead proceeds with its conservative strategy of producing quantum supreme estimates with unnecessarily high precision.
 
-\Cref{fig:histograms_random} indicate that the QUCB regret distribution is more concentrated around the mean and is less affected by the actual bandit instance, but the regret curves in \cref{fig:random,fig:random2,fig:random3} show that it does positively matter which bandit instance is at hand.
+\footnotetext{
+    The astute reader will easily verify that the mean absolute difference is $1/3$.
+}
+
+The final turn reward distributions presented in \cref{fig:histograms_random} indicate that the distribution of the QUCB regret lies more concentrated around its mean and gets less affected by the actual bandit instance, but the regret curves in \cref{fig:random,fig:random2,fig:random3} show that it does positively matter which bandit instance is at hand.
 It is likely the asymptomatic regret properties of the QUCB algorithm, namely the logarithmic upper bound, that enables its regret to flatten out as the number of rounds increases, achieving on occasion better final regrets at the time horizons that were attempted.
 For truly great time horizons, it may be the case that the QUCB algorithm would always outperform the classical algorithms.
 
@@ -62,7 +66,7 @@ Still, changing these hyperparameters would not change the fundamental propertie
 
 In contrast to the QUCB algorithm, reinforcement learning algorithms did not seem to be well suited for solving the bandit problem.
 They do offer great power and flexibility, but only for problems correctly designed for them.
-The bandit problem, even with some help in explicit observations of the means, does not seem to work well with these algorithms.
+The bandit problem, even with some help in explicit state observations of the means, does not appear to work well with these RL algorithms.
 It is conceivable, and mayhap even likely, that further tuning of both state representations and reward functions could yield results on par with the specialised bandit algorithms, but this is not a trivial task, and the time and effort required simply diminish the merit of the general reinforcement learning algorithms.
 A quantum neural network policy could in principle inherit some QUCB advantages, but this would require a different, specialised data inputting scheme to allow direct input of the quantum states representing rewards.
 For it to be possible, another architecture would be needed, such as a quantum recurrent neural network.
