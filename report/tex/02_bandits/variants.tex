@@ -1,14 +1,15 @@
 \subsection{Variants}
 \subsubsection{Best-arm identification}
 An alternative problem is to find the best arm with as few turns as possible.
-In this version, a $\delta$ is given, and the goal is to find the best arm with probability at least $1-\delta$.
+In this version, a $\delta$ is given, and the goal is to find the best arm with a probability of at least $1-\delta$.
 The metric here is how the turns needed grows as a function of $\delta$.
 Unlike regret minimisation, exploitation is less of a concern, but much theory can be transferred from the regret minimisation problem.
 Though there is no direct benefit from exploitation, as there is in regret optimisation where rewards are collected, it is still desirable mainly to pull good arms, as these will need more consideration to be distinguished from the optimal.
 Worse arms should new few pulls to be identified as suboptimal.
 
 \subsubsection{Bandit generalisations}
-The multi-armed bandit problem has numerous generalisations, including the non-stationary multi-armed bandit where the underlying reward distributions change over time, presenting a challenging environment for traditional algorithms developed for the standard, stationary multi-armed bandit problem.
+The multi-armed bandit problem has numerous generalisations.
+One such case is the non-stationary multi-armed bandits where the underlying reward distributions are not assumed constant, but may change over time, presenting a challenging environment for traditional algorithms developed for the standard, stationary multi-armed bandit problem.
 In this variant, agents must continuously explore and adapt to the changing environment.
 Other cases give the agent more info, such as letting it know what the rewards for all arms, were they pulled instead, would have been.
 Another area of study is the contextual multi-armed bandit problem, in which contextual information must be incorporated into the decision-making process for arm selection, adding a layer of complexity to the standard multi-armed bandit problem, particularly useful for recommender systems, where the context is the user and their preferences.
