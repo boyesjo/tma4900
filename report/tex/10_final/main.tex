@@ -21,7 +21,7 @@ Simulating quantum computing is exponentially hard, but something that can be do
 The simulations done for this project demonstrate that the quantum upper confidence bound algorithm is only supreme on what can be considered \enquote{hard} instances of the bandit problem, that is those in which reward means are close and for which many samples will be needed to thoroughly distinguish between them.
 For easy instances, where the expected rewards lie far apart, the algorithm is, in essence, wasting turns on sampling and producing unnecessarily accurate estimates of the reward means.
 It is subsequently significantly outperformed by the classical Thompson sampling algorithm.
-So far, the quantum algorithm had not been compared against Thompson sampling, such that highlighting the cases in which QUCB performs relatively poorly is here a novel contribution.
+Heretofore, the quantum algorithm had not been compared against Thompson sampling, such that highlighting the cases in which QUCB performs relatively poorly is here a novel contribution.
 
 The algorithm's difficulty-dependent performance should not be entirely unexpected, as the algorithm relies on exponentially many consecutive samples to achieve its superior predictive performance, and in the easy instances, arms must be eliminated much earlier to achieve the lowest reasonable regret.
 The provably improved regret bound is no guarantee of improved performance in practice, being both a bound rather than a guarantee and asymptotic in nature.
@@ -63,21 +63,21 @@ Among these are contextual bandits, adversarial bandits, combinatorial bandits, 
 How the methods presented here may be extended to these cases is an interesting question.
 
 By introducing superposition as a permissible mode of querying the arms, it is obvious that advantages will be gained.
-However, it is clear that there exist lower bounds which place limits on the performance attainable through these quantum bandit formulations.
+However, it is clear that there exist lower bounds which place limits on the performance attainable through these quantised bandit formulations.
 It may thus be an interesting pursuit to investigate the nature of these quantum lower bounds, both for minimax- and instance-optimality.
 
 Furthermore, being limited to arms that provide superpositional rewards, it is a daunting task to apply quantum algorithms.
 As such, it would be of great interest to find any explicit scenarios wherein these algorithms could be used and provide real benefits.
 Could some quantum reinforcement learning algorithms be made more efficient with QUCB?
 
-The quantum bandit model considered in this thesis, where arms are pulled by applying corresponding oracles, is merely one of many plausible quantum bandit schematics.
-Several others have been proposed thus far, as touched upon in \cref{sec:qbandits_other}, some of which may be more amenable to practical applications.
+The quantum bandit model mainly considered in this thesis, where arms are pulled through the application of corresponding quantum oracles, is merely one of many plausible quantum bandit schematics.
+Several others have been proposed hitherto, as touched upon in \cref{sec:qbandits_other}, some of which may be more amenable to practical implementation and usage.
 These have necessarily other properties, and it would be interesting to study what quantised bandits be the most useful in practice.
 
 The impressive strides taken in the field of reinforcement learning bear witness to the potential efficacy of applying quantum computing to this discipline.
 Nevertheless, it is plagued by the difficulties inherent in quantum machine learning more generally, whereby empirical demonstrations of real benefits remain elusive and intricate practical problems are often too complicated for exact, analytical considerations.
 Still, it is undoubtedly a promising field of research.
 
-In future work, one may investigate whether the classical and quantum reinforcement learning algorithms considered here are truly incapable of producing a satisfactory solution to the bandit problem, or whether they simply necessitate more design and fine-tuning, which time constraints precluded here.
-It would also be interesting to investigate the use of other quantum reinforcement learning algorithms, such as a quantum value-based algorithm or some actor-critic algorithm where either the actor, the critic or both are quantised.
+In future work, a viable matter to investigate may be whether the classical and quantum reinforcement learning algorithms considered here truly are incapable of producing a satisfactory solution to the bandit problem, or whether they simply necessitate further design and fine-tuning, which time constraints precluded here.
+It would also be interesting to investigate the utility of other quantum reinforcement learning algorithms, such as a quantum value-based algorithm or some actor-critic algorithm where either the actor, the critic or both are quantised.
 Overall, the study and comparison of these quantum reinforcement learning algorithms will be a fruitful area of research.
