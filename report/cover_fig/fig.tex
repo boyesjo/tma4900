@@ -2,10 +2,15 @@
 \usepackage{tikz}
 \usepackage{pgfplots}
 
-\definecolor{blue}{HTML}{3cbfbe}
-\definecolor{red}{HTML}{b01b81}
-\definecolor{green}{HTML}{f7d019}
-\definecolor{orange}{HTML}{bcd025}
+% % \definecolor{blue}{HTML}{3cbfbe} % NTNU CYAN
+% \definecolor{red}{HTML}{023f66} % SINTEF
+% % \definecolor{red}{HTML}{b01b81} % NTNU MAGENTA
+% \definecolor{blue}{HTML}{3cbfbe} % NTNU CYAN
+% \definecolor{green}{HTML}{f7d019}
+% \definecolor{orange}{HTML}{bcd025}
+
+\definecolor{good}{HTML}{3cbfbe} % NTNU CYAN
+\definecolor{bad}{HTML}{023f66} % SINTEF
 
 \begin{document}
 
@@ -15,9 +20,11 @@
             width=7 cm,
             height=5 cm,
             hide axis,
+            enlargelimits=false,
+            scale only axis,
         ]
         \addplot[
-            red,
+            bad,
             only marks,
             error bars/.cd,
             y dir=plus,
@@ -30,7 +37,7 @@
             ] {ucb.dat};
 
         \addplot[
-            blue,
+            good,
             only marks,
             error bars/.cd,
             y dir=plus,
